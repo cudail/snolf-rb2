@@ -35,7 +35,9 @@ addHook("ThinkFrame", function()
 		end
 		
 		player.mo.state = S_PLAY_ROLL --force rolling animation
-		player.pflags = $1 | PF_SPINNING --force spinning flag
+		if P_IsObjectOnGround(player.mo) then
+			player.pflags = $1 | PF_SPINNING --force spinning flag
+		end
 		
 		-- snolfstate
 		-- 0 ready to snolf
@@ -77,6 +79,7 @@ addHook("ThinkFrame", function()
 				player.snolfstate = 3
 				P_InstaThrust(player.mo, player.mo.angle, player.snolf_hdrive*FRACUNIT)
 				P_SetObjectMomZ(player.mo, player.snolf_vdrive*FRACUNIT, true)
+				player.pflags = $1 | PF_JUMPED --force jumped flag
 			else
 				player.snolf_timer = $1 + 1
 				
