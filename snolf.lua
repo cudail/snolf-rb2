@@ -43,18 +43,6 @@ addHook("ThinkFrame", function()
 		-- 2 snolfing vertical
 		-- 3 snolf'd
 
-		--TODO: 
-		-- replace snolf_timer with something that's less framerate dependent
-		-- or just use floats for meters
-		-- snolf does not replenish while rolling
-		-- air snolf off of springs to stop you getting stuck on vertical springs
-		-- comment better
-		-- break stuff out into functions
-		-- animated meters
-		-- meters charge sinusoidally instead of linerally
-		-- sound
-		
-		
 		player.snolf_max_hrz = 50
 		player.snolf_max_vrt = 50
 		
