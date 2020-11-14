@@ -125,7 +125,7 @@ addHook("ThinkFrame", function()
 				end
 			end
 		elseif player.snolfstate == 3 then
-			if P_IsObjectOnGround(player.mo) then
+			if P_IsObjectOnGround(player.mo) and player.speed == 0 then
 				player.snolfstate = 0
 			end
 		elseif player.snolfstate == nil then
