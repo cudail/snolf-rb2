@@ -1,4 +1,11 @@
+hud.add(function(v, player, camera)
+	if player.mo.skin == "snolf" then
+		v.drawString(16, 164, "SHOTS", V_YELLOWMAP)
+		v.drawString(64, 164, player.snolf.shots)
+	end
 
+
+end, "game")
 
 addHook("PreThinkFrame", function()
 	
@@ -6,9 +13,9 @@ addHook("PreThinkFrame", function()
 		if player.mo.skin ~= "snolf" then
 			continue
 		end
-		
+
 		if player.snolf == nil then
-			player.snolf = {}
+			player.snolf = { shots = 0 }
 		end
 
 		--check if the jump button was just tapped
@@ -110,6 +117,7 @@ addHook("ThinkFrame", function()
 		elseif player.snolf.state == 2 then
 			if player.snolf.jumptapping then
 				print("SNOLF!")
+				player.snolf.shots = $1 + 1
 				player.snolf.state = 3
 				P_InstaThrust(player.mo, player.mo.angle, player.snolf.hdrive*FRACUNIT)
 				P_SetObjectMomZ(player.mo, player.snolf.vdrive*FRACUNIT, true)
