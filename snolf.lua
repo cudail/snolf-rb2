@@ -2,6 +2,21 @@ hud.add(function(v, player, camera)
 	if player.mo.skin == "snolf" then
 		v.drawString(16, 164, "SHOTS", V_YELLOWMAP)
 		v.drawString(64, 164, player.snolf.shots)
+
+		if player.snolf.state == 1 then
+			local patch = v.getSpritePatch(SPR_RING)
+			v.drawScaled(
+				FRACUNIT*(160+player.snolf.hdrive),
+				FRACUNIT*150,
+				FRACUNIT/4, patch)
+		elseif player.snolf.state == 2 then
+			local patch = v.getSpritePatch(SPR_RING)
+			v.drawScaled(
+				FRACUNIT*160,
+				FRACUNIT*(150-player.snolf.vdrive),
+				FRACUNIT/4, patch)
+		end
+
 	end
 
 
