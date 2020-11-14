@@ -21,7 +21,7 @@ addHook("PreThinkFrame", function()
 		--swallow player input
 		player.cmd.forwardmove = 0
 		player.cmd.sidemove = 0
-		player.cmd.buttons = 0
+		player.cmd.buttons = $1 & !BT_JUMP
 	end
 	
 end)
