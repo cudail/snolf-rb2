@@ -121,7 +121,7 @@ addHook("ThinkFrame", function()
 				player.snolf.shots = $1 + 1
 				player.snolf.state = 3
 				P_InstaThrust(player.mo, player.mo.angle, player.snolf.hdrive*FRACUNIT)
-				P_SetObjectMomZ(player.mo, player.snolf.vdrive*FRACUNIT, true)
+				P_SetObjectMomZ(player.mo, player.snolf.vdrive*FRACUNIT)
 				player.pflags = $1 | PF_JUMPED --force jumped flag
 				S_StartSound(player.mo, sfx_zoom)
 			else
