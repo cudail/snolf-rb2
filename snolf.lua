@@ -55,6 +55,7 @@ addHook("ThinkFrame", function()
 				player.snolf.mull.z)
 			P_InstaThrust(player.mo, 0, 0)
 			player.snolf.spinhelf = 0
+			S_StartSound(player.mo, sfx_mixup)
 		end
 
 
@@ -86,11 +87,13 @@ addHook("ThinkFrame", function()
 				player.snolf_vdrive = 0
 				player.snolf_increment = 1
 				player.snolf_timer = 0
+				S_StartSoundAtVolume(player.mo, sfx_spndsh, 64)
 			end
 		elseif player.snolfstate == 1 then
 			if player.jumptapping then
 				player.snolfstate = 2
 				player.snolf_increment = 1
+				S_StartSoundAtVolume(player.mo, sfx_spndsh, 100)
 			else
 				player.snolf_timer = $1 + 1
 				
@@ -111,6 +114,7 @@ addHook("ThinkFrame", function()
 				P_InstaThrust(player.mo, player.mo.angle, player.snolf_hdrive*FRACUNIT)
 				P_SetObjectMomZ(player.mo, player.snolf_vdrive*FRACUNIT, true)
 				player.pflags = $1 | PF_JUMPED --force jumped flag
+				S_StartSound(player.mo, sfx_zoom)
 			else
 				player.snolf_timer = $1 + 1
 				
