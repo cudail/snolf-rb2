@@ -4,9 +4,9 @@ DisplayName = Snolf
 TagTextColor = SKINCOLOR_VIOLET
 TagOutlineColor = SKINCOLOR_NEON
 OppositeColor = SKINCOLOR_RASPBERRY
-PlayerText = Snolf it up
+PlayerText = Snolf cannot move normally and controls like a golf game. Aim with the camera and use the jump button to start charging a shot. Use the jump button again to time your shot power.
 
-^1Ability:^0 Put the character's jump ablility here
-^1Ability:^0 Put the character's spin ability here
+^1Ability:^0 Mulligan
+Hold the spin button to go back to your last resting place.
 
-^9Tip:^0 Put a tip here
+^9Tip:^0 Not all level may not be completable with Snolf.
