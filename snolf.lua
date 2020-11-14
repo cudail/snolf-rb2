@@ -35,7 +35,13 @@ end, "game")
 addHook("PreThinkFrame", function()
 
 	for player in players.iterate do
+		-- Don't do anything if we're not Snolf
 		if player.mo.skin ~= "snolf" then
+			continue
+		end
+
+		-- Don't do anything for NiGHTS mode
+		if maptol & TOL_NIGHTS > 1 then
 			continue
 		end
 
