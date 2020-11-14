@@ -4,6 +4,7 @@ Inspired by the original Snolf ROM hacks by Dr. Melon - https://melon.zone/
 
 Made using the Sonic Robo Blast 2 Custom Character Preset by Blu The Hedgehog - https://gamebanana.com/skins/181950
 
+Life count icon from Mario Golf: Advance Tour.
 
 ## Changelog
 
