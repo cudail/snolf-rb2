@@ -126,9 +126,9 @@ addHook("ThinkFrame", function()
 					player.snolf.increment = 1
 				end
 			
-				if player.snolf.timer % 2 == 0 then
+				--if player.snolf.timer % 2 == 0 then
 					player.snolf.hdrive = $1 + player.snolf.increment
-				end
+				--end
 			end
 		elseif player.snolf.state == 2 then
 			if player.snolf.jumptapping then
@@ -147,9 +147,9 @@ addHook("ThinkFrame", function()
 					player.snolf.increment = 1
 				end
 				
-				if player.snolf.timer % 2 == 0 then
+				--if player.snolf.timer % 2 == 0 then
 					player.snolf.vdrive = $1 + player.snolf.increment
-				end
+				--end
 			end
 		elseif player.snolf.state == 3 then
 			if P_IsObjectOnGround(player.mo) and player.speed == 0 then
