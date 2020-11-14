@@ -6,6 +6,8 @@ Made using the Sonic Robo Blast 2 Custom Character Preset by Blu The Hedgehog - 
 
 Life count icon from Mario Golf: Advance Tour.
 
+Not all levels may be completable.
+
 ## Changelog
 
 v0.3
