@@ -1,8 +1,8 @@
 Character
 SkinName = Snolf
 DisplayName = Snolf
-TagTextColor = SKINCOLOR_VIOLET
-TagOutlineColor = SKINCOLOR_NEON
+TagTextColor = SKINCOLOR_APRICOT
+TagOutlineColor = SKINCOLOR_RASPBERRY
 OppositeColor = SKINCOLOR_RASPBERRY
 PlayerText = Snolf cannot move normally and controls like a golf game. Aim with the camera and use the jump button to start charging a shot. Use the jump button again to time your shot power.
 
