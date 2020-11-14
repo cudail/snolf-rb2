@@ -7,6 +7,10 @@ addHook("PreThinkFrame", function()
 			continue
 		end
 		
+		if player.snolf == nil then
+			player.snolf = {}
+		end
+
 		--check if the jump button was just tapped
 		if not (player.cmd.buttons & BT_JUMP) then
 			player.jumptapready = true
@@ -18,6 +22,13 @@ addHook("PreThinkFrame", function()
 			player.jumptapping = false
 		end
 		
+		--check if the ability button is being held
+		if player.snolf.spinheld != nil and (player.cmd.buttons & BT_USE) then
+			player.snolf.spinheld = $1 + 1
+		else
+			player.snolf.spinheld = 0
+		end
+
 		--swallow player input
 		player.cmd.forwardmove = 0
 		player.cmd.sidemove = 0
@@ -33,12 +44,32 @@ addHook("ThinkFrame", function()
 		if player.mo.skin ~= "snolf" then
 			continue
 		end
-		
+
 		player.mo.state = S_PLAY_ROLL --force rolling animation
+
+		if player.snolf.spinheld > 60 and player.snolf.mull then
+
+			P_TeleportMove(player.mo,
+				player.snolf.mull.x,
+				player.snolf.mull.y,
+				player.snolf.mull.z)
+			P_InstaThrust(player.mo, 0, 0)
+			player.snolf.spinhelf = 0
+		end
+
+
 		if P_IsObjectOnGround(player.mo) then
 			player.pflags = $1 | PF_SPINNING --force spinning flag
+
+			if player.speed == 0 then --player is stationary
+				player.snolf.mull = { --set mulligan spot
+					x = player.mo.x,
+					y = player.mo.y,
+					z = player.mo.z
+				}
+			end
 		end
-		
+
 		-- snolfstate
 		-- 0 ready to snolf
 		-- 1 snolfing horizontal
