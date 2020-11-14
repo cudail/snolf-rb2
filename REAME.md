@@ -10,6 +10,14 @@ Not all levels may be completable.
 
 ## Changelog
 
+v0.4
+* Power meter now moves sinusoidally instead of linearlly
+* Mulligan disallowed if stationary
+* Re-enabled control for NiGHTS mode
+* Added custom graphics for power meter
+* Added custom graphics for character select, signpost, extra life and life count
+* Added warning that levels may not be beatable and credit for life count icon to readme
+
 v0.3
 * Added shot counters
 * Mulligan resets player's momentum on the Z axis
