@@ -132,7 +132,6 @@ addHook("ThinkFrame", function()
 			end
 		elseif player.snolf.state == 2 then
 			if player.snolf.jumptapping then
-				print("SNOLF!")
 				player.snolf.shots = $1 + 1
 				player.snolf.state = 3
 				P_InstaThrust(player.mo, player.mo.angle, player.snolf.hdrive*FRACUNIT)
@@ -158,13 +157,6 @@ addHook("ThinkFrame", function()
 			end
 		elseif player.snolf.state == nil then
 			player.snolf.state = 0
-		end
-		
-		if player.snolf.state == 1 or player.snolf.state == 2 then
-			print("Horizontal:")
-			print(player.snolf.hdrive)
-			print("Vertical:")
-			print(player.snolf.vdrive)
 		end
 	end
 end)
