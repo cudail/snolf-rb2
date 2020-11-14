@@ -61,6 +61,7 @@ addHook("ThinkFrame", function()
 				player.snolf.mull.y,
 				player.snolf.mull.z)
 			P_InstaThrust(player.mo, 0, 0)
+			P_SetObjectMomZ(player.mo, 0)
 			player.snolf.spinheld = 0
 			S_StartSound(player.mo, sfx_mixup)
 		end
