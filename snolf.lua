@@ -13,13 +13,13 @@ addHook("PreThinkFrame", function()
 
 		--check if the jump button was just tapped
 		if not (player.cmd.buttons & BT_JUMP) then
-			player.jumptapready = true
-			player.jumptapping = false
-		elseif player.jumptapready then
-			player.jumptapping = true
-			player.jumptapready = false
+			player.snolf.jumptapready = true
+			player.snolf.jumptapping = false
+		elseif player.snolf.jumptapready then
+			player.snolf.jumptapping = true
+			player.snolf.jumptapready = false
 		else
-			player.jumptapping = false
+			player.snolf.jumptapping = false
 		end
 		
 		--check if the ability button is being held
@@ -54,7 +54,7 @@ addHook("ThinkFrame", function()
 				player.snolf.mull.y,
 				player.snolf.mull.z)
 			P_InstaThrust(player.mo, 0, 0)
-			player.snolf.spinhelf = 0
+			player.snolf.spinheld = 0
 			S_StartSound(player.mo, sfx_mixup)
 		end
 
@@ -77,70 +77,70 @@ addHook("ThinkFrame", function()
 		-- 2 snolfing vertical
 		-- 3 snolf'd
 
-		player.snolf_max_hrz = 50
-		player.snolf_max_vrt = 50
+		player.snolf.max_hrz = 50
+		player.snolf.max_vrt = 50
 		
-		if player.snolfstate == 0 then
-			if player.jumptapping then
-				player.snolfstate = 1
-				player.snolf_hdrive = 0
-				player.snolf_vdrive = 0
-				player.snolf_increment = 1
-				player.snolf_timer = 0
+		if player.snolf.state == 0 then
+			if player.snolf.jumptapping then
+				player.snolf.state = 1
+				player.snolf.hdrive = 0
+				player.snolf.vdrive = 0
+				player.snolf.increment = 1
+				player.snolf.timer = 0
 				S_StartSoundAtVolume(player.mo, sfx_spndsh, 64)
 			end
-		elseif player.snolfstate == 1 then
-			if player.jumptapping then
-				player.snolfstate = 2
-				player.snolf_increment = 1
+		elseif player.snolf.state == 1 then
+			if player.snolf.jumptapping then
+				player.snolf.state = 2
+				player.snolf.increment = 1
 				S_StartSoundAtVolume(player.mo, sfx_spndsh, 100)
 			else
-				player.snolf_timer = $1 + 1
+				player.snolf.timer = $1 + 1
 				
-				if player.snolf_hdrive >= player.snolf_max_hrz then
-					player.snolf_increment = -1
-				elseif player.snolf_hdrive <= 0 then
-					player.snolf_increment = 1
+				if player.snolf.hdrive >= player.snolf.max_hrz then
+					player.snolf.increment = -1
+				elseif player.snolf.hdrive <= 0 then
+					player.snolf.increment = 1
 				end
 			
-				if player.snolf_timer % 2 == 0 then
-					player.snolf_hdrive = $1 + player.snolf_increment
+				if player.snolf.timer % 2 == 0 then
+					player.snolf.hdrive = $1 + player.snolf.increment
 				end
 			end
-		elseif player.snolfstate == 2 then
-			if player.jumptapping then
+		elseif player.snolf.state == 2 then
+			if player.snolf.jumptapping then
 				print("SNOLF!")
-				player.snolfstate = 3
-				P_InstaThrust(player.mo, player.mo.angle, player.snolf_hdrive*FRACUNIT)
-				P_SetObjectMomZ(player.mo, player.snolf_vdrive*FRACUNIT, true)
+				player.snolf.state = 3
+				P_InstaThrust(player.mo, player.mo.angle, player.snolf.hdrive*FRACUNIT)
+				P_SetObjectMomZ(player.mo, player.snolf.vdrive*FRACUNIT, true)
 				player.pflags = $1 | PF_JUMPED --force jumped flag
 				S_StartSound(player.mo, sfx_zoom)
 			else
-				player.snolf_timer = $1 + 1
+				player.snolf.timer = $1 + 1
 				
-				if player.snolf_vdrive >= player.snolf_max_vrt then
-					player.snolf_increment = -1
-				elseif player.snolf_vdrive <= 0 then
-					player.snolf_increment = 1
+				if player.snolf.vdrive >= player.snolf.max_vrt then
+					player.snolf.increment = -1
+				elseif player.snolf.vdrive <= 0 then
+					player.snolf.increment = 1
 				end
 				
-				if player.snolf_timer % 2 == 0 then
-					player.snolf_vdrive = $1 + player.snolf_increment
+				if player.snolf.timer % 2 == 0 then
+					player.snolf.vdrive = $1 + player.snolf.increment
 				end
 			end
-		elseif player.snolfstate == 3 then
+		elseif player.snolf.state == 3 then
 			if P_IsObjectOnGround(player.mo) and player.speed == 0 then
-				player.snolfstate = 0
+				player.snolf.state = 0
 			end
-		elseif player.snolfstate == nil then
-			player.snolfstate = 0
+		elseif player.snolf.state == nil then
+			player.snolf.state = 0
 		end
 		
-		if player.snolfstate == 1 or player.snolfstate == 2 then
+		if player.snolf.state == 1 or player.snolf.state == 2 then
 			print("Horizontal:")
-			print(player.snolf_hdrive)
+			print(player.snolf.hdrive)
 			print("Vertical:")
-			print(player.snolf_vdrive)
+			print(player.snolf.vdrive)
 		end
 	end
 end)
