@@ -1,0 +1,12 @@
+Character
+SkinName = Snolf
+DisplayName = Snolf
+TagTextColor = SKINCOLOR_VIOLET
+TagOutlineColor = SKINCOLOR_NEON
+OppositeColor = SKINCOLOR_RASPBERRY
+PlayerText = Snolf it up
+
+^1Ability:^0 Put the character's jump ablility here
+^1Ability:^0 Put the character's spin ability here
+
+^9Tip:^0 Put a tip here

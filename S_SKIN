@@ -1,0 +1,10 @@
+name = Snolf
+flags = SF_SUPER
+RealName = Snolf the Golfball
+HudName = Snolf
+ability = CA_NONE
+ability2 = CA2_NONE
+normalspeed = 38
+prefcolor = Blue
+Supercolor = Gold
+jumpfactor = 1.0
