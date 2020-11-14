@@ -9,26 +9,31 @@ hud.add(function(v, player, camera)
 			local meter = v.getSpritePatch(SPR_SFMR)
 			local harrow = v.getSpritePatch(SPR_SFAH)
 			local varrow = v.getSpritePatch(SPR_SFAV)
+
+			local hpos = player.snolf.convert_angle(player.snolf.hdrive, player.snolf.h_meter_length)
+			local vpos = player.snolf.convert_angle(player.snolf.vdrive, player.snolf.v_meter_length)
+
 			v.drawScaled(
 				FRACUNIT*158,
 				FRACUNIT*103,
 				FRACUNIT, meter)
 			v.drawScaled(
-				FRACUNIT*(160+player.snolf.hdrive),
+				FRACUNIT*(160+hpos),
 				FRACUNIT*150,
 				FRACUNIT, harrow)
 			if player.snolf.state == 2 then
 				v.drawScaled(
 					FRACUNIT*160,
-					FRACUNIT*(150-player.snolf.vdrive),
+					FRACUNIT*(150-vpos),
 					FRACUNIT, varrow)
 			end
 		end
 	end
 end, "game")
 
+
 addHook("PreThinkFrame", function()
-	
+
 	for player in players.iterate do
 		if player.mo.skin ~= "snolf" then
 			continue
@@ -36,6 +41,11 @@ addHook("PreThinkFrame", function()
 
 		if player.snolf == nil then
 			player.snolf = { shots = 0 }
+			player.snolf.convert_angle = function (angle, max_val)
+				return sin(angle - ANGLE_90)
+					*max_val/FRACUNIT/2
+					+ max_val/2
+			end
 		end
 
 		--check if the jump button was just tapped
@@ -48,7 +58,7 @@ addHook("PreThinkFrame", function()
 		else
 			player.snolf.jumptapping = false
 		end
-		
+
 		--check if the ability button is being held
 		if player.snolf.spinheld != nil and (player.cmd.buttons & BT_USE) then
 			player.snolf.spinheld = $1 + 1
@@ -61,7 +71,7 @@ addHook("PreThinkFrame", function()
 		player.cmd.sidemove = 0
 		player.cmd.buttons = $1 & !BT_JUMP
 	end
-	
+
 end)
 
 
@@ -71,6 +81,11 @@ addHook("ThinkFrame", function()
 		if player.mo.skin ~= "snolf" then
 			continue
 		end
+
+		player.snolf.max_hrz = 50 --max horizontal release speed
+		player.snolf.max_vrt = 50 --max vertical release speed
+		player.snolf.h_meter_length = 50 --how many pixels wide the charge meter range is
+		player.snolf.v_meter_length = 50 --how many pixels tall the charge meter range is
 
 		player.mo.state = S_PLAY_ROLL --force rolling animation
 
@@ -105,32 +120,34 @@ addHook("ThinkFrame", function()
 		-- 2 snolfing vertical
 		-- 3 snolf'd
 
-		player.snolf.max_hrz = 50
-		player.snolf.max_vrt = 50
-		
+
+		-- I want the meter timing to be sinusoidal so we will be using trigonometry
+		local increment = ANG1 + ANG2
+		local max_charge = ANGLE_180
+
 		if player.snolf.state == 0 then
 			if player.snolf.jumptapping then
 				player.snolf.state = 1
 				player.snolf.hdrive = 0
 				player.snolf.vdrive = 0
-				player.snolf.increment = 1
+				player.snolf.increment = increment
 				player.snolf.timer = 0
 				S_StartSoundAtVolume(player.mo, sfx_spndsh, 64)
 			end
 		elseif player.snolf.state == 1 then
 			if player.snolf.jumptapping then
 				player.snolf.state = 2
-				player.snolf.increment = 1
+				player.snolf.increment = increment
 				S_StartSoundAtVolume(player.mo, sfx_spndsh, 100)
 			else
 				player.snolf.timer = $1 + 1
-				
-				if player.snolf.hdrive >= player.snolf.max_hrz then
-					player.snolf.increment = -1
+
+				if player.snolf.hdrive >= max_charge then
+					player.snolf.increment = - increment
 				elseif player.snolf.hdrive <= 0 then
-					player.snolf.increment = 1
+					player.snolf.increment = increment
 				end
-			
+
 				--if player.snolf.timer % 2 == 0 then
 					player.snolf.hdrive = $1 + player.snolf.increment
 				--end
@@ -139,19 +156,23 @@ addHook("ThinkFrame", function()
 			if player.snolf.jumptapping then
 				player.snolf.shots = $1 + 1
 				player.snolf.state = 3
-				P_InstaThrust(player.mo, player.mo.angle, player.snolf.hdrive*FRACUNIT)
-				P_SetObjectMomZ(player.mo, player.snolf.vdrive*FRACUNIT)
+
+				local hspeed = player.snolf.convert_angle(player.snolf.hdrive, player.snolf.max_hrz)
+				local vspeed = player.snolf.convert_angle(player.snolf.vdrive, player.snolf.max_vrt)
+
+				P_InstaThrust(player.mo, player.mo.angle, hspeed*FRACUNIT)
+				P_SetObjectMomZ(player.mo, vspeed*FRACUNIT)
 				player.pflags = $1 | PF_JUMPED --force jumped flag
 				S_StartSound(player.mo, sfx_zoom)
 			else
 				player.snolf.timer = $1 + 1
-				
-				if player.snolf.vdrive >= player.snolf.max_vrt then
-					player.snolf.increment = -1
+
+				if player.snolf.vdrive >= max_charge then
+					player.snolf.increment = -increment
 				elseif player.snolf.vdrive <= 0 then
-					player.snolf.increment = 1
+					player.snolf.increment = increment
 				end
-				
+
 				--if player.snolf.timer % 2 == 0 then
 					player.snolf.vdrive = $1 + player.snolf.increment
 				--end
