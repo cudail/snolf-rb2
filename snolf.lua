@@ -138,6 +138,7 @@ addHook("ThinkFrame", function()
 				player.snolf.vdrive = 0
 				player.snolf.increment = increment
 				S_StartSoundAtVolume(player.mo, sfx_spndsh, 64)
+				player.pflags = $1 | PF_STARTDASH -- Set player to spindash state
 			end
 		elseif player.snolf.state == 1 then -- state 1: picking horizontal force
 			if player.snolf.jumptapping then
