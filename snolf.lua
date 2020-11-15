@@ -136,7 +136,6 @@ addHook("ThinkFrame", function()
 				player.snolf.hdrive = 0
 				player.snolf.vdrive = 0
 				player.snolf.increment = increment
-				player.snolf.timer = 0
 				S_StartSoundAtVolume(player.mo, sfx_spndsh, 64)
 			end
 		elseif player.snolf.state == 1 then
@@ -145,7 +144,6 @@ addHook("ThinkFrame", function()
 				player.snolf.increment = increment
 				S_StartSoundAtVolume(player.mo, sfx_spndsh, 100)
 			else
-				player.snolf.timer = $1 + 1
 
 				if player.snolf.hdrive >= max_charge then
 					player.snolf.increment = - increment
@@ -153,9 +151,7 @@ addHook("ThinkFrame", function()
 					player.snolf.increment = increment
 				end
 
-				--if player.snolf.timer % 2 == 0 then
-					player.snolf.hdrive = $1 + player.snolf.increment
-				--end
+				player.snolf.hdrive = $1 + player.snolf.increment
 			end
 		elseif player.snolf.state == 2 then
 			if player.snolf.jumptapping then
@@ -170,7 +166,6 @@ addHook("ThinkFrame", function()
 				player.pflags = $1 | PF_JUMPED --force jumped flag
 				S_StartSound(player.mo, sfx_zoom)
 			else
-				player.snolf.timer = $1 + 1
 
 				if player.snolf.vdrive >= max_charge then
 					player.snolf.increment = -increment
@@ -178,9 +173,7 @@ addHook("ThinkFrame", function()
 					player.snolf.increment = increment
 				end
 
-				--if player.snolf.timer % 2 == 0 then
-					player.snolf.vdrive = $1 + player.snolf.increment
-				--end
+				player.snolf.vdrive = $1 + player.snolf.increment
 			end
 		elseif player.snolf.state == 3 then
 			if P_IsObjectOnGround(player.mo) and player.speed == 0 then
