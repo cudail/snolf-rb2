@@ -50,7 +50,7 @@ addHook("PreThinkFrame", function()
 		end
 
 		if player.snolf == nil then
-			player.snolf = { shots = 0, state = 0 }
+			player.snolf = { shots = 0, state = 0, spinheld = 0 }
 			player.snolf.convert_angle = function (angle, max_val)
 				return sin(angle - ANGLE_90)*max_val/FRACUNIT/2 + max_val/2
 			end
@@ -68,9 +68,14 @@ addHook("PreThinkFrame", function()
 		end
 
 		-- check if the ability button is being held
-		if player.snolf.spinheld ~= nil and (player.cmd.buttons & BT_USE) then
+		if player.cmd.buttons & BT_USE then
+			player.snolf.spintapped = false
 			player.snolf.spinheld = $1 + 1
+		elseif 0 < player.snolf.spinheld and player.snolf.spinheld < 10 then
+			player.snolf.spintapped = true
+			player.snolf.spinheld = 0
 		else
+			player.snolf.spintapped = false
 			player.snolf.spinheld = 0
 		end
 	end
@@ -104,6 +109,10 @@ addHook("ThinkFrame", function()
 
 		if player.pflags & PF_SLIDING == 0 then --unless player is on a slide
 			player.pflags = $1 | PF_JUMPSTASIS -- lock player jump
+		end
+
+		if player.snolf.spintapped then
+			player.mo.angle = $1 + ANGLE_180
 		end
 
 		if player.snolf.spinheld > 60 and player.snolf.state == 3 then
