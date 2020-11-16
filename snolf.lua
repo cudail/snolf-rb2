@@ -71,11 +71,8 @@ addHook("PreThinkFrame", function()
 		if player.cmd.buttons & BT_USE then
 			player.snolf.spintapped = false
 			player.snolf.spinheld = $1 + 1
-		elseif 0 < player.snolf.spinheld and player.snolf.spinheld < 10 then
-			player.snolf.spintapped = true
-			player.snolf.spinheld = 0
 		else
-			player.snolf.spintapped = false
+			player.snolf.spintapped = 0 < player.snolf.spinheld and player.snolf.spinheld < 10
 			player.snolf.spinheld = 0
 		end
 	end
