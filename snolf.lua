@@ -107,8 +107,7 @@ addHook("ThinkFrame", function()
 
 		player.mo.state = S_PLAY_ROLL --force rolling animation
 
-		if player.snolf.spinheld > 60 and player.snolf.mull
-			and player.speed ~= 0 and player.mo.momz ~= 0 then
+		if player.snolf.spinheld > 60 and player.snolf.state == 3 then
 			P_TeleportMove(player.mo,
 				player.snolf.mull.x,
 				player.snolf.mull.y,
