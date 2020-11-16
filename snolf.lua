@@ -76,6 +76,13 @@ addHook("PreThinkFrame", function()
 			player.snolf.spintapped = 0 < player.snolf.spinheld and player.snolf.spinheld < 10
 			player.snolf.spinheld = 0
 		end
+
+		-- check if the first custom action button is being held
+		if player.cmd.buttons & BT_CUSTOM1 then
+			player.snolf.ca1held = $1 + 1
+		else
+			player.snolf.ca1held = 0
+		end
 	end
 
 end)
@@ -103,14 +110,26 @@ addHook("ThinkFrame", function()
 		local increment = ANG1 + ANG2
 		local max_charge = ANGLE_180
 
+		local mull = player.snolf.mull -- list of mulligan points
+
 		player.mo.state = S_PLAY_ROLL --force rolling animation
 
 		if player.snolf.spintapped then
 			player.mo.angle = $1 + ANGLE_180
 		end
 
-		if player.snolf.spinheld > 60 and player.snolf.state == 3 then
-			local mull = player.snolf.mull
+
+		if player.snolf.ca1held > 60 and #mull > 1 then
+			table.remove(mull, #mull)
+			P_TeleportMove(player.mo,
+				mull[#mull].x,
+				mull[#mull].y,
+				mull[#mull].z)
+			P_InstaThrust(player.mo, 0, 0)
+			P_SetObjectMomZ(player.mo, 0)
+			player.snolf.ca1held = 0
+			S_StartSound(player.mo, sfx_mixup)
+		elseif player.snolf.spinheld > 60 and player.snolf.state == 3 then
 			P_TeleportMove(player.mo,
 				mull[#mull].x,
 				mull[#mull].y,
@@ -133,19 +152,18 @@ addHook("ThinkFrame", function()
 		end
 
 
-		print(#player.snolf.mull)
 		-- if the player is on the ground and stationary
 		if P_IsObjectOnGround(player.mo) and player.speed == 0 then
-			local last_mull = player.snolf.mull[#player.snolf.mull]
+			local last_mull = mull[#mull]
 			local pmo = player.mo
 			if not last_mull or
 				(pmo.x ~= last_mull.x or pmo.y ~= last_mull.y or pmo.z ~= last_mull.z) then
 				-- if we already have ten mulligan points clear one out
-				if #player.snolf.mull > 9 then
-					table.remove(player.snolf.mull, 1)
+				if #mull > 9 then
+					table.remove(mull, 1)
 				end
 				-- add a mulligan point
-				table.insert(player.snolf.mull,{ --set mulligan spot
+				table.insert(mull,{ --set mulligan spot
 					x = player.mo.x,
 					y = player.mo.y,
 					z = player.mo.z
