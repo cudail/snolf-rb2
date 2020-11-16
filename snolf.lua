@@ -73,10 +73,6 @@ addHook("PreThinkFrame", function()
 		else
 			player.snolf.spinheld = 0
 		end
-
-		-- swallow player input
-		player.cmd.forwardmove = 0
-		player.cmd.sidemove = 0
 	end
 
 end)
