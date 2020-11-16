@@ -9,4 +9,4 @@ accelstart = 0
 acceleration = 0
 prefcolor = Blue
 Supercolor = Gold
-jumpfactor = 1.0
+jumpfactor = 0
