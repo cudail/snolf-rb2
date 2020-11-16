@@ -101,7 +101,10 @@ addHook("ThinkFrame", function()
 		local max_charge = ANGLE_180
 
 		player.mo.state = S_PLAY_ROLL --force rolling animation
-		player.pflags = $1 | PF_JUMPSTASIS -- lock player jump
+
+		if player.pflags & PF_SLIDING == 0 then --unless player is on a slide
+			player.pflags = $1 | PF_JUMPSTASIS -- lock player jump
+		end
 
 		if player.snolf.spinheld > 60 and player.snolf.state == 3 then
 			P_TeleportMove(player.mo,
@@ -115,7 +118,9 @@ addHook("ThinkFrame", function()
 		end
 
 		if P_IsObjectOnGround(player.mo) then
-			player.pflags = $1 | PF_SPINNING --force spinning flag
+			if player.pflags & PF_SLIDING == 0 then --unless player is on a slide
+				player.pflags = $1 | PF_SPINNING --force spinning flag
+			end
 
 			if player.speed == 0 then --player is stationary
 				player.snolf.mull = { --set mulligan spot
