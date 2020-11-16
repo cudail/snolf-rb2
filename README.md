@@ -20,6 +20,19 @@ Life count icon from Mario Golf: Advance Tour.
 
 ## Changelog
 
+v0.5
+
+* Added Quick Turn ability if spin button is tapped
+* Relaxed Mulligan conditions to prevent potential softlocks
+* Charging a shot now counts as a spindash and allows player to activate spindash switches
+* Snolf's code no longer blocks player input allowing several previously broken mechanics to work
+* Force PF_JUMPSTASIS flag to 1 as the new way of preventing Snolf from jumping
+* Set Snolf's speed and acceleration to 0 as the new way of preventing Snolf from moving
+* Added checks to allow player control when on a waterslide
+* Updated character select text
+* Code cleanup
+* Every level in the main story mode should now, in theory, be completable
+
 v0.4
 * Power meter now moves sinusoidally instead of linearlly
 * Mulligan disallowed if stationary
