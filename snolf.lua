@@ -77,7 +77,6 @@ addHook("PreThinkFrame", function()
 		-- swallow player input
 		player.cmd.forwardmove = 0
 		player.cmd.sidemove = 0
-		player.cmd.buttons = $1 & !BT_JUMP
 	end
 
 end)
@@ -106,6 +105,7 @@ addHook("ThinkFrame", function()
 		local max_charge = ANGLE_180
 
 		player.mo.state = S_PLAY_ROLL --force rolling animation
+		player.pflags = $1 | PF_JUMPSTASIS -- lock player jump
 
 		if player.snolf.spinheld > 60 and player.snolf.state == 3 then
 			P_TeleportMove(player.mo,
