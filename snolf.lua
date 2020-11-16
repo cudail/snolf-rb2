@@ -104,10 +104,6 @@ addHook("ThinkFrame", function()
 
 		player.mo.state = S_PLAY_ROLL --force rolling animation
 
-		if player.pflags & PF_SLIDING == 0 then --unless player is on a slide
-			player.pflags = $1 | PF_JUMPSTASIS -- lock player jump
-		end
-
 		if player.snolf.spintapped then
 			player.mo.angle = $1 + ANGLE_180
 		end
@@ -123,18 +119,24 @@ addHook("ThinkFrame", function()
 			S_StartSound(player.mo, sfx_mixup)
 		end
 
-		if P_IsObjectOnGround(player.mo) then
-			if player.pflags & PF_SLIDING == 0 then --unless player is on a slide
-				player.pflags = $1 | PF_SPINNING --force spinning flag
-			end
+		-- if the player is on the ground and not on a waterslide
+		if P_IsObjectOnGround(player.mo) and (player.pflags & PF_SLIDING == 0) then
+			player.jumpfactor = 0 -- set jump height to zero
+			player.pflags = $1 | PF_SPINNING --force spinning flag
+		elseif player.jumpfactor != 1
+			-- set jump height to normal
+			-- this is to allow the player to jump out waterslides and
+			-- things like the Castle Eggman catapults
+			player.jumpfactor = 1 * FRACUNIT
+		end
 
-			if player.speed == 0 then --player is stationary
-				player.snolf.mull = { --set mulligan spot
-					x = player.mo.x,
-					y = player.mo.y,
-					z = player.mo.z
-				}
-			end
+		-- if the player is on the ground and stationary
+		if P_IsObjectOnGround(player.mo) and player.speed == 0 then
+			player.snolf.mull = { --set mulligan spot
+				x = player.mo.x,
+				y = player.mo.y,
+				z = player.mo.z
+			}
 		end
 
 		if player.snolf.state == 0 then -- state 0: can start a shot
