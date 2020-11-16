@@ -4,9 +4,10 @@ DisplayName = Snolf
 TagTextColor = SKINCOLOR_APRICOT
 TagOutlineColor = SKINCOLOR_RASPBERRY
 OppositeColor = SKINCOLOR_RASPBERRY
-PlayerText = Snolf cannot move normally and controls like a golf game. Aim with the camera and use the jump button to start charging a shot. Use the jump button again to time your shot power.
+PlayerText = Snolf cannot move normally and controls like a golf game. Aim with the camera and use the jump button to time your shots' horizontal and vertical power.
 
 ^1Ability:^0 Mulligan
 Hold the spin button to go back to your last resting place.
 
-^9Tip:^0 Not all level may not be completable with Snolf.
+^1Ability:^0 Quick Turn
+Tap the spin button to do a 180 degree turn.
