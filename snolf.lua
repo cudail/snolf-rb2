@@ -51,6 +51,7 @@ addHook("PreThinkFrame", function()
 
 		if player.snolf == nil then
 			player.snolf = { shots = 0, state = 0, spinheld = 0 }
+			player.snolf.mull = {}
 			player.snolf.convert_angle = function (angle, max_val)
 				return sin(angle - ANGLE_90)*max_val/FRACUNIT/2 + max_val/2
 			end
@@ -109,10 +110,11 @@ addHook("ThinkFrame", function()
 		end
 
 		if player.snolf.spinheld > 60 and player.snolf.state == 3 then
+			local mull = player.snolf.mull
 			P_TeleportMove(player.mo,
-				player.snolf.mull.x,
-				player.snolf.mull.y,
-				player.snolf.mull.z)
+				mull[#mull].x,
+				mull[#mull].y,
+				mull[#mull].z)
 			P_InstaThrust(player.mo, 0, 0)
 			P_SetObjectMomZ(player.mo, 0)
 			player.snolf.spinheld = 0
@@ -130,13 +132,25 @@ addHook("ThinkFrame", function()
 			player.jumpfactor = 1 * FRACUNIT
 		end
 
+
+		print(#player.snolf.mull)
 		-- if the player is on the ground and stationary
 		if P_IsObjectOnGround(player.mo) and player.speed == 0 then
-			player.snolf.mull = { --set mulligan spot
-				x = player.mo.x,
-				y = player.mo.y,
-				z = player.mo.z
-			}
+			local last_mull = player.snolf.mull[#player.snolf.mull]
+			local pmo = player.mo
+			if not last_mull or
+				(pmo.x ~= last_mull.x or pmo.y ~= last_mull.y or pmo.z ~= last_mull.z) then
+				-- if we already have ten mulligan points clear one out
+				if #player.snolf.mull > 9 then
+					table.remove(player.snolf.mull, 1)
+				end
+				-- add a mulligan point
+				table.insert(player.snolf.mull,{ --set mulligan spot
+					x = player.mo.x,
+					y = player.mo.y,
+					z = player.mo.z
+				})
+			end
 		end
 
 		if player.snolf.state == 0 then -- state 0: can start a shot
