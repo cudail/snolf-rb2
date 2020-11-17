@@ -296,3 +296,10 @@ addHook("ThinkFrame", function()
 		end
 	end
 end)
+
+addHook("MobjMoveBlocked", function(mo)
+	if mo.skin ~= "snolf" then return false end
+
+	P_BounceMove(mo)
+	return true
+end)
