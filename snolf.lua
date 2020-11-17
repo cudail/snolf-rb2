@@ -6,6 +6,10 @@ hud.add(function(v, player, camera)
 		v.drawString(16, 164, "SHOTS", V_YELLOWMAP)
 		v.drawString(64, 164, player.snolf.shots)
 
+		if player.snolf.nofail then
+			v.drawString(20, 176, "*", V_YELLOWMAP)
+		end
+
 		if player.snolf.state == 1 or player.snolf.state == 2 then
 			local meter = v.getSpritePatch(SPR_SFMR)  -- shot meter sprite
 			local harrow = v.getSpritePatch(SPR_SFAH) -- shot meter arrow sprite 1
@@ -50,10 +54,24 @@ addHook("PreThinkFrame", function()
 		end
 
 		if player.snolf == nil then
-			player.snolf = { shots = 0, state = 0, spinheld = 0, ca2held = 0 }
+			player.snolf = {
+				shots = 0, state = 0, spinheld = 0, ca2held = 0,
+				nofail = false, player = player
+			}
 			player.snolf.mull = {}
 			player.snolf.convert_angle = function (angle, max_val)
 				return sin(angle - ANGLE_90)*max_val/FRACUNIT/2 + max_val/2
+			end
+			player.snolf.go_to_mull = function ()
+				local mull = player.snolf.mull
+				P_TeleportMove(player.mo,
+					mull[#mull].x,
+					mull[#mull].y,
+					mull[#mull].z)
+				P_InstaThrust(player.mo, 0, 0)
+				P_SetObjectMomZ(player.mo, 0)
+				player.snolf.spinheld = 0
+				S_StartSound(player.mo, sfx_mixup)
 			end
 		end
 
@@ -116,6 +134,7 @@ addHook("ThinkFrame", function()
 		local max_hrz = 50 --max horizontal release speed
 		local max_vrt = 50 --max vertical release speed
 
+		local button_hold_threshold = 60
 
 		-- I want the meter timing to be sinusoidal so we will be using trigonometry
 		local increment = ANG1 + ANG2
@@ -134,26 +153,25 @@ addHook("ThinkFrame", function()
 			P_PlayLivesJingle(player)
 		end
 
-
-		if player.snolf.ca1held > 60 and #mull > 1 then
+		print(player.playerstate)
+		if player.playerstate == PST_REBORN and player.snolf.nofail then
+			player.lives = $1 +1
+			player.snolf.isbeingreborn = true
+			player.snolf.go_to_mull()
+		elseif player.snolf.isbeingreborn and player.playerstate == PST_LIVE then
+			player.snolf.isbeingreborn = false
+			player.snolf.go_to_mull()
+		elseif player.snolf.ca1held > button_hold_threshold and #mull > 1 then
 			table.remove(mull, #mull)
-			P_TeleportMove(player.mo,
-				mull[#mull].x,
-				mull[#mull].y,
-				mull[#mull].z)
-			P_InstaThrust(player.mo, 0, 0)
-			P_SetObjectMomZ(player.mo, 0)
-			player.snolf.ca1held = 0
-			S_StartSound(player.mo, sfx_mixup)
-		elseif player.snolf.spinheld > 60 and player.snolf.state == 3 then
-			P_TeleportMove(player.mo,
-				mull[#mull].x,
-				mull[#mull].y,
-				mull[#mull].z)
-			P_InstaThrust(player.mo, 0, 0)
-			P_SetObjectMomZ(player.mo, 0)
-			player.snolf.spinheld = 0
-			S_StartSound(player.mo, sfx_mixup)
+			player.snolf.go_to_mull()
+		elseif player.snolf.spinheld > button_hold_threshold and player.snolf.state == 3 then
+			player.snolf.go_to_mull()
+		end
+
+		if player.snolf.ca2held > button_hold_threshold * 5 then
+			player.snolf.ca2held = 0
+			player.snolf.nofail = not $1
+			S_StartSound(player.mo, sfx_kc46)
 		end
 
 		-- if the player is on the ground and not on a waterslide
