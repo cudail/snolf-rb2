@@ -55,7 +55,7 @@ addHook("PreThinkFrame", function()
 
 		if player.snolf == nil then
 			player.snolf = {
-				shots = 0, state = 0, spinheld = 0, ca2held = 0,
+				shots = 0, state = 0, spinheld = 0, ca2held = 0, ca3held = 0,
 				nofail = false, player = player
 			}
 			player.snolf.mull = {}
@@ -112,6 +112,15 @@ addHook("PreThinkFrame", function()
 			player.snolf.ca2tapped = 0 < player.snolf.ca2held and player.snolf.ca2held < btn_tap_threshold
 			player.snolf.ca2held = 0
 		end
+
+		-- check if the third custom action button is being held
+		if player.cmd.buttons & BT_CUSTOM3 then
+			player.snolf.ca3tapped = false
+			player.snolf.ca3held = $1 + 1
+		else
+			player.snolf.ca3tapped = 0 < player.snolf.ca3held and player.snolf.ca3held < btn_tap_threshold
+			player.snolf.ca3held = 0
+		end
 	end
 
 end)
@@ -142,6 +151,9 @@ addHook("ThinkFrame", function()
 
 		local mull = player.snolf.mull -- list of mulligan points
 
+		local water_air_timer = 1050
+		local space_air_timer = 403
+
 		player.mo.state = S_PLAY_ROLL --force rolling animation
 
 		if player.snolf.spintapped then -- quick flip
@@ -151,6 +163,17 @@ addHook("ThinkFrame", function()
 		if player.snolf.ca2tapped then -- free life
 			player.lives = $1 +1
 			P_PlayLivesJingle(player)
+		end
+
+		if player.snolf.ca3tapped and
+			(player.powers[pw_underwater] > 0 or player.powers[pw_spacetime] > 0) then -- refill air
+			if player.powers[pw_underwater] > 0 then
+				player.powers[pw_underwater] = water_air_timer
+			end
+			if player.powers[pw_spacetime] > 0 then
+				player.powers[pw_spacetime] = space_air_timer
+			end
+			S_StartSoundAtVolume(player.mo, sfx_gasp, 64)
 		end
 
 		if player.playerstate == PST_REBORN and player.snolf.nofail then
