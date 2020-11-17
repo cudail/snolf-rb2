@@ -297,9 +297,17 @@ addHook("ThinkFrame", function()
 	end
 end)
 
+
+-- Hook to override default collision and make Snolf bounce off walls
 addHook("MobjMoveBlocked", function(mo)
 	if mo.skin ~= "snolf" then return false end
 
+	-- P_BounceMove doesn't bounce the player if they are on the ground 
+	-- To get around this impart the tiniest possible vertical momentum the
+	-- engine will allow so Snolf is technically in the air for a single frame
+	if P_IsObjectOnGround(mo) then
+		P_SetObjectMomZ(mo, 1)
+	end
 	P_BounceMove(mo)
 	return true
 end)
