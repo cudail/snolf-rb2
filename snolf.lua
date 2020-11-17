@@ -50,7 +50,7 @@ addHook("PreThinkFrame", function()
 		end
 
 		if player.snolf == nil then
-			player.snolf = { shots = 0, state = 0, spinheld = 0 }
+			player.snolf = { shots = 0, state = 0, spinheld = 0, ca2held = 0 }
 			player.snolf.mull = {}
 			player.snolf.convert_angle = function (angle, max_val)
 				return sin(angle - ANGLE_90)*max_val/FRACUNIT/2 + max_val/2
@@ -68,12 +68,14 @@ addHook("PreThinkFrame", function()
 			player.snolf.jumptapping = false
 		end
 
+		local btn_tap_threshold = 10
+
 		-- check if the ability button is being held
 		if player.cmd.buttons & BT_USE then
 			player.snolf.spintapped = false
 			player.snolf.spinheld = $1 + 1
 		else
-			player.snolf.spintapped = 0 < player.snolf.spinheld and player.snolf.spinheld < 10
+			player.snolf.spintapped = 0 < player.snolf.spinheld and player.snolf.spinheld < btn_tap_threshold
 			player.snolf.spinheld = 0
 		end
 
@@ -82,6 +84,15 @@ addHook("PreThinkFrame", function()
 			player.snolf.ca1held = $1 + 1
 		else
 			player.snolf.ca1held = 0
+		end
+
+		-- check if the second custom action button is being held
+		if player.cmd.buttons & BT_CUSTOM2 then
+			player.snolf.ca2tapped = false
+			player.snolf.ca2held = $1 + 1
+		else
+			player.snolf.ca2tapped = 0 < player.snolf.ca2held and player.snolf.ca2held < btn_tap_threshold
+			player.snolf.ca2held = 0
 		end
 	end
 
@@ -114,8 +125,13 @@ addHook("ThinkFrame", function()
 
 		player.mo.state = S_PLAY_ROLL --force rolling animation
 
-		if player.snolf.spintapped then
+		if player.snolf.spintapped then -- quick flip
 			player.mo.angle = $1 + ANGLE_180
+		end
+
+		if player.snolf.ca2tapped then -- free life
+			player.lives = $1 +1
+			P_PlayLivesJingle(player)
 		end
 
 
