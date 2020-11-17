@@ -56,7 +56,7 @@ addHook("PreThinkFrame", function()
 		if player.snolf == nil then
 			player.snolf = {
 				shots = 0, state = 0, spinheld = 0, ca2held = 0, ca3held = 0,
-				nofail = false, player = player
+				nofail = false, nodrown = false, player = player
 			}
 			player.snolf.mull = {}
 			player.snolf.convert_angle = function (angle, max_val)
@@ -165,15 +165,23 @@ addHook("ThinkFrame", function()
 			P_PlayLivesJingle(player)
 		end
 
-		if player.snolf.ca3tapped and
-			(player.powers[pw_underwater] > 0 or player.powers[pw_spacetime] > 0) then -- refill air
-			if player.powers[pw_underwater] > 0 then
-				player.powers[pw_underwater] = water_air_timer
+		if player.powers[pw_underwater] > 0 or player.powers[pw_spacetime] > 0 then
+			if player.snolf.nodrown then
+				if player.powers[pw_underwater] > 0 then
+					player.powers[pw_underwater] = water_air_timer
+				end
+				if player.powers[pw_spacetime] > 0 then
+					player.powers[pw_spacetime] = space_air_timer
+				end
+			elseif player.snolf.ca3tapped then
+				if player.powers[pw_underwater] > 0 then
+					player.powers[pw_underwater] = water_air_timer
+				end
+				if player.powers[pw_spacetime] > 0 then
+					player.powers[pw_spacetime] = space_air_timer
+				end
+				S_StartSoundAtVolume(player.mo, sfx_gasp, 64)
 			end
-			if player.powers[pw_spacetime] > 0 then
-				player.powers[pw_spacetime] = space_air_timer
-			end
-			S_StartSoundAtVolume(player.mo, sfx_gasp, 64)
 		end
 
 		if player.playerstate == PST_REBORN and player.snolf.nofail then
@@ -194,6 +202,12 @@ addHook("ThinkFrame", function()
 			player.snolf.ca2held = 0
 			player.snolf.nofail = not $1
 			S_StartSound(player.mo, sfx_kc46)
+		end
+
+		if player.snolf.ca3held > button_hold_threshold * 5 then
+			player.snolf.ca3held = 0
+			player.snolf.nodrown = not $1
+			S_StartSound(player.mo, sfx_ideya)
 		end
 
 		-- if the player is on the ground and not on a waterslide
