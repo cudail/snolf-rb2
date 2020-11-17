@@ -153,9 +153,8 @@ addHook("ThinkFrame", function()
 			P_PlayLivesJingle(player)
 		end
 
-		print(player.playerstate)
 		if player.playerstate == PST_REBORN and player.snolf.nofail then
-			player.lives = $1 +1
+			player.lives = $1 + 1
 			player.snolf.isbeingreborn = true
 			player.snolf.go_to_mull()
 		elseif player.snolf.isbeingreborn and player.playerstate == PST_LIVE then
