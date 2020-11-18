@@ -64,14 +64,16 @@ addHook("PreThinkFrame", function()
 			end
 			player.snolf.go_to_mull = function ()
 				local mull = player.snolf.mull
-				P_TeleportMove(player.mo,
-					mull[#mull].x,
-					mull[#mull].y,
-					mull[#mull].z)
-				P_InstaThrust(player.mo, 0, 0)
-				P_SetObjectMomZ(player.mo, 0)
-				player.snolf.spinheld = 0
-				S_StartSound(player.mo, sfx_mixup)
+				if mull and #mull > 0 then
+					P_TeleportMove(player.mo,
+						mull[#mull].x,
+						mull[#mull].y,
+						mull[#mull].z)
+					P_InstaThrust(player.mo, 0, 0)
+					P_SetObjectMomZ(player.mo, 0)
+					player.snolf.spinheld = 0
+					S_StartSound(player.mo, sfx_mixup)
+				end
 			end
 		end
 
@@ -86,43 +88,31 @@ addHook("PreThinkFrame", function()
 			player.snolf.jumptapping = false
 		end
 
-		local btn_tap_threshold = 10
-
 		-- check if the ability button is being held
 		if player.cmd.buttons & BT_USE then
-			player.snolf.spintapped = false
 			player.snolf.spinheld = $1 + 1
 		else
-			player.snolf.spintapped = 0 < player.snolf.spinheld and player.snolf.spinheld < btn_tap_threshold
 			player.snolf.spinheld = 0
 		end
 
-		-- check if the first custom action button is being held
-		if player.cmd.buttons & BT_CUSTOM1 then
-			player.snolf.ca1held = $1 + 1
+		-- check if the first custom ability button was just tapped
+		if not (player.cmd.buttons & BT_CUSTOM1) then
+			player.snolf.ca1ready = true
+			player.snolf.ca1tapped = false
+		elseif player.snolf.ca1ready then
+			player.snolf.ca1tapped = true
+			player.snolf.ca1ready = false
 		else
-			player.snolf.ca1held = 0
+			player.snolf.ca1tapped = false
 		end
 
 		-- check if the second custom action button is being held
 		if player.cmd.buttons & BT_CUSTOM2 then
-			player.snolf.ca2tapped = false
 			player.snolf.ca2held = $1 + 1
 		else
-			player.snolf.ca2tapped = 0 < player.snolf.ca2held and player.snolf.ca2held < btn_tap_threshold
 			player.snolf.ca2held = 0
 		end
-
-		-- check if the third custom action button is being held
-		if player.cmd.buttons & BT_CUSTOM3 then
-			player.snolf.ca3tapped = false
-			player.snolf.ca3held = $1 + 1
-		else
-			player.snolf.ca3tapped = 0 < player.snolf.ca3held and player.snolf.ca3held < btn_tap_threshold
-			player.snolf.ca3held = 0
-		end
 	end
-
 end)
 
 
@@ -156,7 +146,7 @@ addHook("ThinkFrame", function()
 
 		player.mo.state = S_PLAY_ROLL --force rolling animation
 
-		if player.snolf.spintapped then -- quick flip
+		if player.snolf.ca1tapped then -- quick flip
 			player.mo.angle = $1 + ANGLE_180
 		end
 
@@ -184,31 +174,36 @@ addHook("ThinkFrame", function()
 			end
 		end
 
-		if player.playerstate == PST_REBORN and player.snolf.nofail then
-			player.lives = $1 + 1
-			player.snolf.isbeingreborn = true
-			player.snolf.go_to_mull()
-		elseif player.snolf.isbeingreborn and player.playerstate == PST_LIVE then
-			player.snolf.isbeingreborn = false
-			player.snolf.go_to_mull()
-		elseif player.snolf.ca1held > button_hold_threshold and #mull > 1 then
-			table.remove(mull, #mull)
-			player.snolf.go_to_mull()
-		elseif player.snolf.spinheld > button_hold_threshold and player.snolf.state == 3 then
-			player.snolf.go_to_mull()
+		-- if player.playerstate == PST_REBORN and player.snolf.nofail then
+		-- 	player.lives = $1 + 1
+		-- 	player.snolf.isbeingreborn = true
+		-- 	player.snolf.go_to_mull()
+		-- elseif player.snolf.isbeingreborn and player.playerstate == PST_LIVE then
+		-- 	player.snolf.isbeingreborn = false
+		-- 	player.snolf.go_to_mull()
+
+		if player.snolf.spinheld > button_hold_threshold then
+			if player.cmd.forwardmove < -20 then
+				table.remove(mull, #mull)
+				player.snolf.go_to_mull()
+				player.snolf.spinheld = 0
+			elseif player.snolf.state == 3
+				player.snolf.go_to_mull()
+				player.snolf.spinheld = 0
+			end
 		end
 
-		if player.snolf.ca2held > button_hold_threshold * 5 then
-			player.snolf.ca2held = 0
-			player.snolf.nofail = not $1
-			S_StartSound(player.mo, sfx_kc46)
-		end
+-- 		if player.snolf.ca2held > button_hold_threshold * 5 then
+-- 			player.snolf.ca2held = 0
+-- 			player.snolf.nofail = not $1
+-- 			S_StartSound(player.mo, sfx_kc46)
+-- 		end
 
-		if player.snolf.ca3held > button_hold_threshold * 5 then
-			player.snolf.ca3held = 0
-			player.snolf.nodrown = not $1
-			S_StartSound(player.mo, sfx_ideya)
-		end
+-- 		if player.snolf.ca3held > button_hold_threshold * 5 then
+-- 			player.snolf.ca3held = 0
+-- 			player.snolf.nodrown = not $1
+-- 			S_StartSound(player.mo, sfx_ideya)
+-- 		end
 
 		-- if the player is on the ground and not on a waterslide
 		if P_IsObjectOnGround(player.mo) and (player.pflags & PF_SLIDING == 0) then
