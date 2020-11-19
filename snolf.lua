@@ -61,7 +61,7 @@ addHook("PreThinkFrame", function()
 			player.snolf.mull = {}
 			player.snolf.cheats = {
 				liferefund = false, mullpointondie = false,
-				nodrown = false, groundcontrol = false
+				nodrown = false, groundcontrol = false, inputs = ''
 			}
 			player.snolf.convert_angle = function (angle, max_val)
 				return sin(angle - ANGLE_90)*max_val/FRACUNIT/2 + max_val/2
@@ -109,12 +109,69 @@ addHook("PreThinkFrame", function()
 			player.snolf.ca1tapped = false
 		end
 
-		-- check if the second custom action button is being held
-		if player.cmd.buttons & BT_CUSTOM2 then
-			player.snolf.ca2held = $1 + 1
+
+		-- check directional inputs for inputting cheats
+		if player.cmd.forwardmove < 40 then
+			player.snolf.upready = true
+			player.snolf.uptapped = false
+		elseif player.snolf.upready then
+			player.snolf.uptapped = true
+			player.snolf.upready = false
 		else
-			player.snolf.ca2held = 0
+			player.snolf.uptapped = false
 		end
+
+		if player.cmd.forwardmove > -40 then
+			player.snolf.dnready = true
+			player.snolf.dntapped = false
+		elseif player.snolf.dnready then
+			player.snolf.dntapped = true
+			player.snolf.dnready = false
+		else
+			player.snolf.dntapped = false
+		end
+
+		if player.cmd.sidemove < 40 then
+			player.snolf.rtready = true
+			player.snolf.rttapped = false
+		elseif player.snolf.rtready then
+			player.snolf.rttapped = true
+			player.snolf.rtready = false
+		else
+			player.snolf.rttapped = false
+		end
+
+		if player.cmd.sidemove > -40 then
+			player.snolf.lfready = true
+			player.snolf.lftapped = false
+		elseif player.snolf.lfready then
+			player.snolf.lftapped = true
+			player.snolf.lfready = false
+		else
+			player.snolf.lftapped = false
+		end
+
+		local cht = player.snolf.cheats
+
+		-- check if the second custom action button is held we are in cheat entering mode
+		if player.cmd.buttons & BT_CUSTOM2 then
+			if player.snolf.uptapped then
+				cht.inputs = $1 .. 'u'
+			elseif player.snolf.dntapped then
+				cht.inputs = $1 .. 'd'
+			elseif player.snolf.lftapped then
+				cht.inputs = $1 .. 'l'
+			elseif player.snolf.rttapped then
+				cht.inputs = $1 .. 'r'
+			end
+
+			if #cht.inputs > 10 then -- only keep track of the last ten inputs
+				cht.inputs = string.sub($1, #$1 - 10)
+			end
+		else
+			cht.inputs = ''
+		end
+		print(player.snolf.cheats.inputs)
 	end
 end)
 
@@ -194,19 +251,25 @@ addHook("ThinkFrame", function()
 			end
 		end
 
--- 		if player.snolf.ca2held > button_hold_threshold * 5 then
--- 			player.snolf.ca2held = 0
--- 			player.snolf.nofail = not $1
--- 			S_StartSound(player.mo, sfx_kc46)
--- 		end
+		local chtin = player.snolf.cheats.inputs
 
--- 		if player.snolf.ca3held > button_hold_threshold * 5 then
--- 			player.snolf.ca3held = 0
--- 			player.snolf.nodrown = not $1
--- 			S_StartSound(player.mo, sfx_ideya)
--- 		end
-
-
+		if (string.sub(chtin, #chtin-3)) == 'udlr' then
+			S_StartSound(player.mo, sfx_kc46)
+			player.snolf.cheats.inputs = ''
+			player.snolf.cheats.refundlife = not $1
+		elseif (string.sub(chtin, #chtin-7)) == 'uudduuuu' then
+			S_StartSound(player.mo, sfx_kc46)
+			player.snolf.cheats.inputs = ''
+			player.snolf.cheats.mullpointondie = not $1
+		elseif (string.sub(chtin, #chtin-7)) == 'ullduudr' then
+			S_StartSound(player.mo, sfx_kc46)
+			player.snolf.cheats.inputs = ''
+			player.snolf.cheats.groundcontrol = not $1
+		elseif (string.sub(chtin, #chtin-8)) == 'lllrrruuu' then
+			S_StartSound(player.mo, sfx_ideya)
+			player.snolf.cheats.inputs = ''
+			player.snolf.cheats.nodrown = not $1
+		end
 
 
 		if player.snolf.inair and P_IsObjectOnGround(pmo) then -- we have just landed
