@@ -2,8 +2,6 @@
 
 Snolf character mod for Sonic Robo Blast 2 that allows you to play it like golf. Snolf cannot move normally and controls like a golf game. Aim with the camera and use the jump button to start charging a shot. Use the jump button again to time your shot power.
 
-Not all levels may be completable.
-
 
 ## Installation
 
