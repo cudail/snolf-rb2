@@ -4,7 +4,14 @@ Snolf character mod for Sonic Robo Blast 2 that allows you to play it like golf.
 
 Not all levels may be completable.
 
+
+## Installation
+
+Download and install Sonic Robo Blast 2: https://www.srb2.org/
+
 See the Sonic Robo Blast 2 wiki for how to load a WAD file: https://wiki.srb2.org/wiki/WAD_file#Loading_WAD_files
+
+Sonic Robo Blast 2 does not allow saving with addons loaded by default. In order to enable saving use V_customsave-v1.soc: https://mb.srb2.org/showthread.php?t=45730
 
 
 ## Credits
