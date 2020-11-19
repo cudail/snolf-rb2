@@ -20,6 +20,13 @@ Life count icon from Mario Golf: Advance Tour.
 
 ## Changelog
 
+v0.6
+* Snolf now rebounds off walls and floors
+* Snolf can now revert to previous resting spots with the mulligan
+* Added cheats
+* Instead of setting forcing PF_JUMPSTASIS Snolf's jumpfactor stat is changed based on situation to allow certain level features to work
+* Lots of refactoring
+
 v0.5
 
 * Added Quick Turn ability if spin button is tapped
