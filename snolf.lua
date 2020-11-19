@@ -146,10 +146,12 @@ addHook("ThinkFrame", function()
 		local water_air_timer = 1050
 		local space_air_timer = 403
 
-		player.mo.state = S_PLAY_ROLL --force rolling animation
+		local pmo = player.mo
+
+		pmo.state = S_PLAY_ROLL --force rolling animation
 
 		if player.snolf.ca1tapped then -- quick flip
-			player.mo.angle = $1 + ANGLE_180
+			pmo.angle = $1 + ANGLE_180
 		end
 
 		if player.snolf.ca2tapped then -- free life
@@ -181,7 +183,7 @@ addHook("ThinkFrame", function()
 		if player.snolf.spinheld == button_hold_threshold then
 			local m = mull[#mull]
 			if m then
-				if player.mo.x == m.x and player.mo.y == m.y and player.mo.z == m.z then
+				if pmo.x == m.x and pmo.y == m.y and pmo.z == m.z then
 					table.remove(mull, #mull)
 				end
 				player.snolf.go_to_mull()
@@ -201,7 +203,7 @@ addHook("ThinkFrame", function()
 -- 		end
 
 		-- if the player is on the ground and not on a waterslide
-		if P_IsObjectOnGround(player.mo) and (player.pflags & PF_SLIDING == 0) then
+		if P_IsObjectOnGround(pmo) and (player.pflags & PF_SLIDING == 0) then
 			player.jumpfactor = 0 -- set jump height to zero
 			player.pflags = $1 | PF_SPINNING --force spinning flag
 		elseif player.jumpfactor != 1
@@ -213,9 +215,8 @@ addHook("ThinkFrame", function()
 
 
 		-- if the player is on the ground and stationary
-		if P_IsObjectOnGround(player.mo) and player.speed == 0 then
+		if P_IsObjectOnGround(pmo) and player.speed == 0 then
 			local last_mull = mull[#mull]
-			local pmo = player.mo
 			if not last_mull or
 				(pmo.x ~= last_mull.x or pmo.y ~= last_mull.y or pmo.z ~= last_mull.z) then
 				-- if we already have ten mulligan points clear one out
@@ -224,9 +225,9 @@ addHook("ThinkFrame", function()
 				end
 				-- add a mulligan point
 				table.insert(mull,{ --set mulligan spot
-					x = player.mo.x,
-					y = player.mo.y,
-					z = player.mo.z
+					x = pmo.x,
+					y = pmo.y,
+					z = pmo.z
 				})
 			end
 		end
@@ -237,14 +238,14 @@ addHook("ThinkFrame", function()
 				player.snolf.hdrive = 0
 				player.snolf.vdrive = 0
 				player.snolf.increment = increment
-				S_StartSoundAtVolume(player.mo, sfx_spndsh, 64)
+				S_StartSoundAtVolume(pmo, sfx_spndsh, 64)
 				player.pflags = $1 | PF_STARTDASH -- Set player to spindash state
 			end
 		elseif player.snolf.state == 1 then -- state 1: picking horizontal force
 			if player.snolf.jumptapping then
 				player.snolf.state = 2
 				player.snolf.increment = increment
-				S_StartSoundAtVolume(player.mo, sfx_spndsh, 100)
+				S_StartSoundAtVolume(pmo, sfx_spndsh, 100)
 			else
 
 				if player.snolf.hdrive >= max_charge then
@@ -263,10 +264,10 @@ addHook("ThinkFrame", function()
 				local hspeed = player.snolf.convert_angle(player.snolf.hdrive, max_hrz)
 				local vspeed = player.snolf.convert_angle(player.snolf.vdrive, max_vrt)
 
-				P_InstaThrust(player.mo, player.mo.angle, hspeed*FRACUNIT)
-				P_SetObjectMomZ(player.mo, vspeed*FRACUNIT)
+				P_InstaThrust(pmo, pmo.angle, hspeed*FRACUNIT)
+				P_SetObjectMomZ(pmo, vspeed*FRACUNIT)
 				player.pflags = $1 | PF_JUMPED --force jumped flag
-				S_StartSound(player.mo, sfx_zoom)
+				S_StartSound(pmo, sfx_zoom)
 			else
 
 				if player.snolf.vdrive >= max_charge then
@@ -278,7 +279,7 @@ addHook("ThinkFrame", function()
 				player.snolf.vdrive = $1 + player.snolf.increment
 			end
 		elseif player.snolf.state == 3 then -- state 3: we have launched and can't do anything till we come to a stop
-			if P_IsObjectOnGround(player.mo) and player.speed == 0 then
+			if P_IsObjectOnGround(pmo) and player.speed == 0 then
 				player.snolf.state = 0
 			end
 		elseif player.snolf.state == nil then
