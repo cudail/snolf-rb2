@@ -36,15 +36,15 @@ hud.add(function(v, player, camera)
 		-- draw cheat indicators
 		local starColour = -1
 		local chts = player.snolf.cheats
-		if chts.refundlife and chts.mullpointondie and chts.groundcontrol then
+		if chts.liferefund and chts.mullpointondie and chts.groundcontrol then
 			starColour = 0
-		elseif chts.refundlife and chts.mullpointondie then
+		elseif chts.liferefund and chts.mullpointondie then
 			starColour = V_YELLOWMAP
-		elseif chts.refundlife and chts.groundcontrol then
+		elseif chts.liferefund and chts.groundcontrol then
 			starColour = V_MAGENTAMAP
 		elseif chts.mullpointondie and chts.groundcontrol then
 			starColour = V_SKYMAP
-		elseif chts.refundlife then
+		elseif chts.liferefund then
 			starColour = V_REDMAP
 		elseif chts.mullpointondie then
 			starColour = V_GREENMAP
@@ -279,7 +279,7 @@ addHook("ThinkFrame", function()
 		if (string.sub(chtin, #chtin-3)) == 'udlr' then
 			S_StartSound(player.mo, sfx_kc46)
 			player.snolf.cheats.inputs = ''
-			player.snolf.cheats.refundlife = not $1
+			player.snolf.cheats.liferefund = not $1
 		elseif (string.sub(chtin, #chtin-7)) == 'uudduuuu' then
 			S_StartSound(player.mo, sfx_kc46)
 			player.snolf.cheats.inputs = ''
