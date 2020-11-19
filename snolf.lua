@@ -74,7 +74,6 @@ addHook("PreThinkFrame", function()
 						mull[#mull].z)
 					P_InstaThrust(player.mo, 0, 0)
 					P_SetObjectMomZ(player.mo, 0)
-					player.snolf.spinheld = 0
 					S_StartSound(player.mo, sfx_mixup)
 				end
 			end
@@ -179,14 +178,13 @@ addHook("ThinkFrame", function()
 			player.snolf.go_to_mull()
 		end
 
-		if player.snolf.spinheld > button_hold_threshold then
-			if player.cmd.forwardmove < -20 then
-				table.remove(mull, #mull)
+		if player.snolf.spinheld == button_hold_threshold then
+			local m = mull[#mull]
+			if m then
+				if player.mo.x == m.x and player.mo.y == m.y and player.mo.z == m.z then
+					table.remove(mull, #mull)
+				end
 				player.snolf.go_to_mull()
-				player.snolf.spinheld = 0
-			elseif player.snolf.state == 3
-				player.snolf.go_to_mull()
-				player.snolf.spinheld = 0
 			end
 		end
 
