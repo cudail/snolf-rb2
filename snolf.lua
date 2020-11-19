@@ -99,6 +99,8 @@ addHook("PreThinkFrame", function()
 					P_InstaThrust(player.mo, 0, 0)
 					P_SetObjectMomZ(player.mo, 0)
 					S_StartSound(player.mo, sfx_mixup)
+					player.snolf.inair = false
+					player.snolf.prev_momz = 0
 				end
 			end
 		end
@@ -253,6 +255,8 @@ addHook("ThinkFrame", function()
 		end
 
 		if player.playerstate == PST_REBORN then
+			player.snolf.inair = false
+			player.snolf.prev_momz = 0
 			if player.snolf.cheats.liferefund then
 				player.lives = $1 + 1
 			end
