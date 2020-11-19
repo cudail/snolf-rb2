@@ -55,7 +55,8 @@ addHook("PreThinkFrame", function()
 
 		if player.snolf == nil then
 			player.snolf = {
-				shots = 0, state = 0, spinheld = 0, ca2held = 0, player = player
+				shots = 0, state = 0, spinheld = 0, ca2held = 0, player = player,
+				inair = false
 			}
 			player.snolf.mull = {}
 			player.snolf.cheats = {
@@ -135,6 +136,9 @@ addHook("ThinkFrame", function()
 		local max_hrz = 50 --max horizontal release speed
 		local max_vrt = 50 --max vertical release speed
 
+		local bounce_limit = 10 -- Snolf won't bounce if their vertical momentum is less than this (in FRACUNITs)
+		local bounce_factor = FRACUNIT / 2 -- when Snolf bounces their momentum is multiplied by this factor
+
 		local button_hold_threshold = 60
 
 		-- I want the meter timing to be sinusoidal so we will be using trigonometry
@@ -202,6 +206,19 @@ addHook("ThinkFrame", function()
 -- 			S_StartSound(player.mo, sfx_ideya)
 -- 		end
 
+
+
+
+		if player.snolf.inair and P_IsObjectOnGround(pmo) then -- we have just landed
+			if abs(player.snolf.prev_momz) > abs(bounce_limit * FRACUNIT) then -- bounce if we're above the bounce_limit speed
+				P_SetObjectMomZ(pmo, - FixedMul(player.snolf.prev_momz, bounce_factor)) -- bounce with momentum proportional to what we landed with
+				player.pflags = $1 | PF_JUMPED --force jumped flag
+			else
+				player.snolf.inair = false -- we landed
+			end
+		end
+		player.snolf.prev_momz = pmo.momz -- store z momentum from previous frame for landing bounce maths
+
 		-- if the player is on the ground and not on a waterslide
 		if P_IsObjectOnGround(pmo) and (player.pflags & PF_SLIDING == 0) then
 			player.jumpfactor = 0 -- set jump height to zero
@@ -260,6 +277,7 @@ addHook("ThinkFrame", function()
 			if player.snolf.jumptapping then
 				player.snolf.shots = $1 + 1
 				player.snolf.state = 3
+				player.snolf.inair = true
 
 				local hspeed = player.snolf.convert_angle(player.snolf.hdrive, max_hrz)
 				local vspeed = player.snolf.convert_angle(player.snolf.vdrive, max_vrt)
