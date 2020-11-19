@@ -6,10 +6,6 @@ hud.add(function(v, player, camera)
 		v.drawString(16, 164, "SHOTS", V_YELLOWMAP)
 		v.drawString(64, 164, player.snolf.shots)
 
--- 		if player.snolf.nofail then
--- 			v.drawString(20, 176, "*", V_YELLOWMAP)
--- 		end
-
 		if player.snolf.state == 1 or player.snolf.state == 2 then
 			local meter = v.getSpritePatch(SPR_SFMR)  -- shot meter sprite
 			local harrow = v.getSpritePatch(SPR_SFAH) -- shot meter arrow sprite 1
@@ -36,6 +32,33 @@ hud.add(function(v, player, camera)
 					FRACUNIT, varrow)
 			end
 		end
+
+		-- draw cheat indicators
+		local starColour = -1
+		local chts = player.snolf.cheats
+		if chts.refundlife and chts.mullpointondie and chts.groundcontrol then
+			starColour = 0
+		elseif chts.refundlife and chts.mullpointondie then
+			starColour = V_YELLOWMAP
+		elseif chts.refundlife and chts.groundcontrol then
+			starColour = V_MAGENTAMAP
+		elseif chts.mullpointondie and chts.groundcontrol then
+			starColour = V_SKYMAP
+		elseif chts.refundlife then
+			starColour = V_REDMAP
+		elseif chts.mullpointondie then
+			starColour = V_GREENMAP
+		elseif chts.groundcontrol then
+			starColour = V_BLUEMAP
+		end
+		if starColour > -1 then
+			v.drawString(20, 176, "*", starColour)
+		end
+		if chts.nodrown then
+			local bubble = v.getSpritePatch(SPR_BUBL, 1)
+			v.draw(24, 188, bubble )
+		end
+
 	end
 end, "game")
 
