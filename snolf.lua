@@ -196,7 +196,6 @@ addHook("PreThinkFrame", function()
 		else
 			cht.inputs = ''
 		end
-		print(player.snolf.cheats.inputs)
 	end
 end)
 
