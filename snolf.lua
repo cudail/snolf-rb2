@@ -6,9 +6,9 @@ hud.add(function(v, player, camera)
 		v.drawString(16, 164, "SHOTS", V_YELLOWMAP)
 		v.drawString(64, 164, player.snolf.shots)
 
-		if player.snolf.nofail then
-			v.drawString(20, 176, "*", V_YELLOWMAP)
-		end
+-- 		if player.snolf.nofail then
+-- 			v.drawString(20, 176, "*", V_YELLOWMAP)
+-- 		end
 
 		if player.snolf.state == 1 or player.snolf.state == 2 then
 			local meter = v.getSpritePatch(SPR_SFMR)  -- shot meter sprite
@@ -55,10 +55,13 @@ addHook("PreThinkFrame", function()
 
 		if player.snolf == nil then
 			player.snolf = {
-				shots = 0, state = 0, spinheld = 0, ca2held = 0, ca3held = 0,
-				nofail = false, nodrown = false, player = player
+				shots = 0, state = 0, spinheld = 0, ca2held = 0, player = player
 			}
 			player.snolf.mull = {}
+			player.snolf.cheats = {
+				liferefund = false, mullpointondie = false,
+				nodrown = false, groundcontrol = false
+			}
 			player.snolf.convert_angle = function (angle, max_val)
 				return sin(angle - ANGLE_90)*max_val/FRACUNIT/2 + max_val/2
 			end
@@ -155,32 +158,26 @@ addHook("ThinkFrame", function()
 			P_PlayLivesJingle(player)
 		end
 
-		if player.powers[pw_underwater] > 0 or player.powers[pw_spacetime] > 0 then
-			if player.snolf.nodrown then
-				if player.powers[pw_underwater] > 0 then
-					player.powers[pw_underwater] = water_air_timer
-				end
-				if player.powers[pw_spacetime] > 0 then
-					player.powers[pw_spacetime] = space_air_timer
-				end
-			elseif player.snolf.ca3tapped then
-				if player.powers[pw_underwater] > 0 then
-					player.powers[pw_underwater] = water_air_timer
-				end
-				if player.powers[pw_spacetime] > 0 then
-					player.powers[pw_spacetime] = space_air_timer
-				end
-				S_StartSoundAtVolume(player.mo, sfx_gasp, 64)
+		if player.snolf.cheats.nodrown then
+			if player.powers[pw_underwater] > 0 then
+				player.powers[pw_underwater] = water_air_timer
+			end
+			if player.powers[pw_spacetime] > 0 then
+				player.powers[pw_spacetime] = space_air_timer
 			end
 		end
 
-		-- if player.playerstate == PST_REBORN and player.snolf.nofail then
-		-- 	player.lives = $1 + 1
-		-- 	player.snolf.isbeingreborn = true
-		-- 	player.snolf.go_to_mull()
-		-- elseif player.snolf.isbeingreborn and player.playerstate == PST_LIVE then
-		-- 	player.snolf.isbeingreborn = false
-		-- 	player.snolf.go_to_mull()
+		if player.playerstate == PST_REBORN then
+			if player.snolf.cheats.liferefund then
+				player.lives = $1 + 1
+			end
+			if player.snolf.cheats.mullpointondie then
+				player.snolf.isbeingreborn = true
+			end
+		elseif player.snolf.isbeingreborn and player.playerstate == PST_LIVE then
+			player.snolf.isbeingreborn = false
+			player.snolf.go_to_mull()
+		end
 
 		if player.snolf.spinheld > button_hold_threshold then
 			if player.cmd.forwardmove < -20 then
