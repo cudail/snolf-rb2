@@ -20,7 +20,7 @@ Life count icon from Mario Golf: Advance Tour.
 
 ## Changelog
 
-v0.6
+v1.0
 * Snolf now rebounds off walls and floors
 * Snolf can now revert to previous resting spots with the mulligan
 * Added cheats
