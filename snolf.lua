@@ -253,6 +253,16 @@ addHook("ThinkFrame", function()
 			end
 		end
 
+		if player.snolf.cheats.groundcontrol and P_IsObjectOnGround(pmo) then
+			-- give the player normal levels of control while rolling
+			player.accelstart = 96
+			player.acceleration = 40
+		else
+			-- no control
+			player.accelstart = 0
+			player.acceleration = 0
+		end
+
 		if player.playerstate == PST_REBORN then
 			player.snolf.inair = false
 			player.snolf.prev_momz = 0
