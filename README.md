@@ -12,6 +12,16 @@ See the Sonic Robo Blast 2 wiki for how to load a WAD file: https://wiki.srb2.or
 Sonic Robo Blast 2 does not allow saving with addons loaded by default. In order to enable saving use V_customsave-v1.soc: https://mb.srb2.org/showthread.php?t=45730
 
 
+## Cheats
+
+Because this, by design, makes many levels incredibly difficult I've included a built in cheat mode. Cheats are activated by holding down the second custom action button and pressing a series of directional inputs with the WASD keys or whatever you are using for movement. U, D, L and R here refer to the forward, back, left and right inputs respectively.
+
+* UDLR - Infinite lives
+* UUDDUUUU - On death return to last resting point
+* ULLDUUDR - Enable steering on the ground
+* LLLRRRUUU - No drowning
+
+
 ## Credits
 
 Snolf Robo Blast 2 by Caoimhe Ní Chaoimh - https://oakreef.ie/
