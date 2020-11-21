@@ -312,23 +312,23 @@ addHook("ThinkFrame", function()
 		local chtin = player.snolf.cheats.inputs
 
 		if (string.sub(chtin, #chtin-3)) == 'udlr' then
-			S_StartSound(player.mo, sfx_kc46)
+			S_StartSound(player.mo, sfx_oneup)
 			player.snolf.cheats.inputs = ''
 			player.snolf.cheats.liferefund = not $1
 		elseif (string.sub(chtin, #chtin-4)) == 'uddlr' then
-			S_StartSound(player.mo, sfx_kc46)
+			S_StartSound(player.mo, sfx_itemup)
 			player.snolf.cheats.inputs = ''
 			player.snolf.cheats.infrings = not $1
 		elseif (string.sub(chtin, #chtin-7)) == 'uudduuuu' then
-			S_StartSound(player.mo, sfx_kc46)
+			S_StartSound(player.mo, sfx_s3ka3)
 			player.snolf.cheats.inputs = ''
 			player.snolf.cheats.mullpointondie = not $1
 		elseif (string.sub(chtin, #chtin-7)) == 'ullduudr' then
-			S_StartSound(player.mo, sfx_kc46)
+			S_StartSound(player.mo, sfx_skid)
 			player.snolf.cheats.inputs = ''
 			player.snolf.cheats.groundcontrol = not $1
 		elseif (string.sub(chtin, #chtin-8)) == 'lllrrruuu' then
-			S_StartSound(player.mo, sfx_ideya)
+			S_StartSound(player.mo, sfx_s3k3f)
 			player.snolf.cheats.inputs = ''
 			player.snolf.cheats.nodrown = not $1
 		end
