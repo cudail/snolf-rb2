@@ -273,6 +273,8 @@ addHook("ThinkFrame", function()
 			end
 			if player.snolf.cheats.mullpointondie then
 				player.snolf.isbeingreborn = true
+			else
+				player.snolf.mull = {} --reset  mulligan points
 			end
 		elseif player.snolf.isbeingreborn and player.playerstate == PST_LIVE then
 			player.snolf.isbeingreborn = false
