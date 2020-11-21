@@ -36,6 +36,22 @@ Life count icon from Mario Golf: Advance Tour.
 
 ## Changelog
 
+
+v1.1
+
+* Added infinite rings cheats
+* Added flag to allow other skins to be forced into Snolf controls
+* Added small mini WAD to force Snolf controls on all characters
+* Added description of cheats to readme
+* Added tip about first person view to character select screen
+* Mulligan point list is cleared on death (unless return to mulligan point cheat is enabled)
+* Mulligan point list is cleared on map change
+* Shot is reset on death, map change or while touching a slide
+* Moved shots tracker under the ring count and styled to be similar
+* Made new HUD elements display consistently on different resolutions
+* At-rest check now checks vertical momentum as well
+* Teleport sound no longer plays if resetting to last mulligan point on death with cheat
+
 v1.0
 * Snolf now rebounds off walls and floors
 * Snolf can now revert to previous resting spots with the mulligan
