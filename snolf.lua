@@ -267,9 +267,15 @@ addHook("ThinkFrame", function()
 
 		-- Check if the map changed
 		if gamemap != player.snolf.gamemap then
+			player.snolf.state = 3
 			player.snolf.mull = {} --reset  mulligan points
 		end
 		player.snolf.gamemap = gamemap
+
+		-- if player is dead force them into non-snolfing state
+		if player.playerstate ~= PST_LIVE then
+			player.snolf.state = 3
+		end
 
 		if player.playerstate == PST_REBORN then
 			player.snolf.inair = false
