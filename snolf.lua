@@ -265,6 +265,12 @@ addHook("ThinkFrame", function()
 			player.acceleration = 0
 		end
 
+		-- Check if the map changed
+		if gamemap != player.snolf.gamemap then
+			player.snolf.mull = {} --reset  mulligan points
+		end
+		player.snolf.gamemap = gamemap
+
 		if player.playerstate == PST_REBORN then
 			player.snolf.inair = false
 			player.snolf.prev_momz = 0
