@@ -271,6 +271,10 @@ addHook("ThinkFrame", function()
 			player.xtralife = 99
 		end
 
+		if player.pflags & PF_SLIDING > 0 then
+			player.snolf.state = 3
+		end
+
 		-- Check if the map changed
 		if gamemap != player.snolf.gamemap then
 			player.snolf.state = 3
