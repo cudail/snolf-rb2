@@ -428,7 +428,7 @@ addHook("ThinkFrame", function()
 				player.snolf.vdrive = $1 + player.snolf.increment
 			end
 		elseif player.snolf.state == 3 then -- state 3: we have launched and can't do anything till we come to a stop
-			if P_IsObjectOnGround(pmo) and player.speed == 0 then
+			if P_IsObjectOnGround(pmo) and player.speed == 0 and pmo.momz == 0 then
 				player.snolf.state = 0
 			end
 		elseif player.snolf.state == nil then
