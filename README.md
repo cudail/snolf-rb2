@@ -17,6 +17,7 @@ Sonic Robo Blast 2 does not allow saving with addons loaded by default. In order
 Because this, by design, makes many levels incredibly difficult I've included a built in cheat mode. Cheats are activated by holding down the second custom action button and pressing a series of directional inputs with the WASD keys or whatever you are using for movement. When a cheat is activated a sound will play and an indicator will be displayed on the HUD.
 
 * ↑ ↓ ← → - Infinite lives
+* ↑ ↓ ↓ ← → - Infinite rings
 * ↑ ↑ ↓ ↓ ↑ ↑ ↑ ↑ - On death return to last resting point
 * ↑ ← ← ↓ ↑ ↑ ↓ → - Enable steering on the ground
 * ← ← ← → → → ↑ ↑ ↑ - No drowning
