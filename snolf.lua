@@ -92,7 +92,7 @@ addHook("PreThinkFrame", function()
 			player.snolf.convert_angle = function (angle, max_val)
 				return sin(angle - ANGLE_90)*max_val/FRACUNIT/2 + max_val/2
 			end
-			player.snolf.go_to_mull = function ()
+			player.snolf.go_to_mull = function (playsound)
 				local mull = player.snolf.mull
 				if mull and #mull > 0 then
 					P_TeleportMove(player.mo,
@@ -101,7 +101,9 @@ addHook("PreThinkFrame", function()
 						mull[#mull].z)
 					P_InstaThrust(player.mo, 0, 0)
 					P_SetObjectMomZ(player.mo, 0)
-					S_StartSound(player.mo, sfx_mixup)
+					if playsound or playsound == nil then
+						S_StartSound(player.mo, sfx_mixup)
+					end
 					player.snolf.inair = false
 					player.snolf.prev_momz = 0
 				end
@@ -300,7 +302,7 @@ addHook("ThinkFrame", function()
 			end
 		elseif player.snolf.isbeingreborn and player.playerstate == PST_LIVE then
 			player.snolf.isbeingreborn = false
-			player.snolf.go_to_mull()
+			player.snolf.go_to_mull(false)
 		end
 
 		if player.snolf.spinheld == button_hold_threshold then
