@@ -86,7 +86,8 @@ addHook("PreThinkFrame", function()
 			player.snolf.mull = {}
 			player.snolf.cheats = {
 				liferefund = false, mullpointondie = false,
-				nodrown = false, groundcontrol = false, inputs = ''
+				nodrown = false, groundcontrol = false,
+				infrings = false, inputs = ''
 			}
 			player.snolf.convert_angle = function (angle, max_val)
 				return sin(angle - ANGLE_90)*max_val/FRACUNIT/2 + max_val/2
@@ -265,6 +266,11 @@ addHook("ThinkFrame", function()
 			player.acceleration = 0
 		end
 
+		if player.snolf.cheats.infrings then
+			player.rings = 999
+			player.xtralife = 99
+		end
+
 		-- Check if the map changed
 		if gamemap != player.snolf.gamemap then
 			player.snolf.state = 3
@@ -309,6 +315,10 @@ addHook("ThinkFrame", function()
 			S_StartSound(player.mo, sfx_kc46)
 			player.snolf.cheats.inputs = ''
 			player.snolf.cheats.liferefund = not $1
+		elseif (string.sub(chtin, #chtin-4)) == 'uddlr' then
+			S_StartSound(player.mo, sfx_kc46)
+			player.snolf.cheats.inputs = ''
+			player.snolf.cheats.infrings = not $1
 		elseif (string.sub(chtin, #chtin-7)) == 'uudduuuu' then
 			S_StartSound(player.mo, sfx_kc46)
 			player.snolf.cheats.inputs = ''
