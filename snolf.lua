@@ -1,10 +1,12 @@
-freeslot("SPR_SFAH", "SPR_SFAV", "SPR_SFMR")
+freeslot("SPR_SFST", "SPR_SFAH", "SPR_SFAV", "SPR_SFMR")
 
 hud.add(function(v, player, camera)
 	-- Don't do anything if we're not Snolf
 	if player.mo.skin == "snolf" then
-		v.drawString(16, 164, "SHOTS", V_YELLOWMAP|V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM)
-		v.drawString(64, 164, player.snolf.shots, V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM)
+
+		local hud_shots = v.getSpritePatch(SPR_SFST) -- SHOTS HUD element
+		v.draw(16, 58, hud_shots, V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOTOP)
+		v.drawNum(96, 58, player.snolf.shots, V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOTOP)
 
 		if player.snolf.state == 1 or player.snolf.state == 2 then
 			local meter = v.getSpritePatch(SPR_SFMR)  -- shot meter sprite
