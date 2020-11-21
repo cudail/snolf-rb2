@@ -3,8 +3,8 @@ freeslot("SPR_SFAH", "SPR_SFAV", "SPR_SFMR")
 hud.add(function(v, player, camera)
 	-- Don't do anything if we're not Snolf
 	if player.mo.skin == "snolf" then
-		v.drawString(16, 164, "SHOTS", V_YELLOWMAP)
-		v.drawString(64, 164, player.snolf.shots)
+		v.drawString(16, 164, "SHOTS", V_YELLOWMAP|V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM)
+		v.drawString(64, 164, player.snolf.shots, V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM)
 
 		if player.snolf.state == 1 or player.snolf.state == 2 then
 			local meter = v.getSpritePatch(SPR_SFMR)  -- shot meter sprite
@@ -52,11 +52,11 @@ hud.add(function(v, player, camera)
 			starColour = V_BLUEMAP
 		end
 		if starColour > -1 then
-			v.drawString(20, 176, "*", starColour)
+			v.drawString(20, 176, "*", starColour|V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM)
 		end
 		if chts.nodrown then
 			local bubble = v.getSpritePatch(SPR_BUBL, 1)
-			v.draw(24, 188, bubble )
+			v.draw(24, 188, bubble, V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM)
 		end
 
 	end
