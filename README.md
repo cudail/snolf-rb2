@@ -41,6 +41,12 @@ Because this, by design, makes many levels incredibly difficult I've included a 
 Everybody's Snolf is a mini-WAD containing a single Lua script that if used in conjunction with Snolf will force all characters, including characters from other mods, to use Snolf's controls. This is just for a bit of fun and will probably be very unstable and not work very well with a lot of other mods.
 
 
+## Known Issues
+
+* Quarter- and half-pipe structures do not work correctly. Snolf will just bounce off them instead of being launched into the air.
+* Enabling the no drowning cheat while the drowning music is playing will not stop stop the drowning music and the normal stage music will not resume afterwards. You can get it back by disabling the cheat, waiting until the drowning music starts again, getting air the normal way so the stage music resumes, then activating the cheat again.
+
+
 ## Credits
 
 Snolf Robo Blast 2 by Caoimhe Ní Chaoimh - https://oakreef.ie/
