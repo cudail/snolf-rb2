@@ -12,6 +12,19 @@ See the Sonic Robo Blast 2 wiki for how to load a WAD file: https://wiki.srb2.or
 Sonic Robo Blast 2 does not allow saving with addons loaded by default. In order to enable saving use V_customsave-v1.soc: https://mb.srb2.org/showthread.php?t=45730
 
 
+## Controls
+
+Snolf cannot move or jump like a normal character. Instead they must take a golf swing.
+
+**Swing:** Aim with the camera and use the Jump button to time your shots' horizontal and vertical power.
+
+**Mulligan:** Hold the Spin button to undo your last shot. Use this if you get stuck.
+
+**Quick Turn:** Press Custom Action 1 to do a 180° turn.
+
+*Tip:* If the camera is getting caught on a wall use first person view to aim.
+
+
 ## Cheats
 
 Because this, by design, makes many levels incredibly difficult I've included a built in cheat mode. Cheats are activated by holding down the second custom action button and pressing a series of directional inputs with the WASD keys or whatever you are using for movement. When a cheat is activated a sound will play and an indicator will be displayed on the HUD.
