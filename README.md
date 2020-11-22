@@ -23,6 +23,11 @@ Because this, by design, makes many levels incredibly difficult I've included a 
 * ← ← ← → → → ↑ ↑ ↑ - No drowning
 
 
+## Everybody's Snolf
+
+Everybody's Snolf is a mini-WAD containing a single Lua script that if used in conjunction with Snolf will force all characters, including characters from other mods, to use Snolf's controls. This is just for a bit of fun and will probably be very unstable and not work very well with a lot of other mods.
+
+
 ## Credits
 
 Snolf Robo Blast 2 by Caoimhe Ní Chaoimh - https://oakreef.ie/
