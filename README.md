@@ -27,7 +27,7 @@ Snolf cannot move or jump like a normal character. Instead they must take a golf
 
 ## Cheats
 
-Because this, by design, makes many levels incredibly difficult I've included a built in cheat mode. Cheats are activated by holding down the second custom action button and pressing a series of directional inputs with the WASD keys or whatever you are using for movement. When a cheat is activated a sound will play and an indicator will be displayed on the HUD.
+Because this, by design, makes many levels incredibly difficult I've included a built in cheat mode. Cheats are toggled by holding down the second custom action button and pressing a series of directional inputs with the WASD keys or whatever you are using for movement. When a cheat is toggled a sound will play and an indicator will be displayed on the HUD. Entering a cheat a second time will disable it.
 
 * ↑ ↓ ← → - Infinite lives
 * ↑ ↓ ↓ ← → - Infinite rings
