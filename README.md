@@ -60,6 +60,13 @@ Life count icon from Mario Golf: Advance Tour.
 
 ## Changelog
 
+v1.2
+* Changed how Snolf mode was being checked to fix potential error messages when using Everybody's Snolf
+* Added new continue icon
+* Added constellation sprites
+* Copied rolling animations over walking animations so that Snolf is distinguishable from Sonic in the multiplayer character select screen
+* Copied rolling animations to continue screen animations so Snolf is still in a ball on the continue screen
+* Added controls and known issues to readme
 
 v1.1
 
