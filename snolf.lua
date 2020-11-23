@@ -2,76 +2,71 @@ freeslot("SPR_SFST", "SPR_SFAH", "SPR_SFAV", "SPR_SFMR")
 
 hud.add(function(v, player, camera)
 	-- Don't do anything if we're not Snolf
-	if player.snolf then
+	if not player.snolf then return end
 
-		local hud_shots = v.getSpritePatch(SPR_SFST) -- SHOTS HUD element
-		v.draw(16, 58, hud_shots, V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOTOP)
-		v.drawNum(96, 58, player.snolf.shots, V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOTOP)
+	local hud_shots = v.getSpritePatch(SPR_SFST) -- SHOTS HUD element
+	v.draw(16, 58, hud_shots, V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOTOP)
+	v.drawNum(96, 58, player.snolf.shots, V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOTOP)
 
-		if player.snolf.state == 1 or player.snolf.state == 2 then
-			local meter = v.getSpritePatch(SPR_SFMR)  -- shot meter sprite
-			local harrow = v.getSpritePatch(SPR_SFAH) -- shot meter arrow sprite 1
-			local varrow = v.getSpritePatch(SPR_SFAV) -- shot meter arrow sprite 2
+	if player.snolf.state == 1 or player.snolf.state == 2 then
+		local meter = v.getSpritePatch(SPR_SFMR)  -- shot meter sprite
+		local harrow = v.getSpritePatch(SPR_SFAH) -- shot meter arrow sprite 1
+		local varrow = v.getSpritePatch(SPR_SFAV) -- shot meter arrow sprite 2
 
-			local h_meter_length = 50 -- how many pixels wide the charge meter range is
-			local v_meter_length = 50 -- how many pixels tall the charge meter range is
+		local h_meter_length = 50 -- how many pixels wide the charge meter range is
+		local v_meter_length = 50 -- how many pixels tall the charge meter range is
 
-			local hpos = player.snolf.convert_angle(player.snolf.hdrive, h_meter_length)
-			local vpos = player.snolf.convert_angle(player.snolf.vdrive, v_meter_length)
+		local hpos = player.snolf.convert_angle(player.snolf.hdrive, h_meter_length)
+		local vpos = player.snolf.convert_angle(player.snolf.vdrive, v_meter_length)
 
+		v.drawScaled(
+			FRACUNIT*158,
+			FRACUNIT*103,
+			FRACUNIT, meter)
+		v.drawScaled(
+			FRACUNIT*(160+hpos),
+			FRACUNIT*150,
+			FRACUNIT, harrow)
+		if player.snolf.state == 2 then
 			v.drawScaled(
-				FRACUNIT*158,
-				FRACUNIT*103,
-				FRACUNIT, meter)
-			v.drawScaled(
-				FRACUNIT*(160+hpos),
-				FRACUNIT*150,
-				FRACUNIT, harrow)
-			if player.snolf.state == 2 then
-				v.drawScaled(
-					FRACUNIT*160,
-					FRACUNIT*(150-vpos),
-					FRACUNIT, varrow)
-			end
+				FRACUNIT*160,
+				FRACUNIT*(150-vpos),
+				FRACUNIT, varrow)
 		end
+	end
 
-		-- draw cheat indicators
-		local starColour = -1
-		local chts = player.snolf.cheats
-		if chts.liferefund and chts.mullpointondie and chts.groundcontrol then
-			starColour = 0
-		elseif chts.liferefund and chts.mullpointondie then
-			starColour = V_YELLOWMAP
-		elseif chts.liferefund and chts.groundcontrol then
-			starColour = V_MAGENTAMAP
-		elseif chts.mullpointondie and chts.groundcontrol then
-			starColour = V_SKYMAP
-		elseif chts.liferefund then
-			starColour = V_REDMAP
-		elseif chts.mullpointondie then
-			starColour = V_GREENMAP
-		elseif chts.groundcontrol then
-			starColour = V_BLUEMAP
-		end
-		if starColour > -1 then
-			v.drawString(20, 176, "*", starColour|V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM)
-		end
-		if chts.nodrown then
-			local bubble = v.getSpritePatch(SPR_BUBL, 1)
-			v.draw(24, 188, bubble, V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM)
-		end
-
+	-- draw cheat indicators
+	local starColour = -1
+	local chts = player.snolf.cheats
+	if chts.liferefund and chts.mullpointondie and chts.groundcontrol then
+		starColour = 0
+	elseif chts.liferefund and chts.mullpointondie then
+		starColour = V_YELLOWMAP
+	elseif chts.liferefund and chts.groundcontrol then
+		starColour = V_MAGENTAMAP
+	elseif chts.mullpointondie and chts.groundcontrol then
+		starColour = V_SKYMAP
+	elseif chts.liferefund then
+		starColour = V_REDMAP
+	elseif chts.mullpointondie then
+		starColour = V_GREENMAP
+	elseif chts.groundcontrol then
+		starColour = V_BLUEMAP
+	end
+	if starColour > -1 then
+		v.drawString(20, 176, "*", starColour|V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM)
+	end
+	if chts.nodrown then
+		local bubble = v.getSpritePatch(SPR_BUBL, 1)
+		v.draw(24, 188, bubble, V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM)
 	end
 end, "game")
 
 
 addHook("PreThinkFrame", function()
-
 	for player in players.iterate do
 		-- Don't do anything if we're not Snolf
-		if player.mo.skin ~= "snolf" and not player.forcesnolf then
-			continue
-		end
+		if player.mo.skin ~= "snolf" and not player.forcesnolf then continue end
 
 		-- Don't do anything for NiGHTS mode
 		if maptol & TOL_NIGHTS > 1 then
@@ -207,11 +202,9 @@ end)
 
 
 addHook("ThinkFrame", function()
-	-- Don't do anything if we're not Snolf
 	for player in players.iterate do
-		if not player.snolf then
-			continue
-		end
+		-- Don't do anything if we're not Snolf
+		if not player.snolf then continue end
 
 		-- snolfstate
 		-- 0 ready to snolf
@@ -440,9 +433,7 @@ end)
 
 -- Hook to override default collision and make Snolf bounce off walls
 addHook("MobjMoveBlocked", function(mo)
-	if not mo.player or not mo.player.snolf then
-		return false
-	end
+	if not mo.player or not mo.player.snolf then return false end
 
 	-- P_BounceMove doesn't bounce the player if they are on the ground 
 	-- To get around this impart the tiniest possible vertical momentum the
