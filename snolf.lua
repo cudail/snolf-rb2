@@ -2,7 +2,7 @@ freeslot("SPR_SFST", "SPR_SFAH", "SPR_SFAV", "SPR_SFMR")
 
 hud.add(function(v, player, camera)
 	-- Don't do anything if we're not Snolf
-	if player.mo.skin == "snolf" or player.forcesnolf then
+	if player.snolf then
 
 		local hud_shots = v.getSpritePatch(SPR_SFST) -- SHOTS HUD element
 		v.draw(16, 58, hud_shots, V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOTOP)
@@ -209,7 +209,7 @@ end)
 addHook("ThinkFrame", function()
 	-- Don't do anything if we're not Snolf
 	for player in players.iterate do
-		if player.mo.skin ~= "snolf" and not player.forcesnolf then
+		if not player.snolf then
 			continue
 		end
 
@@ -440,7 +440,7 @@ end)
 
 -- Hook to override default collision and make Snolf bounce off walls
 addHook("MobjMoveBlocked", function(mo)
-	if mo.skin ~= "snolf" and not (mo.player and mo.player.forcesnolf) then
+	if not mo.player or not mo.player.snolf then
 		return false
 	end
 
