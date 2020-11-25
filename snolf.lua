@@ -1,5 +1,26 @@
 freeslot("SPR_SFST", "SPR_SFAH", "SPR_SFAV", "SPR_SFMR")
 
+local function go_to_mull(player, playsound)
+	local mull = player.snolf.mull
+	if mull and #mull > 0 then
+		P_TeleportMove(player.mo,
+			mull[#mull].x,
+			mull[#mull].y,
+			mull[#mull].z)
+		P_InstaThrust(player.mo, 0, 0)
+		P_SetObjectMomZ(player.mo, 0)
+		if playsound or playsound == nil then
+			S_StartSound(player.mo, sfx_mixup)
+		end
+		player.snolf.inair = false
+		player.snolf.prev_momz = 0
+	end
+end
+
+local function convert_angle(angle, max_val)
+	return sin(angle - ANGLE_90)*max_val/FRACUNIT/2 + max_val/2
+end
+
 hud.add(function(v, player, camera)
 	-- Don't do anything if we're not Snolf
 	if not player.snolf then return end
@@ -16,8 +37,8 @@ hud.add(function(v, player, camera)
 		local h_meter_length = 50 -- how many pixels wide the charge meter range is
 		local v_meter_length = 50 -- how many pixels tall the charge meter range is
 
-		local hpos = player.snolf.convert_angle(player.snolf.hdrive, h_meter_length)
-		local vpos = player.snolf.convert_angle(player.snolf.vdrive, v_meter_length)
+		local hpos = convert_angle(player.snolf.hdrive, h_meter_length)
+		local vpos = convert_angle(player.snolf.vdrive, v_meter_length)
 
 		v.drawScaled(
 			FRACUNIT*158,
@@ -84,25 +105,6 @@ addHook("PreThinkFrame", function()
 				nodrown = false, groundcontrol = false,
 				infrings = false, inputs = ''
 			}
-			player.snolf.convert_angle = function (angle, max_val)
-				return sin(angle - ANGLE_90)*max_val/FRACUNIT/2 + max_val/2
-			end
-			player.snolf.go_to_mull = function (playsound)
-				local mull = player.snolf.mull
-				if mull and #mull > 0 then
-					P_TeleportMove(player.mo,
-						mull[#mull].x,
-						mull[#mull].y,
-						mull[#mull].z)
-					P_InstaThrust(player.mo, 0, 0)
-					P_SetObjectMomZ(player.mo, 0)
-					if playsound or playsound == nil then
-						S_StartSound(player.mo, sfx_mixup)
-					end
-					player.snolf.inair = false
-					player.snolf.prev_momz = 0
-				end
-			end
 		end
 
 		-- check if the jump button was just tapped
@@ -295,7 +297,7 @@ addHook("ThinkFrame", function()
 			end
 		elseif player.snolf.isbeingreborn and player.playerstate == PST_LIVE then
 			player.snolf.isbeingreborn = false
-			player.snolf.go_to_mull(false)
+			go_to_mull(player, false)
 		end
 
 		if player.snolf.spinheld == button_hold_threshold then
@@ -304,7 +306,7 @@ addHook("ThinkFrame", function()
 				if pmo.x == m.x and pmo.y == m.y and pmo.z == m.z then
 					table.remove(mull, #mull)
 				end
-				player.snolf.go_to_mull()
+				go_to_mull(player)
 			end
 		end
 
@@ -403,8 +405,8 @@ addHook("ThinkFrame", function()
 				player.snolf.state = 3
 				player.snolf.inair = true
 
-				local hspeed = player.snolf.convert_angle(player.snolf.hdrive, max_hrz)
-				local vspeed = player.snolf.convert_angle(player.snolf.vdrive, max_vrt)
+				local hspeed = convert_angle(player.snolf.hdrive, max_hrz)
+				local vspeed = convert_angle(player.snolf.vdrive, max_vrt)
 
 				P_InstaThrust(pmo, pmo.angle, hspeed*FRACUNIT)
 				P_SetObjectMomZ(pmo, vspeed*FRACUNIT)
