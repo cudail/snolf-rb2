@@ -43,6 +43,7 @@ Everybody's Snolf is a mini-WAD containing a single Lua script that if used in c
 
 ## Known Issues
 
+* Snolf currently does not work with network games at all. It is completely broken.
 * Quarter- and half-pipe structures do not work correctly. Snolf will just bounce off them instead of being launched into the air.
 * Enabling the no drowning cheat while the drowning music is playing will not stop stop the drowning music and the normal stage music will not resume afterwards. You can get it back by disabling the cheat, waiting until the drowning music starts again, getting air the normal way so the stage music resumes, then activating the cheat again.
 
