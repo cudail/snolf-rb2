@@ -67,7 +67,8 @@ probably be very unstable and not work very well with a lot of other mods.
 
 * Quarter- and half-pipe structures do not work correctly. Snolf will just
 bounce off them instead of being launched into the air.
-* Sometimes Snolf will get stuck unable to shoot while on a conveyor belt, especially when on the edge of one. If this happens all the player can do is
+* Sometimes Snolf will get stuck unable to shoot while on a conveyor belt,
+especially when on the edge of one. If this happens all the player can do is
 wait to reach the end of the conveyor belt or use a mullgian.
 * Enabling the no drowning modifier while the drowning music is playing will not
 stop stop the drowning music and the normal stage music will not resume
