@@ -441,7 +441,6 @@ end)
 
 -- Hook to override default collision and make Snolf bounce off walls
 addHook("MobjMoveBlocked", function(mo)
-	if not player.mo then return false end
 	if not mo.player or not mo.player.snolf then return false end
 
 	-- P_BounceMove doesn't bounce the player if they are on the ground 
