@@ -97,6 +97,10 @@ Life count icon from Mario Golf: Advance Tour.
 v1.4
 * New character select art by Mike Tona
 * Fixed errors with spectator players in multiplayer
+* Taking a mulligan adds to the shot total
+* Shots and mulligans while free roaming after finishing a level in multiplayer
+are not counted towards total
+* Shots HUD element is disabled after completing a level in co-op
 * Renamed cheats to modifiers in readme
 * Removed Super Sonic and NiGHTS sprites from WAD
 
