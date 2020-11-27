@@ -71,6 +71,10 @@ Life count icon from Mario Golf: Advance Tour.
 
 ## Changelog
 
+v1.4
+* New character select art by Mike Tona
+* Renamed cheats to modifiers in readme
+
 v1.3
 * Fixed Snolf breaking netplay gameas
 
