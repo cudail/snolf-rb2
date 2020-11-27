@@ -31,7 +31,7 @@ Snolf cannot move or jump like a normal character. Instead they must take a golf
 
 ## Modifiers
 
-Because this, by design, makes many levels incredibly difficult I've included a set of modifiers to make the game easier that can be activated in game. Modifiers are toggled by holding down the Custom Action 2 and pressing a series of directional inputs with the WASD keys or whatever you are using for movement. When a modifier is toggled a sound will play and an indicator will be displayed on the HUD. Entering the code a second time will disable it.
+Because this, by design, makes many levels incredibly difficult I've included a set of modifiers to make the game easier that can be activated in game. Modifiers are toggled by holding down Custom Action 2 and pressing a series of directional inputs with the WASD keys or whatever you are using for movement. When a modifier is toggled a sound will play and an indicator will be displayed on the HUD. Entering the code a second time will disable it.
 
 * ↑ ↓ ← → - Infinite lives
 * ↑ ↓ ↓ ← → - Infinite rings
