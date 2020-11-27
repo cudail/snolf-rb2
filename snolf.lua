@@ -25,6 +25,12 @@ local function convert_angle(angle, max_val)
 	return sin(angle - ANGLE_90)*max_val/FRACUNIT/2 + max_val/2
 end
 
+local function announce_cheat(player, cheatname, onoff)
+	local announcement = player.name .." turned " ..
+		(onoff and "on" or "off") .. " modifier '" .. cheatname + "'"
+	chatprint(announcement)
+end
+
 hud.add(function(v, player, camera)
 	-- Don't do anything if we're not Snolf
 	if not player.mo then return end
@@ -328,22 +334,27 @@ addHook("ThinkFrame", function()
 			S_StartSound(player.mo, sfx_oneup)
 			player.snolf.cheats.inputs = ''
 			player.snolf.cheats.liferefund = not $1
+			announce_cheat(player, "infinite lives", player.snolf.cheats.liferefund)
 		elseif (string.sub(chtin, #chtin-4)) == 'uddlr' then
 			S_StartSound(player.mo, sfx_itemup)
 			player.snolf.cheats.inputs = ''
 			player.snolf.cheats.infrings = not $1
+			announce_cheat(player, "infinite rings", player.snolf.cheats.infrings)
 		elseif (string.sub(chtin, #chtin-7)) == 'uudduuuu' then
 			S_StartSound(player.mo, sfx_s3ka3)
 			player.snolf.cheats.inputs = ''
 			player.snolf.cheats.mullpointondie = not $1
+			announce_cheat(player, "return to last resting place on death", player.snolf.cheats.mullpointondie)
 		elseif (string.sub(chtin, #chtin-7)) == 'ullduudr' then
 			S_StartSound(player.mo, sfx_skid)
 			player.snolf.cheats.inputs = ''
 			player.snolf.cheats.groundcontrol = not $1
+			announce_cheat(player, "ground control", player.snolf.cheats.groundcontrol)
 		elseif (string.sub(chtin, #chtin-8)) == 'lllrrruuu' then
 			S_StartSound(player.mo, sfx_s3k3f)
 			player.snolf.cheats.inputs = ''
 			player.snolf.cheats.nodrown = not $1
+			announce_cheat(player, "no drowning", player.snolf.cheats.nodrown)
 		end
 
 
