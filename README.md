@@ -29,9 +29,9 @@ Snolf cannot move or jump like a normal character. Instead they must take a golf
 *Tip:* If the camera is getting caught on a wall use first person view to aim.
 
 
-## Cheats
+## Modifiers
 
-Because this, by design, makes many levels incredibly difficult I've included a built in cheat mode. Cheats are toggled by holding down the second custom action button and pressing a series of directional inputs with the WASD keys or whatever you are using for movement. When a cheat is toggled a sound will play and an indicator will be displayed on the HUD. Entering a cheat a second time will disable it.
+Because this, by design, makes many levels incredibly difficult I've included a set of modifiers to make the game easier that can be activated in game. Modifiers are toggled by holding down the Custom Action 2 and pressing a series of directional inputs with the WASD keys or whatever you are using for movement. When a modifier is toggled a sound will play and an indicator will be displayed on the HUD. Entering the code a second time will disable it.
 
 * ↑ ↓ ← → - Infinite lives
 * ↑ ↓ ↓ ← → - Infinite rings
@@ -48,7 +48,7 @@ Everybody's Snolf is a mini-WAD containing a single Lua script that if used in c
 ## Known Issues
 
 * Quarter- and half-pipe structures do not work correctly. Snolf will just bounce off them instead of being launched into the air.
-* Enabling the no drowning cheat while the drowning music is playing will not stop stop the drowning music and the normal stage music will not resume afterwards. You can get it back by disabling the cheat, waiting until the drowning music starts again, getting air the normal way so the stage music resumes, then activating the cheat again.
+* Enabling the no drowning modifier while the drowning music is playing will not stop stop the drowning music and the normal stage music will not resume afterwards. You can get it back by disabling the modifier, waiting until the drowning music starts again, getting air the normal way so the stage music resumes, then activating the modifier again.
 
 
 ## Credits
