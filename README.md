@@ -5,11 +5,15 @@ Snolf character mod for Sonic Robo Blast 2 that allows you to play it like golf.
 
 ## Installation
 
-Download and install Sonic Robo Blast 2: https://www.srb2.org/
+Download and install [Sonic Robo Blast 2].
 
-See the Sonic Robo Blast 2 wiki for how to load a WAD file: https://wiki.srb2.org/wiki/WAD_file#Loading_WAD_files
+Download the Snolf WAD file. See the Sonic Robo Blast 2 wiki for [how to load a WAD file]. Snolf will appear as a separate character in the character select menu.
 
-Sonic Robo Blast 2 does not allow saving with addons loaded by default. In order to enable saving use V_customsave-v1.soc: https://mb.srb2.org/showthread.php?t=45730
+Sonic Robo Blast 2 does not allow saving with addons loaded by default. In order to enable saving use [V_customsave-v1.soc].
+
+[Sonic Robo Blast 2]: https://www.srb2.org/
+[how to load a WAD file]: https://wiki.srb2.org/wiki/WAD_file#Loading_WAD_files
+[V_customsave-v1.soc]: https://mb.srb2.org/showthread.php?t=45730
 
 
 ## Controls
@@ -49,13 +53,20 @@ Everybody's Snolf is a mini-WAD containing a single Lua script that if used in c
 
 ## Credits
 
-Snolf Robo Blast 2 by Caoimhe Ní Chaoimh - https://oakreef.ie/
+Snolf Robo Blast 2 by [Caoimhe Ní Chaoimh].
 
-Inspired by the original Snolf ROM hacks by Dr. Melon - https://melon.zone/
+Inspired by the original Snolf ROM hacks by [Melon].
 
-Made using the Sonic Robo Blast 2 Custom Character Preset by Blu The Hedgehog - https://gamebanana.com/skins/181950
+Character art by [Mike Tona].
+
+Made using the [Sonic Robo Blast 2 Custom Character Preset] by Blu The Hedgehog.
 
 Life count icon from Mario Golf: Advance Tour.
+
+[Caoimhe Ní Chaoimh]: https://oakreef.ie/
+[Melon]: https://melon.zone/
+[Mike Tona]: https://miketona.carrd.co/
+[Sonic Robo Blast 2 Custom Character Preset]: https://gamebanana.com/skins/181950
 
 
 ## Changelog
