@@ -96,7 +96,9 @@ Life count icon from Mario Golf: Advance Tour.
 
 v1.4
 * New character select art by Mike Tona
+* Fixed errors with spectator players in multiplayer
 * Renamed cheats to modifiers in readme
+* Removed Super Sonic and NiGHTS sprites from WAD
 
 v1.3
 * Fixed Snolf breaking netplay gameas

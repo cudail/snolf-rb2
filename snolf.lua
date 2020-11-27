@@ -14,6 +14,7 @@ local function go_to_mull(player, playsound)
 		end
 		player.snolf.inair = false
 		player.snolf.prev_momz = 0
+		player.snolf.mullcount = $1 + 1
 	end
 end
 
@@ -27,8 +28,9 @@ hud.add(function(v, player, camera)
 	if not player.snolf then return end
 
 	local hud_shots = v.getSpritePatch(SPR_SFST) -- SHOTS HUD element
+	local dis_shots = player.snolf.shots + player.snolf.mullcount
 	v.draw(16, 58, hud_shots, V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOTOP)
-	v.drawNum(96, 58, player.snolf.shots, V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOTOP)
+	v.drawNum(96, 58, dis_shots, V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOTOP)
 
 	if player.snolf.state == 1 or player.snolf.state == 2 then
 		local meter = v.getSpritePatch(SPR_SFMR)  -- shot meter sprite
@@ -98,8 +100,9 @@ addHook("PreThinkFrame", function()
 
 		if player.snolf == nil then
 			player.snolf = {
-				shots = 0, state = 0, spinheld = 0, ca2held = 0, player = player,
-				inair = false
+				shots = 0, mullcount = 0, state = 0,
+				spinheld = 0, ca2held = 0,
+				player = player, inair = false
 			}
 			player.snolf.mull = {}
 			player.snolf.cheats = {
