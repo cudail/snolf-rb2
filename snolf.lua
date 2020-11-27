@@ -14,7 +14,10 @@ local function go_to_mull(player, playsound)
 		end
 		player.snolf.inair = false
 		player.snolf.prev_momz = 0
-		player.snolf.mullcount = $1 + 1
+		if player.pflags & PF_FINISHED == 0 then
+			-- don't count mulligans after the player has finished the level
+			player.snolf.mullcount = $1 + 1
+		end
 	end
 end
 
@@ -29,8 +32,11 @@ hud.add(function(v, player, camera)
 
 	local hud_shots = v.getSpritePatch(SPR_SFST) -- SHOTS HUD element
 	local dis_shots = player.snolf.shots + player.snolf.mullcount
-	v.draw(16, 58, hud_shots, V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOTOP)
-	v.drawNum(96, 58, dis_shots, V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOTOP)
+
+	if player.pflags & PF_FINISHED == 0 or player.exiting > 0 then
+		v.draw(16, 58, hud_shots, V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOTOP)
+		v.drawNum(96, 58, dis_shots, V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOTOP)
+	end
 
 	if player.snolf.state == 1 or player.snolf.state == 2 then
 		local meter = v.getSpritePatch(SPR_SFMR)  -- shot meter sprite
@@ -407,7 +413,10 @@ addHook("ThinkFrame", function()
 			end
 		elseif player.snolf.state == 2 then -- state 2: picking vertical force
 			if player.snolf.jumptapping then
-				player.snolf.shots = $1 + 1
+				if player.pflags & PF_FINISHED == 0 then
+					-- don't count shots after the player has finished the level
+					player.snolf.shots = $1 + 1
+				end
 				player.snolf.state = 3
 				player.snolf.inair = true
 
