@@ -23,6 +23,7 @@ end
 
 hud.add(function(v, player, camera)
 	-- Don't do anything if we're not Snolf
+	if not player.mo then return end
 	if not player.snolf then return end
 
 	local hud_shots = v.getSpritePatch(SPR_SFST) -- SHOTS HUD element
@@ -87,6 +88,7 @@ end, "game")
 addHook("PreThinkFrame", function()
 	for player in players.iterate do
 		-- Don't do anything if we're not Snolf
+		if not player.mo then continue end
 		if player.mo.skin ~= "snolf" and not player.forcesnolf then continue end
 
 		-- Don't do anything for NiGHTS mode
@@ -206,6 +208,7 @@ end)
 addHook("ThinkFrame", function()
 	for player in players.iterate do
 		-- Don't do anything if we're not Snolf
+		if not player.mo then continue end
 		if not player.snolf then continue end
 
 		-- snolfstate
@@ -435,6 +438,7 @@ end)
 
 -- Hook to override default collision and make Snolf bounce off walls
 addHook("MobjMoveBlocked", function(mo)
+	if not player.mo then return false end
 	if not mo.player or not mo.player.snolf then return false end
 
 	-- P_BounceMove doesn't bounce the player if they are on the ground 
