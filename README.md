@@ -87,7 +87,7 @@ Snolf Robo Blast 2 by [Caoimhe Ní Chaoimh].
 
 Inspired by the original Snolf ROM hacks by [Melon].
 
-Character art by [Mike Tona].
+Character portrait by [Mike Tona].
 
 Made using the [Sonic Robo Blast 2 Custom Character Preset] by Blu The Hedgehog.
 
