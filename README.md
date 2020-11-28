@@ -108,7 +108,7 @@ v1.4
 * Shots and mulligans while free roaming after finishing a level in multiplayer
 are not counted towards total
 * Shots HUD element is disabled after completing a level in multiplayer
-* Modifers are announced in chat
+* Modifiers are announced in chat
 * Renamed cheats to modifiers in readme
 * Added warning about conveyor belts to readme
 * Removed Super Sonic and NiGHTS sprites from WAD
