@@ -267,6 +267,10 @@ addHook("ThinkFrame", function()
 			-- double charge rate for Super Snolf
 			increment = $1 * 2
 		end
+		if player.powers[pw_sneakers] > 0 then
+			-- double charge rate for Speed Shoes
+			increment = $1 * 2
+		end
 		local max_charge = ANGLE_180
 
 		local mull = player.snolf.mull -- list of mulligan points
