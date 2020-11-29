@@ -259,6 +259,10 @@ addHook("ThinkFrame", function()
 
 		-- I want the meter timing to be sinusoidal so we will be using trigonometry
 		local increment = ANG1 + ANG2
+		if gamemap == 25 then
+			-- double charge speed for Metal Sonic race
+			increment = $1 * 2
+		end
 		local max_charge = ANGLE_180
 
 		local mull = player.snolf.mull -- list of mulligan points
