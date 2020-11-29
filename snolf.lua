@@ -32,7 +32,7 @@ local function allow_air_snolf(player)
 	if player.powers[pw_super] > 0 then
 		return true
 	-- the last few bosses might be impossible without this
-	elseif gamemap and type(gamemap) == "number" then
+	elseif gamemap then
 		local air_snolf_maps = {
 			[25]=true, -- Metal Sonic Race
 			[26]=true, -- Metal Sonic Fight
