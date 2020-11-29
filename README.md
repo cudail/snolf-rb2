@@ -101,6 +101,13 @@ Life count icon from Mario Golf: Advance Tour.
 
 ## Changelog
 
+v1.5
+* Super Snolf can take shoots mid-air and has a doubled shot charge rate
+* Super Sneakers double shot charge rate
+* Snolf can take shots mid-"air" when in space
+* Snolf can take shots mid-air in certain maps
+* Shot charge rate is doubled on a certain map
+
 v1.4
 * New character select art by Mike Tona
 * Fixed errors with spectator players in multiplayer
