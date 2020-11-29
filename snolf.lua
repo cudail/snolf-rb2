@@ -260,7 +260,11 @@ addHook("ThinkFrame", function()
 		-- I want the meter timing to be sinusoidal so we will be using trigonometry
 		local increment = ANG1 + ANG2
 		if gamemap == 25 then
-			-- double charge speed for Metal Sonic race
+			-- double charge rate for Metal Sonic race
+			increment = $1 * 2
+		end
+		if player.powers[pw_super] > 0 then
+			-- double charge rate for Super Snolf
 			increment = $1 * 2
 		end
 		local max_charge = ANGLE_180
