@@ -31,6 +31,9 @@ local function allow_air_snolf(player)
 	-- if they're in a super form
 	if player.powers[pw_super] > 0 then
 		return true
+	-- if the player is in the vacuum of space
+	elseif player.powers[pw_spacetime] > 0 then
+		return true
 	-- the last few bosses might be impossible without this
 	elseif gamemap then
 		local air_snolf_maps = {
