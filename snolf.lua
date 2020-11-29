@@ -25,6 +25,19 @@ local function convert_angle(angle, max_val)
 	return sin(angle - ANGLE_90)*max_val/FRACUNIT/2 + max_val/2
 end
 
+
+-- for the last few maps allow the player to take shots in the air
+local function allow_air_snolf()
+	if gamemap and type(gamemap) == "number" then
+		local air_snolf_maps = {
+			[25]=true, -- Metal Sonic Race
+			[26]=true, -- Metal Sonic Fight
+			[27]=true} -- Metal Robotnik Fight
+		return air_snolf_maps[gamemap]
+	end
+	return false
+end
+
 local function announce_cheat(player, cheatname, onoff)
 	local announcement = player.name .." turned " ..
 		(onoff and "on" or "off") .. " modifier '" .. cheatname + "'"
@@ -449,7 +462,7 @@ addHook("ThinkFrame", function()
 				player.snolf.vdrive = $1 + player.snolf.increment
 			end
 		elseif player.snolf.state == 3 then -- state 3: we have launched and can't do anything till we come to a stop
-			if P_IsObjectOnGround(pmo) and player.speed == 0 and pmo.momz == 0 then
+			if allow_air_snolf() or (P_IsObjectOnGround(pmo) and player.speed == 0 and pmo.momz == 0) then
 				player.snolf.state = 0
 			end
 		elseif player.snolf.state == nil then
