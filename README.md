@@ -101,6 +101,10 @@ Life count icon from Mario Golf: Advance Tour.
 
 ## Changelog
 
+v1.6
+* Adjusted alignment of constellation sprites
+* Shot charge rate is doubled in certain maps
+
 v1.5
 * Super Snolf can take shoots mid-air and has a doubled shot charge rate
 * Super Sneakers double shot charge rate
