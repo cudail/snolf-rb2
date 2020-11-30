@@ -1,5 +1,5 @@
 name = Snolf
-flags = SF_SUPER
+flags = SF_SUPER|SF_NONIGHTSSUPER
 RealName = Snolf the Golfball
 HudName = Snolf
 ability = CA_NONE
