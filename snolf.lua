@@ -26,6 +26,17 @@ local function convert_angle(angle, max_val)
 end
 
 
+-- the last few bosses are very difficult
+-- so I'm going to give the player a few bonuses if they've gotten that far
+local function in_black_core()
+	local black_core_maps = {
+		[25]=true, -- Metal Sonic Race
+		[26]=true, -- Metal Sonic Fight
+		[27]=true} -- Metal Robotnik Fight
+	return black_core_maps[gamemap]
+end
+
+
 -- situations where we want the player to be able to shoot mid-air
 local function allow_air_snolf(player)
 	-- if they're in a super form
@@ -34,16 +45,10 @@ local function allow_air_snolf(player)
 	-- if the player is in the vacuum of space
 	elseif player.powers[pw_spacetime] > 0 then
 		return true
-	-- the last few bosses might be impossible without this
-	elseif gamemap then
-		local air_snolf_maps = {
-			[25]=true, -- Metal Sonic Race
-			[26]=true, -- Metal Sonic Fight
-			[27]=true} -- Metal Robotnik Fight
-		return air_snolf_maps[gamemap]
 	end
-	return false
+	return in_black_core()
 end
+
 
 local function announce_cheat(player, cheatname, onoff)
 	local announcement = player.name .." turned " ..
@@ -262,8 +267,8 @@ addHook("ThinkFrame", function()
 
 		-- I want the meter timing to be sinusoidal so we will be using trigonometry
 		local increment = ANG1 + ANG2
-		if gamemap == 25 then
-			-- double charge rate for Metal Sonic race
+		if in_black_core() then
+			-- double charge rate for the last few bosses
 			increment = $1 * 2
 		end
 		if player.powers[pw_super] > 0 then
