@@ -1,9 +1,16 @@
 freeslot("SPR_SFST", "SPR_SFAH", "SPR_SFAV", "SPR_SFMR")
 
+
+---------------
+-- constants --
+---------------
 local h_meter_length = 50
 local v_meter_length = 50
 
 
+---------------------------------
+-- player behaviour coroutines --
+---------------------------------
 -- declaring these functions because we're about to make some circular
 -- references and we need these to be declared to avoid parsing errors
 local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop
@@ -66,33 +73,9 @@ waiting_to_stop = function(snolf_table)
 end
 
 
-local is_snolf = function(mo)
-	return mo and mo.skin == "snolf"
-end
-
-
-local at_rest = function(snlf)
-	return P_IsObjectOnGround(snlf.mo) and snlf.p.speed == 0 and snlf.mo.momz == 0
-end
-
-
-
--- draw the charge meter
-hud.add( function(v, player, camera)
-	if not is_snolf(player.mo) then return end
-	if not player.snolf.charging then return end
-
-	local meter = v.getSpritePatch(SPR_SFMR)  -- shot meter sprite
-	local harrow = v.getSpritePatch(SPR_SFAH, 0, 4) -- shot meter arrow sprite 1
-	local varrow = v.getSpritePatch(SPR_SFAV, 0, 5) -- shot meter arrow sprite 2
-
-	v.draw(158, 103, meter)
-	v.draw(160+player.snolf.hdrive, 151, harrow)
-	if player.snolf.vdrive ~= -1 then
-		v.draw(159, 150-player.snolf.vdrive, varrow)
-	end
-end, "game")
-
+---------------
+-- functions --
+---------------
 
 -- store all snolf-relevant state info in player_t.snolf
 local snolf_setup = function(player)
@@ -109,9 +92,40 @@ local snolf_setup = function(player)
 	player.snolf.routine = coroutine.create(shot_ready)
 end
 
+local is_snolf = function(mo)
+	return mo and mo.skin == "snolf"
+end
 
 
+local at_rest = function(snlf)
+	return P_IsObjectOnGround(snlf.mo) and snlf.p.speed == 0 and snlf.mo.momz == 0
+end
 
+
+-------------------
+-- HUD functions --
+-------------------
+hud.add( function(v, player, camera)
+	if not is_snolf(player.mo) then return end
+	if not player.snolf.charging then return end
+
+	local meter = v.getSpritePatch(SPR_SFMR)  -- shot meter sprite
+	local harrow = v.getSpritePatch(SPR_SFAH, 0, 4) -- shot meter arrow sprite 1
+	local varrow = v.getSpritePatch(SPR_SFAV, 0, 5) -- shot meter arrow sprite 2
+
+	v.draw(158, 103, meter)
+	v.draw(160+player.snolf.hdrive, 151, harrow)
+	if player.snolf.vdrive ~= -1 then
+		v.draw(159, 150-player.snolf.vdrive, varrow)
+	end
+end, "game")
+
+
+-----------
+-- hooks --
+-----------
+
+-- main hook
 addHook("PreThinkFrame", function()
 	for player in players.iterate do
 
