@@ -101,6 +101,10 @@ Life count icon from Mario Golf: Advance Tour.
 
 ## Changelog
 
+v2.0
+* Complete rewrite of Lua script
+* Removed idle animation sprites
+
 v1.6
 * Adjusted alignment of constellation sprites
 * Shot charge rate is doubled in certain maps
