@@ -1,5 +1,8 @@
 freeslot("SPR_SFST", "SPR_SFAH", "SPR_SFAV", "SPR_SFMR")
 
+local h_meter_length = 50
+local v_meter_length = 50
+
 
 -- initialising these functions because we're about to make some circular
 -- references and 
@@ -17,26 +20,38 @@ end
 -- setting horizontal shot force
 horizontal_charge = function(snolf_table)
 	local snlf = snolf_table
+	local increment = 1
 	snlf.hdrive = -1
 	repeat
- 		snlf.hdrive = $1 + 1
+		if snlf.hdrive >= h_meter_length then
+			increment = -1
+		elseif snlf.hdrive <= 0 then
+			increment = 1
+		end
+		snlf.hdrive = $1 + increment
 		print(snlf.hdrive)
- 		coroutine.yield()
+		coroutine.yield()
 	until(snlf.ctrl.jmp == 1)
- 	snlf.routine = coroutine.create(vertical_charge, snlf)
+	snlf.routine = coroutine.create(vertical_charge, snlf)
 end
 
 -- setting vertical shot force
 vertical_charge = function(snolf_table)
 	local snlf = snolf_table
+	local increment = 1
 	snlf.vdrive = -1
 	repeat
- 		snlf.vdrive = $1 + 1
+		if snlf.vdrive >= v_meter_length then
+			increment = -1
+		elseif snlf.vdrive <= 0 then
+			increment = 1
+		end
+		snlf.vdrive = $1 + increment
 		print(snlf.vdrive)
- 		coroutine.yield()
+		coroutine.yield()
 	until(snlf.ctrl.jmp == 1)
 	P_InstaThrust(snlf.mo, snlf.mo.angle, snlf.hdrive*FRACUNIT)
- 	P_SetObjectMomZ(snlf.mo, snlf.vdrive*FRACUNIT)
+	P_SetObjectMomZ(snlf.mo, snlf.vdrive*FRACUNIT)
 	snlf.routine = coroutine.create(shot_ready, snlf)
 end
 
