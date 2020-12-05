@@ -77,6 +77,7 @@ vertical_charge = function(snolf_table)
 	P_InstaThrust(snlf.mo, snlf.mo.angle, snlf.hdrive*FRACUNIT)
 	P_SetObjectMomZ(snlf.mo, snlf.vdrive*FRACUNIT)
 	snlf.charging = false
+	snlf.shotcount = $1 + 1
 	snlf.routine = coroutine.create(waiting_to_stop, snlf)
 end
 
@@ -98,13 +99,21 @@ end
 -- store all snolf-relevant state info in player_t.snolf
 snolf_setup = function(player)
 	player.snolf = {
+		-- SRB2 data structures
 		p = player,
 		mo = player.mo,
+		-- Snolf shot state
 		charging = false,
-		ctrl = { jmp = 0, spn = 0 },
 		hdrive = 0,
 		vdrive = 0,
+		-- controls
+		ctrl = { jmp = 0, spn = 0 },
+		-- mulligan points
 		mull_pts = {},
+		--stats
+		shotcount = 0,
+		mullcount = 0,
+		--functions
 		at_rest = at_rest,
 		take_a_mulligan = take_a_mulligan
 	}
@@ -136,6 +145,7 @@ take_a_mulligan = function(snlf)
 		P_InstaThrust(mo, 0, 0)
 		P_SetObjectMomZ(mo, 0)
 		S_StartSound(mo, sfx_mixup)
+		snlf.mullcount = $1 + 1
 	end
 end
 
@@ -150,6 +160,7 @@ end
 -------------------
 -- HUD functions --
 -------------------
+-- shot meter
 hud.add( function(v, player, camera)
 	if not is_snolf(player.mo) then return end
 	if not player.snolf.charging then return end
@@ -164,6 +175,21 @@ hud.add( function(v, player, camera)
 		v.draw(159, 150-player.snolf.vdrive, varrow)
 	end
 end, "game")
+
+
+-- shots count
+hud.add( function(v, player, camera)
+	if not is_snolf(player.mo) then return end
+
+	local hud_shots = v.getSpritePatch(SPR_SFST) -- SHOTS HUD element
+	local shotcount = player.snolf.shotcount + player.snolf.mullcount
+
+	if player.pflags & PF_FINISHED == 0 or player.exiting > 0 then
+		v.draw(16, 58, hud_shots, V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOTOP)
+		v.drawNum(96, 58, shotcount, V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOTOP)
+	end
+end, "game")
+
 
 
 -----------
