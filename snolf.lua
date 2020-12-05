@@ -9,9 +9,9 @@ local is_snolf, at_rest, take_a_mulligan, same_position, snolf_setup
 ---------------
 -- constants --
 ---------------
-local h_meter_length = 50
-local v_meter_length = 50
-local ticks_for_mulligan = 35
+local H_METER_LENGTH = 50
+local V_METER_LENGTH = 50
+local TICKS_FOR_MULLIGAN = 35
 
 
 ---------------------------------
@@ -50,7 +50,7 @@ horizontal_charge = function(snolf_table)
 	local snlf = snolf_table
 	local increment = 1
 	repeat
-		if snlf.hdrive >= h_meter_length then
+		if snlf.hdrive >= H_METER_LENGTH then
 			increment = -1
 		elseif snlf.hdrive <= 0 then
 			increment = 1
@@ -66,7 +66,7 @@ vertical_charge = function(snolf_table)
 	local snlf = snolf_table
 	local increment = 1
 	repeat
-		if snlf.vdrive >= v_meter_length then
+		if snlf.vdrive >= V_METER_LENGTH then
 			increment = -1
 		elseif snlf.vdrive <= 0 then
 			increment = 1
@@ -194,7 +194,7 @@ addHook("PreThinkFrame", function()
 			coroutine.resume(snlf.routine, snlf)
 		end
 
-		if snlf.ctrl.spn == ticks_for_mulligan then
+		if snlf.ctrl.spn == TICKS_FOR_MULLIGAN then
 			snlf:take_a_mulligan()
 		end
 
