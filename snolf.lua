@@ -31,7 +31,6 @@ horizontal_charge = function(snolf_table)
 			increment = 1
 		end
 		snlf.hdrive = $1 + increment
-		print(snlf.hdrive)
 		coroutine.yield()
 	until(snlf.ctrl.jmp == 1)
 	snlf.routine = coroutine.create(vertical_charge, snlf)
@@ -48,7 +47,6 @@ vertical_charge = function(snolf_table)
 			increment = 1
 		end
 		snlf.vdrive = $1 + increment
-		print(snlf.vdrive)
 		coroutine.yield()
 	until(snlf.ctrl.jmp == 1)
 	P_InstaThrust(snlf.mo, snlf.mo.angle, snlf.hdrive*FRACUNIT)
