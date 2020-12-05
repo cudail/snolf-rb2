@@ -1,24 +1,42 @@
 freeslot("SPR_SFST", "SPR_SFAH", "SPR_SFAV", "SPR_SFMR")
 
 
+-- declare functions in advance so they can reference each other
+-- without causing parsing errors
+local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop
+local is_snolf, at_rest, take_a_mulligan, same_position, snolf_setup
+
 ---------------
 -- constants --
 ---------------
 local h_meter_length = 50
 local v_meter_length = 50
+local ticks_for_mulligan = 35
 
 
 ---------------------------------
 -- player behaviour coroutines --
 ---------------------------------
--- declaring these functions because we're about to make some circular
--- references and we need these to be declared to avoid parsing errors
-local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop
-
 -- sit ready until the player presses jump
 shot_ready = function(snolf_table)
 	local snlf = snolf_table
 	repeat
+
+		-- if Snolf is at rest try to set a mulligan point
+		if snlf:at_rest() then
+			local mo, mulls = snlf.mo, snlf.mull_pts
+			local lm = mulls[#mulls] -- last mulligan point
+
+			-- if we don't have a mulligan point yet
+			-- or if our last one does not match our current position
+			if not lm or not same_position(mo, lm) then
+				-- if there's already ten mulligan points stored then remove one
+				if #mulls > 9 then
+					table.remove(mulls, 1)
+				end
+				table.insert(mulls, {x = mo.x, y = mo.y, z = mo.z})
+			end
+		end
 		coroutine.yield()
 	until snlf.ctrl.jmp == 1
 	snlf.charging = true
@@ -78,28 +96,55 @@ end
 ---------------
 
 -- store all snolf-relevant state info in player_t.snolf
-local snolf_setup = function(player)
+snolf_setup = function(player)
 	player.snolf = {
 		p = player,
 		mo = player.mo,
 		charging = false,
-		ctrl = { jmp = 0 },
-		at_rest = at_rest,
+		ctrl = { jmp = 0, spn = 0 },
 		hdrive = 0,
-		vdrive = 0
+		vdrive = 0,
+		mull_pts = {},
+		at_rest = at_rest,
+		take_a_mulligan = take_a_mulligan
 	}
 
 	player.snolf.routine = coroutine.create(shot_ready)
 end
 
-local is_snolf = function(mo)
+
+is_snolf = function(mo)
 	return mo and mo.skin == "snolf"
 end
 
 
-local at_rest = function(snlf)
+at_rest = function(snlf)
 	return P_IsObjectOnGround(snlf.mo) and snlf.p.speed == 0 and snlf.mo.momz == 0
 end
+
+
+take_a_mulligan = function(snlf)
+	local lm = snlf.mull_pts[#snlf.mull_pts] -- last mulligan point
+	local mo = snlf.mo
+	-- if we're still at the last mulligan point remove it and go back one
+	if lm and same_position(lm, mo) then
+		table.remove(snlf.mull_pts, #snlf.mull_pts)
+		lm = snlf.mull_pts[#snlf.mull_pts]
+	end
+	if lm then
+		P_TeleportMove(mo, lm.x, lm.y, lm.z)
+		P_InstaThrust(mo, 0, 0)
+		P_SetObjectMomZ(mo, 0)
+		S_StartSound(mo, sfx_mixup)
+	end
+end
+
+
+same_position = function(pt1, pt2)
+	return pt1.x == pt2.x and pt1.y == pt2.y and pt1.z == pt2.z
+end
+
+
 
 
 -------------------
@@ -142,11 +187,15 @@ addHook("PreThinkFrame", function()
 
 		-- check controls
 		snlf.ctrl.jmp = p.cmd.buttons & BT_JUMP and $1+1 or 0
-
+		snlf.ctrl.spn = p.cmd.buttons & BT_SPIN and $1+1 or 0
 
 		-- run the player's current coroutine
 		if snlf.routine and coroutine.status(snlf.routine) ~= "dead" then
 			coroutine.resume(snlf.routine, snlf)
+		end
+
+		if snlf.ctrl.spn == ticks_for_mulligan then
+			snlf:take_a_mulligan()
 		end
 
 	end
