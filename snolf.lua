@@ -56,6 +56,7 @@ vertical_charge = function(snolf_table)
 end
 
 
+-- wait until Snolf comes to a complete stop before they can take another shot
 waiting_to_stop = function(snolf_table)
 	local snlf = snolf_table
 	local p, pmo = snlf.p, snlf.p.mo
