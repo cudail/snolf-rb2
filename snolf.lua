@@ -224,6 +224,18 @@ addHook("PreThinkFrame", function()
 			snlf:take_a_mulligan()
 		end
 
+
+		-- force changes to player state
+		if P_IsObjectOnGround(player.mo) then
+			p.jumpfactor = 0 -- disable jump
+			p.pflags = $1 | PF_SPINNING -- force spinning flag
+			if snlf.charging then
+				p.pflags = $1 | PF_STARTDASH -- force spindash
+			end
+		end
+
+		pmo.state = S_PLAY_ROLL -- always force rolling animation
+
 	end
 end)
 
