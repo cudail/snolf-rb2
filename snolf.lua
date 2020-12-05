@@ -4,9 +4,9 @@ local h_meter_length = 50
 local v_meter_length = 50
 
 
--- initialising these functions because we're about to make some circular
--- references and 
-local shot_ready, horizontal_charge, vertical_charge
+-- declaring these functions because we're about to make some circular
+-- references and we need these to be declared to avoid parsing errors
+local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop
 
 -- sit ready until the player presses jump
 shot_ready = function(snolf_table)
