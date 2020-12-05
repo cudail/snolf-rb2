@@ -103,6 +103,7 @@ Life count icon from Mario Golf: Advance Tour.
 
 v2.0
 * Complete rewrite of Lua script
+* Time it takes to mulligan reduced to one second
 * Removed idle animation sprites
 
 v1.6
