@@ -59,18 +59,22 @@ end
 -- wait until Snolf comes to a complete stop before they can take another shot
 waiting_to_stop = function(snolf_table)
 	local snlf = snolf_table
-	local p, pmo = snlf.p, snlf.p.mo
 	repeat
 		coroutine.yield()
-	until P_IsObjectOnGround(pmo) and p.speed == 0 and pmo.momz == 0
+	until snlf:at_rest()
 	snlf.routine = coroutine.create(shot_ready, snlf)
 end
-
 
 
 local is_snolf = function(mo)
 	return mo and mo.skin == "snolf"
 end
+
+
+local at_rest = function(snlf)
+	return P_IsObjectOnGround(snlf.mo) and snlf.p.speed == 0 and snlf.mo.momz == 0
+end
+
 
 
 -- draw the charge meter
@@ -97,13 +101,15 @@ local snolf_setup = function(player)
 		mo = player.mo,
 		charging = false,
 		ctrl = { jmp = 0 },
-		handle_jump = handle_jump,
+		at_rest = at_rest,
 		hdrive = 0,
 		vdrive = 0
 	}
 
 	player.snolf.routine = coroutine.create(shot_ready)
 end
+
+
 
 
 addHook("PreThinkFrame", function()
