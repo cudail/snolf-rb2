@@ -52,6 +52,16 @@ vertical_charge = function(snolf_table)
 	P_InstaThrust(snlf.mo, snlf.mo.angle, snlf.hdrive*FRACUNIT)
 	P_SetObjectMomZ(snlf.mo, snlf.vdrive*FRACUNIT)
 	snlf.charging = false
+	snlf.routine = coroutine.create(waiting_to_stop, snlf)
+end
+
+
+waiting_to_stop = function(snolf_table)
+	local snlf = snolf_table
+	local p, pmo = snlf.p, snlf.p.mo
+	repeat
+		coroutine.yield()
+	until (P_IsObjectOnGround(pmo) and p.speed == 0 and pmo.momz == 0)
 	snlf.routine = coroutine.create(shot_ready, snlf)
 end
 
