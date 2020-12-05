@@ -66,9 +66,15 @@ waiting_to_stop = function(snolf_table)
 end
 
 
+
+local is_snolf = function(mo)
+	return mo and mo.skin == "snolf"
+end
+
+
 -- draw the charge meter
 hud.add( function(v, player, camera)
-	if not player.mo or not player.snolf then return end
+	if not is_snolf(player.mo) then return end
 	if not player.snolf.charging then return end
 
 	local meter = v.getSpritePatch(SPR_SFMR)  -- shot meter sprite
@@ -103,7 +109,7 @@ addHook("PreThinkFrame", function()
 	for player in players.iterate do
 
 		-- don't do anything if we're not Snolf
-		if player.mo.skin ~= "snolf" then continue end
+		if not is_snolf(player.mo) then continue end
 
 		if player.snolf == nil then 
 			snolf_setup(player)
@@ -124,3 +130,19 @@ addHook("PreThinkFrame", function()
 
 	end
 end)
+
+
+-- Hook to override default collision and make Snolf bounce off walls
+addHook("MobjMoveBlocked", function(mo)
+	if not is_snolf(mo) then return false end
+
+	-- P_BounceMove doesn't bounce the player if they are on the ground
+	-- To get around this impart the tiniest possible vertical momentum the
+	-- engine will allow so Snolf is technically in the air for a single frame
+	if P_IsObjectOnGround(mo) then
+		P_SetObjectMomZ(mo, 1)
+	end
+	P_BounceMove(mo)
+	return true
+end)
+
