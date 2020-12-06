@@ -42,6 +42,7 @@ shot_ready = function(snolf_table)
 	snlf.charging = true
 	snlf.hdrive = -1
 	snlf.vdrive = -1
+	S_StartSoundAtVolume(pmo, sfx_spndsh, 64)
 	snlf.routine = coroutine.create(horizontal_charge, snlf)
 end
 
@@ -58,6 +59,7 @@ horizontal_charge = function(snolf_table)
 		snlf.hdrive = $1 + increment
 		coroutine.yield()
 	until snlf.ctrl.jmp == 1
+	S_StartSoundAtVolume(pmo, sfx_spndsh, 100)
 	snlf.routine = coroutine.create(vertical_charge, snlf)
 end
 
@@ -77,6 +79,7 @@ vertical_charge = function(snolf_table)
 	P_InstaThrust(snlf.mo, snlf.mo.angle, snlf.hdrive*FRACUNIT)
 	P_SetObjectMomZ(snlf.mo, snlf.vdrive*FRACUNIT)
 	snlf.p.pflags = $1 | PF_JUMPED
+	S_StartSound(pmo, sfx_zoom)
 	snlf.charging = false
 	snlf.shotcount = $1 + 1
 	snlf.routine = coroutine.create(waiting_to_stop, snlf)
