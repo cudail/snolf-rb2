@@ -11,8 +11,9 @@ local is_snolf, at_rest, take_a_mulligan, same_position, snolf_setup
 ---------------
 local H_METER_LENGTH = 50
 local V_METER_LENGTH = 50
-local TICKS_FOR_MULLIGAN = 35
-
+local TICKS_FOR_MULLIGAN = 35 -- how long to hold down the spin button to take a mulligan
+local BOUNCE_LIMIT = 10*FRACUNIT -- Snolf won't bounce if their vertical momentum is less than this
+local BOUNCE_FACTOR = FRACUNIT/2 -- when Snolf bounces their momentum is multiplied by this factor
 
 ---------------------------------
 -- player behaviour coroutines --
@@ -110,6 +111,8 @@ snolf_setup = function(player)
 		charging = false,
 		hdrive = 0,
 		vdrive = 0,
+		-- previous tick state
+		prev = { inair = false, momz = 0 },
 		-- controls
 		ctrl = { jmp = 0, spn = 0 },
 		-- mulligan points
@@ -212,7 +215,7 @@ addHook("PreThinkFrame", function()
 		end
 
 		-- set some local variables as shortcuts
-		local p, pmo, snlf = player, player.mo, player.snolf
+		local p, mo, snlf = player, player.mo, player.snolf
 
 
 		-- check controls
@@ -230,7 +233,7 @@ addHook("PreThinkFrame", function()
 
 
 		-- force changes to player state
-		if P_IsObjectOnGround(player.mo) then
+		if P_IsObjectOnGround(mo) then
 			p.jumpfactor = 0 -- disable jump
 			p.pflags = $1 | PF_SPINNING -- force spinning flag
 			if snlf.charging then
@@ -238,8 +241,18 @@ addHook("PreThinkFrame", function()
 			end
 		end
 
-		pmo.state = S_PLAY_ROLL -- always force rolling animation
+		-- check if we landed this turn
+		if snlf.prev.inair and P_IsObjectOnGround(mo) then
+			if abs(snlf.prev.momz) > BOUNCE_LIMIT then
+				P_SetObjectMomZ(mo, - FixedMul(snlf.prev.momz, BOUNCE_FACTOR))
+			end
+		end
 
+		mo.state = S_PLAY_ROLL -- always force rolling animation
+
+		-- store certain state attributes so we can check for changes next tick
+		snlf.prev.inair = not P_IsObjectOnGround(mo)
+		snlf.prev.momz = mo.momz
 	end
 end)
 
