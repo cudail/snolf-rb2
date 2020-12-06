@@ -76,6 +76,7 @@ vertical_charge = function(snolf_table)
 	until snlf.ctrl.jmp == 1
 	P_InstaThrust(snlf.mo, snlf.mo.angle, snlf.hdrive*FRACUNIT)
 	P_SetObjectMomZ(snlf.mo, snlf.vdrive*FRACUNIT)
+	snlf.p.pflags = $1 | PF_JUMPED
 	snlf.charging = false
 	snlf.shotcount = $1 + 1
 	snlf.routine = coroutine.create(waiting_to_stop, snlf)
