@@ -3,8 +3,8 @@ freeslot("SPR_SFST", "SPR_SFAH", "SPR_SFAV", "SPR_SFMR")
 
 -- declare functions in advance so they can reference each other
 -- without causing parsing errors
-local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop
-local is_snolf, at_rest, take_a_mulligan, same_position, snolf_setup
+local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, is_snolf,
+	at_rest, take_a_mulligan, same_position, snolf_setup, reset_state
 
 ---------------
 -- constants --
@@ -79,7 +79,7 @@ vertical_charge = function(snolf_table)
 	until snlf.ctrl.jmp == 1
 	P_InstaThrust(snlf.mo, snlf.mo.angle, snlf.hdrive*FRACUNIT)
 	P_SetObjectMomZ(snlf.mo, snlf.vdrive*FRACUNIT)
-	snlf.p.pflags = $1 | PF_JUMPED
+	snlf.pflags = $1 | PF_JUMPED
 	S_StartSound(pmo, sfx_zoom)
 	snlf.charging = false
 	snlf.shotcount = $1 + 1
@@ -103,10 +103,9 @@ end
 
 -- store all snolf-relevant state info in player_t.snolf
 snolf_setup = function(player)
-	player.snolf = {
+	local snolf = {
 		-- SRB2 data structures
 		p = player,
-		mo = player.mo,
 		-- Snolf shot state
 		charging = false,
 		hdrive = 0,
@@ -122,10 +121,31 @@ snolf_setup = function(player)
 		mullcount = 0,
 		--functions
 		at_rest = at_rest,
-		take_a_mulligan = take_a_mulligan
+		take_a_mulligan = take_a_mulligan,
+		reset_state = reset_state,
+		--coroutine
+		routine = coroutine.create(waiting_to_stop)
 	}
 
-	player.snolf.routine = coroutine.create(shot_ready)
+	setmetatable(snolf, {
+		__index = function(snolf, key)
+			-- make all properties of the parent player accessible
+			return snolf.p[key]
+		end
+	})
+
+	player.snolf = snolf
+end
+
+
+-- resetting state to be used on death or level change
+reset_state = function(snlf)
+	snlf.prev = { inair = false, momz = 0 }
+	snlf.mull_pts = {}
+	snlf.charging = false
+	snlf.hdrive = 0
+	snlf.vdrive = 0
+	snlf.routine = coroutine.create(waiting_to_stop)
 end
 
 
@@ -135,7 +155,7 @@ end
 
 
 at_rest = function(snlf)
-	return P_IsObjectOnGround(snlf.mo) and snlf.p.speed == 0 and snlf.mo.momz == 0
+	return P_IsObjectOnGround(snlf.mo) and snlf.speed == 0 and snlf.mo.momz == 0
 end
 
 
@@ -223,8 +243,11 @@ addHook("PreThinkFrame", function()
 		snlf.ctrl.spn = p.cmd.buttons & BT_SPIN and $1+1 or 0
 
 		-- run the player's current coroutine
-		if snlf.routine and coroutine.status(snlf.routine) ~= "dead" then
-			coroutine.resume(snlf.routine, snlf)
+		local resumed, err = coroutine.resume(snlf.routine, snlf)
+		if not resumed then
+			print("Snolf coroutine died")
+			print(err)
+			snlf.routine = coroutine.create(waiting_to_stop)
 		end
 
 		if snlf.ctrl.spn == TICKS_FOR_MULLIGAN then
@@ -271,3 +294,18 @@ addHook("MobjMoveBlocked", function(mo)
 	return true
 end)
 
+
+-- reset state on death
+addHook("MobjDeath", function(mo)
+	if not is_snolf(mo) then return false end
+	print("Snolf died")
+	mo.player.snolf:reset_state()
+end)
+
+-- reset state when a new map is loaded
+addHook("MapLoad", function(mapnumber)
+	for player in players.iterate do
+		if not is_snolf(player.mo) then continue end
+		player.snolf:reset_state()
+	end
+end)
