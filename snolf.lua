@@ -29,21 +29,6 @@ local V_METER_LENGTH = 50
 shot_ready = function(snolf_table)
 	local snlf = snolf_table
 	repeat
-		-- if Snolf is at rest try to set a mulligan point
-		if snlf:at_rest() then
-			local mo, mulls = snlf.mo, snlf.mull_pts
-			local lm = mulls[#mulls] -- last mulligan point
-
-			-- if we don't have a mulligan point yet
-			-- or if our last one does not match our current position
-			if not lm or not same_position(mo, lm) then
-				-- if there's already ten mulligan points stored then remove one
-				if #mulls > 9 then
-					table.remove(mulls, 1)
-				end
-				table.insert(mulls, {x = mo.x, y = mo.y, z = mo.z})
-			end
-		end
 		coroutine.yield()
 	until snlf.ctrl.jmp == 1
 	snlf.charging = true
@@ -102,7 +87,22 @@ waiting_to_stop = function(snolf_table)
 	repeat
 		coroutine.yield()
 	until snlf:at_rest()
+
 	snlf.routine = coroutine.create(shot_ready, snlf)
+
+	-- try to set a mulligan point
+	local mo, mulls = snlf.mo, snlf.mull_pts
+	local lm = mulls[#mulls] -- last mulligan point
+
+	-- if we don't have a mulligan point yet
+	-- or if our last one does not match our current position
+	if not lm or not same_position(mo, lm) then
+		-- if there's already ten mulligan points stored then remove one
+		if #mulls > 9 then
+			table.remove(mulls, 1)
+		end
+		table.insert(mulls, {x = mo.x, y = mo.y, z = mo.z})
+	end
 end
 
 
