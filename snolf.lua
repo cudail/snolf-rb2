@@ -43,6 +43,7 @@ horizontal_charge = function(snolf_table)
 	local snlf = snolf_table
 	local increment = 1
 	repeat
+		snlf.p.pflags = $1 | PF_STARTDASH -- force spindash state
 		if snlf.hdrive >= H_METER_LENGTH then
 			increment = -1
 		elseif snlf.hdrive <= 0 then
@@ -60,6 +61,7 @@ vertical_charge = function(snolf_table)
 	local snlf = snolf_table
 	local increment = 1
 	repeat
+		snlf.p.pflags = $1 | PF_STARTDASH -- force spindash state
 		if snlf.vdrive >= V_METER_LENGTH then
 			increment = -1
 		elseif snlf.vdrive <= 0 then
@@ -277,20 +279,12 @@ addHook("PreThinkFrame", function()
 			snlf:take_a_mulligan()
 		end
 
-
-		-- force changes to player state
-		if P_IsObjectOnGround(mo) then
-			p.jumpfactor = 0 -- disable jump
-			p.pflags = $1 | PF_SPINNING -- force spinning flag
-			if snlf.charging then
-				p.pflags = $1 | PF_STARTDASH -- force spindash
-			end
-		end
-
 		-- check if we landed this turn
 		if snlf.prev.inair and P_IsObjectOnGround(mo) then
 			if abs(snlf.prev.momz) > BOUNCE_LIMIT then
 				P_SetObjectMomZ(mo, - FixedMul(snlf.prev.momz, BOUNCE_FACTOR))
+			else
+				p.pflags = $1 | PF_SPINNING -- force spinning flag
 			end
 		end
 
