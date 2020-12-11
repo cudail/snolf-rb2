@@ -4,16 +4,23 @@ freeslot("SPR_SFST", "SPR_SFAH", "SPR_SFAV", "SPR_SFMR")
 -- declare functions in advance so they can reference each other
 -- without causing parsing errors
 local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, is_snolf,
-	at_rest, take_a_mulligan, same_position, snolf_setup, reset_state
+	at_rest, take_a_mulligan, same_position, snolf_setup, reset_state,
+	sinusoidal_scale
 
 ---------------
 -- constants --
 ---------------
-local H_METER_LENGTH = 50
-local V_METER_LENGTH = 50
 local TICKS_FOR_MULLIGAN = 35 -- how long to hold down the spin button to take a mulligan
 local BOUNCE_LIMIT = 10*FRACUNIT -- Snolf won't bounce if their vertical momentum is less than this
 local BOUNCE_FACTOR = FRACUNIT/2 -- when Snolf bounces their momentum is multiplied by this factor
+
+-- as it stands the max strength of a fully charged shot,
+-- the charge meter period and the max displacement of the charge meter arrows
+-- during the animation are all deterimned by these two constants, one each
+-- for horizontal and vertical. ideally these should be six different constants
+local H_METER_LENGTH = 50
+local V_METER_LENGTH = 50
+
 
 ---------------------------------
 -- player behaviour coroutines --
@@ -22,7 +29,6 @@ local BOUNCE_FACTOR = FRACUNIT/2 -- when Snolf bounces their momentum is multipl
 shot_ready = function(snolf_table)
 	local snlf = snolf_table
 	repeat
-
 		-- if Snolf is at rest try to set a mulligan point
 		if snlf:at_rest() then
 			local mo, mulls = snlf.mo, snlf.mull_pts
@@ -77,8 +83,11 @@ vertical_charge = function(snolf_table)
 		snlf.vdrive = $1 + increment
 		coroutine.yield()
 	until snlf.ctrl.jmp == 1
-	P_InstaThrust(snlf.mo, snlf.mo.angle, snlf.hdrive*FRACUNIT)
-	P_SetObjectMomZ(snlf.mo, snlf.vdrive*FRACUNIT)
+
+	local h = sinusoidal_scale(snlf.hdrive, H_METER_LENGTH)
+	local v = sinusoidal_scale(snlf.vdrive, V_METER_LENGTH)
+	P_InstaThrust(snlf.mo, snlf.mo.angle, h*FRACUNIT)
+	P_SetObjectMomZ(snlf.mo, v*FRACUNIT)
 	snlf.pflags = $1 | PF_JUMPED
 	S_StartSound(pmo, sfx_zoom)
 	snlf.charging = false
@@ -182,6 +191,17 @@ same_position = function(pt1, pt2)
 end
 
 
+-- converts a value on a linear scale with min value 0 and max value m to a
+-- sinusoidal scale with the same limits.
+-- m/2(1-cos(pi*x/m))
+sinusoidal_scale = function(x, m)
+	local xf, mf = x*FRACUNIT, m*FRACUNIT
+	-- is this this too computationally expensive?
+	local angle = FixedAngle(FixedDiv(FixedMul(AngleFixed(ANGLE_180),xf),mf))
+	local rud =  FixedRound(FixedMul(FRACUNIT - cos(angle),mf)/2) / FRACUNIT
+	print(rud)
+	return rud
+end
 
 
 -------------------
@@ -196,10 +216,13 @@ hud.add( function(v, player, camera)
 	local harrow = v.getSpritePatch(SPR_SFAH, 0, 4) -- shot meter arrow sprite 1
 	local varrow = v.getSpritePatch(SPR_SFAV, 0, 5) -- shot meter arrow sprite 2
 
+	local hpos = sinusoidal_scale(player.snolf.hdrive, H_METER_LENGTH)
+	local vpos = sinusoidal_scale(player.snolf.vdrive, V_METER_LENGTH)
+
 	v.draw(158, 103, meter)
-	v.draw(160+player.snolf.hdrive, 151, harrow)
+	v.draw(160+hpos, 151, harrow)
 	if player.snolf.vdrive ~= -1 then
-		v.draw(159, 150-player.snolf.vdrive, varrow)
+		v.draw(159, 150-vpos, varrow)
 	end
 end, "game")
 
@@ -230,7 +253,7 @@ addHook("PreThinkFrame", function()
 		-- don't do anything if we're not Snolf
 		if not is_snolf(player.mo) then continue end
 
-		if player.snolf == nil then 
+		if player.snolf == nil then
 			snolf_setup(player)
 		end
 
