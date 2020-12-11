@@ -200,9 +200,7 @@ sinusoidal_scale = function(x, m)
 	local xf, mf = x*FRACUNIT, m*FRACUNIT
 	-- is this this too computationally expensive?
 	local angle = FixedAngle(FixedDiv(FixedMul(AngleFixed(ANGLE_180),xf),mf))
-	local rud =  FixedRound(FixedMul(FRACUNIT - cos(angle),mf)/2) / FRACUNIT
-	print(rud)
-	return rud
+	return FixedRound(FixedMul(FRACUNIT - cos(angle),mf)/2) / FRACUNIT
 end
 
 
@@ -270,8 +268,6 @@ addHook("PreThinkFrame", function()
 		-- run the player's current coroutine
 		local resumed, err = coroutine.resume(snlf.routine, snlf)
 		if not resumed then
-			print("Snolf coroutine died")
-			print(err)
 			snlf.routine = coroutine.create(waiting_to_stop)
 		end
 
@@ -315,7 +311,6 @@ end)
 -- reset state on death
 addHook("MobjDeath", function(mo)
 	if not is_snolf(mo) then return false end
-	print("Snolf died")
 	mo.player.snolf:reset_state()
 end)
 
