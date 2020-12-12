@@ -75,7 +75,7 @@ vertical_charge = function(snolf_table)
 	local v = sinusoidal_scale(snlf.vdrive, V_METER_LENGTH)
 	P_InstaThrust(snlf.mo, snlf.mo.angle, h*FRACUNIT)
 	P_SetObjectMomZ(snlf.mo, v*FRACUNIT)
-	snlf.pflags = $1 | PF_JUMPED
+	snlf.p.pflags = $1 | PF_JUMPED
 	S_StartSound(pmo, sfx_zoom)
 	snlf.charging = false
 	snlf.shotcount = $1 + 1
