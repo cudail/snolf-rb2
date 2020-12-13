@@ -14,7 +14,8 @@ local cheats = {
 	snolf_inf_lives = false,
 	snolf_inf_air = false,
 	snolf_death_mulligan = false,
-	snolf_ground_control = false
+	snolf_ground_control = false,
+	snolf_air_shot = false
 }
 
 ---------------
@@ -266,6 +267,10 @@ end
 
 -- situations where we want Snolf to be able to shoot mid-air
 allow_air_snolf = function(snlf)
+	-- air snolf cheat
+	if cheats.snolf_air_shot then
+		return true
+	end
 	-- Super Snolf
 	if snlf.powers[pw_super] > 0 then
 		return true
@@ -506,4 +511,8 @@ end, COM_ADMIN)
 
 COM_AddCommand("snolf_ground_control", function(player, arg)
 	cheat_toggle("snolf_ground_control", arg)
+end, COM_ADMIN)
+
+COM_AddCommand("snolf_air_shot", function(player, arg)
+	cheat_toggle("snolf_air_shot", arg)
 end, COM_ADMIN)
