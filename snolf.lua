@@ -5,7 +5,7 @@ freeslot("SPR_SFST", "SPR_SFAH", "SPR_SFAV", "SPR_SFMR")
 -- without causing parsing errors
 local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, is_snolf,
 	at_rest, take_a_mulligan, same_position, snolf_setup, reset_state,
-	sinusoidal_scale
+	sinusoidal_scale, get_charge_increment, in_black_core
 
 ---------------
 -- constants --
@@ -43,13 +43,13 @@ end
 -- setting horizontal shot force
 horizontal_charge = function(snolf_table)
 	local snlf = snolf_table
-	local increment = 1
+	local increment = get_charge_increment(snlf)
 	repeat
 		snlf.p.pflags = $1 | PF_STARTDASH -- force spindash state
 		if snlf.hdrive >= H_METER_LENGTH then
-			increment = -1
+			increment = - get_charge_increment(snlf)
 		elseif snlf.hdrive <= 0 then
-			increment = 1
+			increment = get_charge_increment(snlf)
 		end
 		snlf.hdrive = $1 + increment
 		coroutine.yield()
@@ -61,13 +61,13 @@ end
 -- setting vertical shot force
 vertical_charge = function(snolf_table)
 	local snlf = snolf_table
-	local increment = 1
+	local increment = get_charge_increment(snlf)
 	repeat
 		snlf.p.pflags = $1 | PF_STARTDASH -- force spindash state
 		if snlf.vdrive >= V_METER_LENGTH then
-			increment = -1
+			increment = - get_charge_increment(snlf)
 		elseif snlf.vdrive <= 0 then
-			increment = 1
+			increment = get_charge_increment(snlf)
 		end
 		snlf.vdrive = $1 + increment
 		coroutine.yield()
@@ -215,6 +215,36 @@ sinusoidal_scale = function(x, m)
 	local angle = FixedAngle(FixedDiv(FixedMul(AngleFixed(ANGLE_180),xf),mf))
 	return FixedRound(FixedMul(FRACUNIT - cos(angle),mf)/2) / FRACUNIT
 end
+
+
+get_charge_increment = function(snlf)
+	local increment = 1
+	if in_black_core() then
+		-- double charge rate for the last few bosses
+		increment = $1 * 2
+	end
+	if snlf.powers[pw_super] > 0 then
+		-- double charge rate for Super Snolf
+		increment = $1 * 2
+	end
+	if snlf.powers[pw_sneakers] > 0 then
+		-- double charge rate for Speed Shoes
+		increment = $1 * 2
+	end
+	return increment
+end
+
+
+-- the last few bosses are very difficult
+-- so I'm going to give the player a few bonuses if they've gotten that far
+in_black_core = function()
+	local black_core_maps = {
+		[25]=true, -- Metal Sonic Race
+		[26]=true, -- Metal Sonic Fight
+		[27]=true} -- Metal Robotnik Fight
+	return black_core_maps[gamemap]
+end
+
 
 
 -------------------
