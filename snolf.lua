@@ -30,7 +30,8 @@ local BOUNCE_FACTOR = FRACUNIT/2 -- when Snolf bounces their momentum is multipl
 -- for horizontal and vertical. ideally these should be six different constants
 local H_METER_LENGTH = 50
 local V_METER_LENGTH = 50
-
+local WATER_AIR_TIMER = 1050
+local SPACE_AIR_TIMER = 403
 
 ---------------------------------
 -- player behaviour coroutines --
@@ -379,6 +380,16 @@ addHook("PreThinkFrame", function()
 		if cheats.snolf_inf_rings then
 			p.xtralife = 99
 			p.rings = 999
+		end
+
+		-- no drowning cheat
+		if cheats.snolf_inf_air then
+			if p.powers[pw_underwater] > 0 then
+				p.powers[pw_underwater] = WATER_AIR_TIMER
+			end
+			if p.powers[pw_spacetime] > 0 then
+				p.powers[pw_spacetime] = SPACE_AIR_TIMER
+			end
 		end
 
 		-- store certain state attributes so we can check for changes next tick
