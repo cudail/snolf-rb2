@@ -375,6 +375,12 @@ addHook("PreThinkFrame", function()
 			p.jumpfactor = FRACUNIT
 		end
 
+		-- infinite rings cheat
+		if cheats.snolf_inf_rings then
+			p.xtralife = 99
+			p.rings = 999
+		end
+
 		-- store certain state attributes so we can check for changes next tick
 		snlf.prev.inair = not P_IsObjectOnGround(mo)
 		snlf.prev.momz = mo.momz
@@ -435,3 +441,29 @@ COM_AddCommand("everybodys_snolf", function(player, arg)
 		end
 	end
 end, COM_ADMIN)
+
+
+COM_AddCommand("snolf_inf_rings", function(player, arg)
+	cheat_toggle("snolf_inf_rings", arg)
+end, COM_ADMIN)
+
+
+COM_AddCommand("snolf_inf_lives", function(player, arg)
+	cheat_toggle("snolf_inf_lives", arg)
+end, COM_ADMIN)
+
+
+COM_AddCommand("snolf_inf_air", function(player, arg)
+	cheat_toggle("snolf_inf_air", arg)
+end, COM_ADMIN)
+
+
+COM_AddCommand("snolf_death_mulligan", function(player, arg)
+	cheat_toggle("snolf_death_mulligan", arg)
+end, COM_ADMIN)
+
+
+COM_AddCommand("snolf_ground_control", function(player, arg)
+	cheat_toggle("snolf_ground_control", arg)
+end, COM_ADMIN)
+
