@@ -284,14 +284,20 @@ addHook("PreThinkFrame", function()
 			end
 		end
 
-		mo.state = S_PLAY_ROLL -- always force rolling animation
-
 		-- store certain state attributes so we can check for changes next tick
 		snlf.prev.inair = not P_IsObjectOnGround(mo)
 		snlf.prev.momz = mo.momz
 	end
 end)
 
+
+addHook("PostThinkFrame", function()
+	for player in players.iterate do
+		if not is_snolf(player.mo) then continue end
+		player.mo.state = S_PLAY_ROLL -- always force rolling animation
+	end
+end
+)
 
 -- Hook to override default collision and make Snolf bounce off walls
 addHook("MobjMoveBlocked", function(mo)
