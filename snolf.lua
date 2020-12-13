@@ -415,6 +415,11 @@ end)
 addHook("MobjDeath", function(mo)
 	if not is_snolf(mo) then return false end
 	mo.player.snolf:reset_state()
+
+	-- infinite lives cheat
+	if cheats.snolf_inf_lives then
+		mo.player.lives = $1 + 1
+	end
 end)
 
 -- reset state when a new map is loaded
@@ -466,4 +471,3 @@ end, COM_ADMIN)
 COM_AddCommand("snolf_ground_control", function(player, arg)
 	cheat_toggle("snolf_ground_control", arg)
 end, COM_ADMIN)
-
