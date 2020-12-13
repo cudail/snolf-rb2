@@ -6,10 +6,11 @@ freeslot("SPR_SFST", "SPR_SFAH", "SPR_SFAV", "SPR_SFMR")
 local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, is_snolf,
 	at_rest, take_a_mulligan, same_position, snolf_setup, reset_state,
 	sinusoidal_scale, get_charge_increment, in_black_core, allow_air_snolf,
-	cheat_toggle
+	cheat_toggle, snolfify_name
 
 local cheats = {
 	everybodys_snolf = false,
+	everybodys_snolf_name_override = false,
 	snolf_inf_rings = false,
 	snolf_inf_lives = false,
 	snolf_inf_air = false,
@@ -142,6 +143,7 @@ snolf_setup = function(player)
 	local snolf = {
 		-- SRB2 data structures
 		p = player,
+		hudname = snolfify_name(skins[player.mo.skin].hudname),
 		-- Snolf shot state
 		charging = false,
 		hdrive = 0,
@@ -299,6 +301,53 @@ cheat_toggle = function(cheat_name, arg)
 end
 
 
+snolfify_name = function(orig_name)
+	orig_name = orig_name:lower()
+
+	-- bafflingly the game uses a control character in character names
+	local sep = string.char(30)
+
+	local name_lookup = {
+		sonic = "Snolf",
+		knuckles = "Knolf",
+		amy = "Amy Rolf",
+		metal = "M"..sep.."Snolf",
+		robotnik = "Robotnolf",
+		shadow = "Shdolf",
+		silver = "Slolf",
+		rouge = "Roulfe",
+		gamma = "102-Golf"}
+	name_lookup["k"..sep.."t"..sep.."e"] = "Knolf"
+	name_lookup["amy"..sep.."r"] = "Amy Rolf"
+	name_lookup["tails doll"] = "Tolf doll"
+	name_lookup["m.k"] = "M"..sep.."knolf"
+	name_lookup["egg robo"] = "Egg Robolf"
+	local consonants = "bcdfghjklmnpqrstvwxyz"
+
+	local name = name_lookup[orig_name]
+
+	if name == nil -- wasn't in our list of hardcoded names
+		-- iterate over letters till find a consonant
+		local i = 0
+		repeat
+			i = $1 + 1
+		until i > #orig_name or consonants:find(orig_name:sub(i,i)) ~= nil
+		-- then iterate until something that is not a consonant is found
+		repeat
+			i = $1 + 1
+		until i > #orig_name or consonants:find(orig_name:sub(i,i)) == nil
+
+		if i ~= #orig_name and i > 1 then
+			name = orig_name:sub(1, i-1) .. "olf"
+		else
+			name = orig_name
+		end
+	end
+
+	return name
+end
+
+
 
 -------------------
 -- HUD functions --
@@ -333,6 +382,21 @@ hud.add( function(v, player, camera)
 	if player.pflags & PF_FINISHED == 0 or player.exiting > 0 then
 		v.draw(16, 58, hud_shots, V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOTOP)
 		v.drawNum(96, 58, shotcount, V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOTOP)
+	end
+end, "game")
+
+
+-- everybody's snolf life icon
+hud.add ( function(v, player, camera)
+
+	if cheats.everybodys_snolf and cheats.everybodys_snolf_name_override and
+		player.mo and player.mo.skin then
+
+		local life_icon = v.getSprite2Patch(player.mo.skin, SPR2_XTRA, player.powers[pw_super] > 0)
+		v.drawScaled(16*FRACUNIT, 176*FRACUNIT, FRACUNIT/2, life_icon,
+			V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM,
+			v.getColormap(player.mo.skin, player.mo.color))
+		v.drawString(34, 176, player.snolf.hudname, V_YELLOWMAP)
 	end
 end, "game")
 
@@ -485,6 +549,23 @@ COM_AddCommand("everybodys_snolf", function(player, arg)
 			player.accelstart = skin.accelstart
 			player.acceleration = skin.acceleration
 		end
+	end
+
+	if cheats.everybodys_snolf and cheats.everybodys_snolf_name_override and mo.skin ~= "snolf" then
+		hud.disable("lives")
+	else
+		hud.enable("lives")
+	end
+end, COM_ADMIN)
+
+
+COM_AddCommand("everybodys_snolf_name_override", function(player, arg)
+	cheat_toggle("everybodys_snolf_name_override", arg)
+
+	if cheats.everybodys_snolf and cheats.everybodys_snolf_name_override and mo.skin ~= "snolf" then
+		hud.disable("lives")
+	else
+		hud.enable("lives")
 	end
 end, COM_ADMIN)
 
