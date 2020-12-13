@@ -307,6 +307,7 @@ snolfify_name = function(orig_name)
 	-- bafflingly the game uses a control character in character names
 	local sep = string.char(30)
 
+	-- hardcoding some names for certain characters, including from other mods
 	local name_lookup = {
 		sonic = "Snolf",
 		knuckles = "Knolf",
@@ -320,31 +321,52 @@ snolfify_name = function(orig_name)
 	name_lookup["k"..sep.."t"..sep.."e"] = "Knolf"
 	name_lookup["amy"..sep.."r"] = "Amy Rolf"
 	name_lookup["tails doll"] = "Tolf doll"
-	name_lookup["m.k"] = "M"..sep.."knolf"
+	name_lookup["m"..sep.."k"] = "M"..sep.."knolf"
 	name_lookup["egg robo"] = "Egg Robolf"
 	local consonants = "bcdfghjklmnpqrstvwxyz"
 
 	local name = name_lookup[orig_name]
 
-	if name == nil -- wasn't in our list of hardcoded names
-		-- iterate over letters till find a consonant
-		local i = 0
-		repeat
-			i = $1 + 1
-		until i > #orig_name or consonants:find(orig_name:sub(i,i)) ~= nil
-		-- then iterate until something that is not a consonant is found
-		repeat
-			i = $1 + 1
-		until i > #orig_name or consonants:find(orig_name:sub(i,i)) == nil
-
-		if i ~= #orig_name and i > 1 then
-			name = orig_name:sub(1, i-1) .. "olf"
-		else
-			name = orig_name
-		end
+	if name ~= nil then
+		return name
 	end
 
-	return name
+
+	local i = #orig_name
+	-- iterate backwards till we find a G
+	repeat
+		i = $1 - 1
+	until i == 0 or orig_name:sub(i,i) == "g"
+	if i > 0 then
+		return orig_name:sub(1, i) .. "olf"
+	end
+
+
+	i = #orig_name
+	-- iterate backwards till we find an O
+	repeat
+		i = $1 - 1
+	until i == 0 or orig_name:sub(i,i) == "o"
+	if i > 0 then
+		return orig_name:sub(1, i) .. "lf"
+	end
+
+
+	i = 0
+	-- iterate over letters till find a consonant
+	repeat
+		i = $1 + 1
+	until i > #orig_name or consonants:find(orig_name:sub(i,i)) ~= nil
+	-- then iterate until something that is not a consonant is found
+	repeat
+		i = $1 + 1
+	until i > #orig_name or consonants:find(orig_name:sub(i,i)) == nil
+
+	if i ~= #orig_name and i > 1 then
+		return orig_name:sub(1, i-1) .. "olf"
+	end
+
+	return orig_name
 end
 
 
@@ -551,7 +573,7 @@ COM_AddCommand("everybodys_snolf", function(player, arg)
 		end
 	end
 
-	if cheats.everybodys_snolf and cheats.everybodys_snolf_name_override and mo.skin ~= "snolf" then
+	if cheats.everybodys_snolf and cheats.everybodys_snolf_name_override then
 		hud.disable("lives")
 	else
 		hud.enable("lives")
@@ -562,7 +584,7 @@ end, COM_ADMIN)
 COM_AddCommand("everybodys_snolf_name_override", function(player, arg)
 	cheat_toggle("everybodys_snolf_name_override", arg)
 
-	if cheats.everybodys_snolf and cheats.everybodys_snolf_name_override and mo.skin ~= "snolf" then
+	if cheats.everybodys_snolf and cheats.everybodys_snolf_name_override then
 		hud.disable("lives")
 	else
 		hud.enable("lives")
