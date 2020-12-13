@@ -28,6 +28,8 @@ local V_METER_LENGTH = 50
 -- sit ready until the player presses jump
 shot_ready = function(snolf_table)
 	local snlf = snolf_table
+
+	snlf.p.jumpfactor = 0 -- disable jump
 	repeat
 		coroutine.yield()
 	until snlf.ctrl.jmp == 1
@@ -71,12 +73,15 @@ vertical_charge = function(snolf_table)
 		coroutine.yield()
 	until snlf.ctrl.jmp == 1
 
+	-- shoot
+	S_StartSound(pmo, sfx_zoom)
 	local h = sinusoidal_scale(snlf.hdrive, H_METER_LENGTH)
 	local v = sinusoidal_scale(snlf.vdrive, V_METER_LENGTH)
 	P_InstaThrust(snlf.mo, snlf.mo.angle, h*FRACUNIT)
 	P_SetObjectMomZ(snlf.mo, v*FRACUNIT)
+
+	-- change some player state
 	snlf.p.pflags = $1 | PF_JUMPED
-	S_StartSound(pmo, sfx_zoom)
 	snlf.charging = false
 	snlf.shotcount = $1 + 1
 	snlf.routine = coroutine.create(waiting_to_stop, snlf)
@@ -86,6 +91,12 @@ end
 -- wait until Snolf comes to a complete stop before they can take another shot
 waiting_to_stop = function(snolf_table)
 	local snlf = snolf_table
+
+	-- enable jumping after taking a shot. this is to allow players to dismount
+	-- level gimmicks like rolling boulders in Red Volcano Zone
+	-- this is here rather than at the end of the vertical_charge function so
+	-- that it happens the frame after Snolf has left the ground
+	snlf.p.jumpfactor = FRACUNIT
 	repeat
 		coroutine.yield()
 	until snlf:at_rest()
@@ -166,7 +177,9 @@ end
 
 
 at_rest = function(snlf)
-	return P_IsObjectOnGround(snlf.mo) and snlf.speed == 0 and snlf.mo.momz == 0
+	-- player is on the ground and not on a waterslide and not moving
+	return P_IsObjectOnGround(snlf.mo) and snlf.pflags & PF_SLIDING == 0 and
+		snlf.speed == 0 and snlf.mo.momz == 0
 end
 
 
@@ -260,7 +273,6 @@ addHook("PreThinkFrame", function()
 		-- set some local variables as shortcuts
 		local p, mo, snlf = player, player.mo, player.snolf
 
-
 		-- check controls
 		snlf.ctrl.jmp = p.cmd.buttons & BT_JUMP and $1+1 or 0
 		snlf.ctrl.spn = p.cmd.buttons & BT_SPIN and $1+1 or 0
@@ -277,11 +289,19 @@ addHook("PreThinkFrame", function()
 
 		-- check if we landed this turn
 		if snlf.prev.inair and P_IsObjectOnGround(mo) then
+			-- if going fast enough when Snolf hits the ground, bounce
 			if abs(snlf.prev.momz) > BOUNCE_LIMIT then
 				P_SetObjectMomZ(mo, - FixedMul(snlf.prev.momz, BOUNCE_FACTOR))
+			-- otherwise land
 			else
 				p.pflags = $1 | PF_SPINNING -- force spinning flag
+				p.jumpfactor = 0 -- disable jump
 			end
+		end
+
+		-- enable jumping while on a water slide
+		if p.pflags & PF_SLIDING ~= 0 and p.jumpfactor == 0 then
+			p.jumpfactor = FRACUNIT
 		end
 
 		-- store certain state attributes so we can check for changes next tick
