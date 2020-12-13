@@ -5,7 +5,7 @@ freeslot("SPR_SFST", "SPR_SFAH", "SPR_SFAV", "SPR_SFMR")
 -- without causing parsing errors
 local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, is_snolf,
 	at_rest, take_a_mulligan, same_position, snolf_setup, reset_state,
-	sinusoidal_scale, get_charge_increment, in_black_core
+	sinusoidal_scale, get_charge_increment, in_black_core, allow_air_snolf
 
 ---------------
 -- constants --
@@ -99,7 +99,7 @@ waiting_to_stop = function(snolf_table)
 	snlf.p.jumpfactor = FRACUNIT
 	repeat
 		coroutine.yield()
-	until snlf:at_rest()
+	until snlf:at_rest() or snlf:allow_air_snolf()
 
 	snlf.routine = coroutine.create(shot_ready, snlf)
 
@@ -145,6 +145,7 @@ snolf_setup = function(player)
 		at_rest = at_rest,
 		take_a_mulligan = take_a_mulligan,
 		reset_state = reset_state,
+		allow_air_snolf = allow_air_snolf,
 		--coroutine
 		routine = coroutine.create(waiting_to_stop)
 	}
@@ -243,6 +244,20 @@ in_black_core = function()
 		[26]=true, -- Metal Sonic Fight
 		[27]=true} -- Metal Robotnik Fight
 	return black_core_maps[gamemap]
+end
+
+
+-- situations where we want Snolf to be able to shoot mid-air
+allow_air_snolf = function(snlf)
+	-- Super Snolf
+	if snlf.powers[pw_super] > 0 then
+		return true
+	-- if Snolf is in the vacuum of space
+	elseif snlf.powers[pw_spacetime] > 0 then
+		return true
+	end
+	-- for the last three bosses
+	return in_black_core()
 end
 
 
