@@ -10,7 +10,7 @@ local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, is_snolf,
 
 local cheats = {
 	everybodys_snolf = false,
-	everybodys_snolf_name_override = false,
+	everybodys_snolf_name_override = true,
 	snolf_inf_rings = false,
 	snolf_inf_lives = false,
 	snolf_inf_air = false,
