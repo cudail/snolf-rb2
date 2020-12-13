@@ -1,4 +1,4 @@
-freeslot("SPR_SFST", "SPR_SFAH", "SPR_SFAV", "SPR_SFMR")
+freeslot("SPR_SFST", "SPR_SFAH", "SPR_SFAV", "SPR_SFMR", "SPR_SFHX")
 
 
 -- declare functions in advance so they can reference each other
@@ -413,6 +413,9 @@ hud.add ( function(v, player, camera)
 
 	if cheats.everybodys_snolf and cheats.everybodys_snolf_name_override and
 		player.mo and player.mo.skin then
+
+		local life_x = v.getSpritePatch(SPR_SFHX)
+		v.draw(38, 186	, life_x, V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM)
 
 		local life_icon = v.getSprite2Patch(player.mo.skin, SPR2_XTRA, player.powers[pw_super] > 0)
 		v.drawScaled(16*FRACUNIT, 176*FRACUNIT, FRACUNIT/2, life_icon,
