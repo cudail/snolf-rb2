@@ -465,14 +465,13 @@ end)
 
 COM_AddCommand("everybodys_snolf", function(player, arg)
 	cheat_toggle("everybodys_snolf", arg)
-
-	-- re-enable control for everyone who's not Snolf. this is hacky and
-	-- replaces the character's original stats with the default ones. sorry
+	-- restore character stats
 	for player in players.iterate do
 		if not is_snolf(player.mo) then
-			player.jumpfactor = FRACUNIT
-			player.accelstart = 128
-			player.acceleration = 40
+			local skin = skins[player.mo.skin]
+			player.jumpfactor = skin.jumpfactor
+			player.accelstart = skin.accelstart
+			player.acceleration = skin.acceleration
 		end
 	end
 end, COM_ADMIN)
