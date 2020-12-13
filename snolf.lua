@@ -148,7 +148,7 @@ snolf_setup = function(player)
 		-- previous tick state
 		prev = { inair = false, momz = 0 },
 		-- controls
-		ctrl = { jmp = 0, spn = 0 },
+		ctrl = { jmp = 0, spn = 0, ca1 = 0 },
 		-- mulligan points
 		mull_pts = {},
 		--stats
@@ -354,6 +354,7 @@ addHook("PreThinkFrame", function()
 		-- check controls
 		snlf.ctrl.jmp = p.cmd.buttons & BT_JUMP and $1+1 or 0
 		snlf.ctrl.spn = p.cmd.buttons & BT_SPIN and $1+1 or 0
+		snlf.ctrl.ca1 = p.cmd.buttons & BT_CUSTOM1 and $1+1 or 0
 
 		-- run the player's current coroutine
 		local resumed, err = coroutine.resume(snlf.routine, snlf)
@@ -361,8 +362,14 @@ addHook("PreThinkFrame", function()
 			snlf.routine = coroutine.create(waiting_to_stop)
 		end
 
+		-- take a mulligan
 		if snlf.ctrl.spn == TICKS_FOR_MULLIGAN then
 			snlf:take_a_mulligan()
+		end
+
+		-- quick turn
+		if snlf.ctrl.ca1 == 1 then
+			mo.angle = $1 + ANGLE_180
 		end
 
 		-- check if we landed this turn
