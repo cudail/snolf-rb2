@@ -7,6 +7,13 @@ local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, is_snolf,
 	at_rest, take_a_mulligan, same_position, snolf_setup, reset_state,
 	sinusoidal_scale, get_charge_increment, in_black_core, allow_air_snolf
 
+
+---------------
+-- variables --
+---------------
+local everybodys_snolf = false
+
+
 ---------------
 -- constants --
 ---------------
@@ -173,7 +180,7 @@ end
 
 
 is_snolf = function(mo)
-	return mo and mo.skin == "snolf"
+	return mo and (mo.skin == "snolf" or everybodys_snolf)
 end
 
 
@@ -392,3 +399,32 @@ addHook("MapLoad", function(mapnumber)
 		player.snolf:reset_state()
 	end
 end)
+
+
+--------------
+-- Commands --
+--------------
+
+COM_AddCommand("everybodys_snolf", function(player, arg)
+	if arg == nil then
+		everybodys_snolf = not $1
+	elseif arg == "0" then
+		everybodys_snolf = false
+	elseif arg == "1" then
+		everybodys_snolf = true
+	else
+		CONS_Printf(player, "everybodys_snolf should be called with either 0, 1 or no argument")
+		return
+	end
+
+	-- re-enable jump for everyone who's not Snolf. this is hacky and replaces
+	-- the character's original jump height with the default one. sorry
+	for player in players.iterate do
+		if not is_snolf(player.mo) then
+			player.jumpfactor = FRACUNIT
+		end
+	end
+
+	local es_state = everybodys_snolf and "enabled" or "disabled"
+	chatprint("Everybody's Snolf has been "..es_state..".")
+end, COM_ADMIN)
