@@ -98,6 +98,8 @@ v2.0
 * Complete rewrite of Lua script
 * Time it takes to mulligan reduced to one second
 * Replaced modifier input method with console commands
+* Added air snolf command
+* Replaced Everybody's Snolf WAD with a console command
 * Removed idle animation sprites
 
 v1.6
