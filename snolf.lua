@@ -5,14 +5,17 @@ freeslot("SPR_SFST", "SPR_SFAH", "SPR_SFAV", "SPR_SFMR")
 -- without causing parsing errors
 local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, is_snolf,
 	at_rest, take_a_mulligan, same_position, snolf_setup, reset_state,
-	sinusoidal_scale, get_charge_increment, in_black_core, allow_air_snolf
+	sinusoidal_scale, get_charge_increment, in_black_core, allow_air_snolf,
+	cheat_toggle
 
-
----------------
--- variables --
----------------
-local everybodys_snolf = false
-
+local cheats = {
+	everybodys_snolf = false,
+	snolf_inf_rings = false,
+	snolf_inf_lives = false,
+	snolf_inf_air = false,
+	snolf_death_mulligan = false,
+	snolf_ground_control = false
+}
 
 ---------------
 -- constants --
@@ -180,7 +183,7 @@ end
 
 
 is_snolf = function(mo)
-	return mo and (mo.skin == "snolf" or everybodys_snolf)
+	return mo and mo.skin and (mo.skin == "snolf" or cheats.everybodys_snolf)
 end
 
 
@@ -265,6 +268,22 @@ allow_air_snolf = function(snlf)
 	end
 	-- for the last three bosses
 	return in_black_core()
+end
+
+
+cheat_toggle = function(cheat_name, arg)
+	local current_bool = cheats[cheat_name]
+	if arg == nil then
+		cheats[cheat_name] = not $1
+	elseif arg == "0" then
+		cheats[cheat_name] = false
+	elseif arg == "1" then
+		cheats[cheat_name] = true
+	else
+		CONS_Printf(player, cheat_name.." should be called with either 0, 1 or no argument")
+		return
+	end
+	chatprint(cheat_name.." has been "..(cheats[cheat_name] and "enabled" or "disabled")..".")
 end
 
 
@@ -406,16 +425,7 @@ end)
 --------------
 
 COM_AddCommand("everybodys_snolf", function(player, arg)
-	if arg == nil then
-		everybodys_snolf = not $1
-	elseif arg == "0" then
-		everybodys_snolf = false
-	elseif arg == "1" then
-		everybodys_snolf = true
-	else
-		CONS_Printf(player, "everybodys_snolf should be called with either 0, 1 or no argument")
-		return
-	end
+	cheat_toggle("everybodys_snolf", arg)
 
 	-- re-enable jump for everyone who's not Snolf. this is hacky and replaces
 	-- the character's original jump height with the default one. sorry
@@ -424,7 +434,4 @@ COM_AddCommand("everybodys_snolf", function(player, arg)
 			player.jumpfactor = FRACUNIT
 		end
 	end
-
-	local es_state = everybodys_snolf and "enabled" or "disabled"
-	chatprint("Everybody's Snolf has been "..es_state..".")
 end, COM_ADMIN)
