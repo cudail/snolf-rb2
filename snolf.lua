@@ -41,6 +41,8 @@ shot_ready = function(snolf_table)
 	local snlf = snolf_table
 
 	snlf.p.jumpfactor = 0 -- disable jump
+	snlf.p.accelstart = 0 -- disable movement
+	snlf.p.acceleration = 0
 	repeat
 		coroutine.yield()
 	until snlf.ctrl.jmp == 1
@@ -372,6 +374,10 @@ addHook("PreThinkFrame", function()
 			else
 				p.pflags = $1 | PF_SPINNING -- force spinning flag
 				p.jumpfactor = 0 -- disable jump
+				if cheats.snolf_ground_control then
+					player.accelstart = 96
+					player.acceleration = 40
+				end
 			end
 		end
 
@@ -460,11 +466,13 @@ end)
 COM_AddCommand("everybodys_snolf", function(player, arg)
 	cheat_toggle("everybodys_snolf", arg)
 
-	-- re-enable jump for everyone who's not Snolf. this is hacky and replaces
-	-- the character's original jump height with the default one. sorry
+	-- re-enable control for everyone who's not Snolf. this is hacky and
+	-- replaces the character's original stats with the default ones. sorry
 	for player in players.iterate do
 		if not is_snolf(player.mo) then
 			player.jumpfactor = FRACUNIT
+			player.accelstart = 128
+			player.acceleration = 40
 		end
 	end
 end, COM_ADMIN)
