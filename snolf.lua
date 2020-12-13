@@ -418,7 +418,9 @@ hud.add ( function(v, player, camera)
 		v.drawScaled(16*FRACUNIT, 176*FRACUNIT, FRACUNIT/2, life_icon,
 			V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM,
 			v.getColormap(player.mo.skin, player.mo.color))
-		v.drawString(34, 176, player.snolf.hudname, V_YELLOWMAP)
+
+		local align = #player.snolf.hudname > 6 and "thin" or "left"
+		v.drawString(34, 176, player.snolf.hudname, V_YELLOWMAP, align)
 	end
 end, "game")
 
