@@ -41,28 +41,21 @@ stuck.
 *Tip:* If the camera is getting caught on a wall use first person view to aim.
 
 
-## Modifiers
+## Commands
 
-Because this, by design, makes many levels incredibly difficult I've included a
-set of modifiers to make the game easier that can be activated in game.
-Modifiers are toggled by holding down Custom Action 2 and pressing a series of
-directional inputs with the WASD keys or whatever you are using for movement.
-When a modifier is toggled a sound will play and an indicator will be displayed
-on the HUD. Entering the code a second time will disable it.
+The mod adds some modes that can be enabled or disabled by console command.
+Call the command without any argument to toggle on or off. You can also call
+them with an argument of 0 or 1 to disable or enable them.
 
-* ↑ ↓ ← → - Infinite lives
-* ↑ ↓ ↓ ← → - Infinite rings
-* ↑ ↑ ↓ ↓ ↑ ↑ ↑ ↑ - On death return to last resting point
-* ↑ ← ← ↓ ↑ ↑ ↓ → - Enable steering on the ground
-* ← ← ← → → → ↑ ↑ ↑ - No drowning
-
-
-## Everybody's Snolf
-
-Everybody's Snolf is a mini-WAD containing a single Lua script that if used in
-conjunction with Snolf will force all characters, including characters from
-other mods, to use Snolf's controls. This is just for a bit of fun and will
-probably be very unstable and not work very well with a lot of other mods.
+* `everybodys_snolf`: Forces all characters to use Snolf controls. This is just
+for a bit of fun and will probably be very unstable and not work very well with
+other mods.
+* `snolf_inf_rings`: Forces ring counter to always be 999
+* `snolf_inf_lives`: Gives you an extra life every time you die
+* `snolf_inf_air`: No drowning
+* `snolf_death_mulligan`: On death return to last mulligan point
+* `snolf_ground_control`: Enable steering on the ground
+* `snolf_air_shot`: Allows you to take shots mid-air
 
 
 ## Known Issues
@@ -72,11 +65,11 @@ bounce off them instead of being launched into the air.
 * Sometimes Snolf will get stuck unable to shoot while on a conveyor belt,
 especially when on the edge of one. If this happens all the player can do is
 wait to reach the end of the conveyor belt or use a mullgian.
-* Enabling the no drowning modifier while the drowning music is playing will not
+* Enabling the no drowning command while the drowning music is playing will not
 stop stop the drowning music and the normal stage music will not resume
-afterwards. You can get it back by disabling the modifier, waiting until the
+afterwards. You can get it back by disabling the command, waiting until the
 drowning music starts again, getting air the normal way so the stage music
-resumes, then activating the modifier again.
+resumes, then activating the command again.
 * You cannot change away from the Snolf skin in multiplayer as the game never
 considers the player stationary due to forcing the spinning state at all times.
 
@@ -104,6 +97,7 @@ Life count icon from Mario Golf: Advance Tour.
 v2.0
 * Complete rewrite of Lua script
 * Time it takes to mulligan reduced to one second
+* Replaced modifier input method with console commands
 * Removed idle animation sprites
 
 v1.6
