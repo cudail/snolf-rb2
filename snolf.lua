@@ -173,13 +173,15 @@ end
 
 
 -- resetting state to be used on death or level change
-reset_state = function(snlf)
+reset_state = function(snlf, leave_mulls)
 	snlf.prev = { inair = false, momz = 0 }
-	snlf.mull_pts = {}
 	snlf.charging = false
 	snlf.hdrive = 0
 	snlf.vdrive = 0
 	snlf.routine = coroutine.create(waiting_to_stop)
+	if not leave_mulls then
+		snlf.mull_pts = {}
+	end
 end
 
 
@@ -195,7 +197,7 @@ at_rest = function(snlf)
 end
 
 
-take_a_mulligan = function(snlf)
+take_a_mulligan = function(snlf, dont_play_sound)
 	local lm = snlf.mull_pts[#snlf.mull_pts] -- last mulligan point
 	local mo = snlf.mo
 	-- if we're still at the last mulligan point remove it and go back one
@@ -204,10 +206,12 @@ take_a_mulligan = function(snlf)
 		lm = snlf.mull_pts[#snlf.mull_pts]
 	end
 	if lm then
+		if not dont_play_sound then
+			S_StartSound(mo, sfx_mixup)
+		end
 		P_TeleportMove(mo, lm.x, lm.y, lm.z)
 		P_InstaThrust(mo, 0, 0)
 		P_SetObjectMomZ(mo, 0)
-		S_StartSound(mo, sfx_mixup)
 		snlf.mullcount = $1 + 1
 	end
 end
@@ -425,7 +429,7 @@ end)
 -- reset state on death
 addHook("MobjDeath", function(mo)
 	if not is_snolf(mo) then return false end
-	mo.player.snolf:reset_state()
+	mo.player.snolf:reset_state(cheats.snolf_death_mulligan)
 
 	-- infinite lives cheat
 	if cheats.snolf_inf_lives then
@@ -441,6 +445,13 @@ addHook("MapLoad", function(mapnumber)
 	end
 end)
 
+
+-- cheat to return to last spot on death
+addHook("PlayerSpawn", function(player)
+	if is_snolf(player.mo) and cheats.snolf_death_mulligan then
+		player.snolf:take_a_mulligan(true)
+	end
+end)
 
 --------------
 -- Commands --
