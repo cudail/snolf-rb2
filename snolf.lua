@@ -68,8 +68,6 @@ snolf_setup = function(player)
 		take_a_mulligan = take_a_mulligan,
 		reset_state = reset_state,
 		allow_air_snolf = allow_air_snolf,
-		--coroutine
-		routine = coroutine.create(waiting_to_stop)
 	}
 
 	setmetatable(snolf, {
@@ -89,7 +87,7 @@ reset_state = function(snlf, leave_mulls)
 	snlf.charging = false
 	snlf.hdrive = 0
 	snlf.vdrive = 0
-	snlf.routine = coroutine.create(waiting_to_stop)
+	snlf.state = STATE_WAITING
 	if not leave_mulls then
 		snlf.mull_pts = {}
 	end
@@ -431,7 +429,6 @@ addHook("PreThinkFrame", function()
 				snlf.p.pflags = $1 | PF_JUMPED
 				snlf.charging = false
 				snlf.shotcount = $1 + 1
-				snlf.routine = coroutine.create(waiting_to_stop, snlf)
 
 				snlf.state = STATE_WAITING
 			else
