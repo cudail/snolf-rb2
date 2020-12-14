@@ -45,7 +45,7 @@ local SPACE_AIR_TIMER = 403
 
 -- store all snolf-relevant state info in player_t.snolf
 snolf_setup = function(player)
-	local snolf = {
+	player.snolf = {
 		-- SRB2 data structures
 		p = player,
 		hudname = snolfify_name(skins[player.mo.skin].hudname),
@@ -64,15 +64,6 @@ snolf_setup = function(player)
 		shotcount = 0,
 		mullcount = 0,
 	}
-
-	setmetatable(snolf, {
-		__index = function(snolf, key)
-			-- make all properties of the parent player accessible
-			return snolf.p[key]
-		end
-	})
-
-	player.snolf = snolf
 end
 
 
@@ -99,14 +90,14 @@ end
 
 at_rest = function(snlf)
 	-- player is on the ground and not on a waterslide and not moving
-	return P_IsObjectOnGround(snlf.mo) and snlf.pflags & PF_SLIDING == 0 and
-		snlf.speed == 0 and snlf.mo.momz == 0
+	return P_IsObjectOnGround(snlf.p.mo) and snlf.p.pflags & PF_SLIDING == 0 and
+		snlf.p.speed == 0 and snlf.p.mo.momz == 0
 end
 
 
 take_a_mulligan = function(snlf, dont_play_sound)
 	local lm = snlf.mull_pts[#snlf.mull_pts] -- last mulligan point
-	local mo = snlf.mo
+	local mo = snlf.p.mo
 	-- if we're still at the last mulligan point remove it and go back one
 	if lm and same_position(lm, mo) then
 		table.remove(snlf.mull_pts, #snlf.mull_pts)
@@ -146,11 +137,11 @@ get_charge_increment = function(snlf)
 		-- double charge rate for the last few bosses
 		increment = $1 * 2
 	end
-	if snlf.powers[pw_super] > 0 then
+	if snlf.p.powers[pw_super] > 0 then
 		-- double charge rate for Super Snolf
 		increment = $1 * 2
 	end
-	if snlf.powers[pw_sneakers] > 0 then
+	if snlf.p.powers[pw_sneakers] > 0 then
 		-- double charge rate for Speed Shoes
 		increment = $1 * 2
 	end
@@ -176,10 +167,10 @@ allow_air_snolf = function(snlf)
 		return true
 	end
 	-- Super Snolf
-	if snlf.powers[pw_super] > 0 then
+	if snlf.p.powers[pw_super] > 0 then
 		return true
 	-- if Snolf is in the vacuum of space
-	elseif snlf.powers[pw_spacetime] > 0 then
+	elseif snlf.p.powers[pw_spacetime] > 0 then
 		return true
 	end
 	-- for the last three bosses
@@ -369,7 +360,7 @@ addHook("PreThinkFrame", function()
 		if snlf.state == STATE_WAITING then
 			if at_rest(snlf) or allow_air_snolf(snlf) then
 				-- try to set a mulligan point
-				local mo, mulls = snlf.mo, snlf.mull_pts
+				local mo, mulls = snlf.p.mo, snlf.mull_pts
 				local lm = mulls[#mulls] -- last mulligan point
 
 				-- if we don't have a mulligan point yet
@@ -421,8 +412,8 @@ addHook("PreThinkFrame", function()
 				S_StartSound(pmo, sfx_zoom)
 				local h = sinusoidal_scale(snlf.hdrive, H_METER_LENGTH)
 				local v = sinusoidal_scale(snlf.vdrive, V_METER_LENGTH)
-				P_InstaThrust(snlf.mo, snlf.mo.angle, h*FRACUNIT)
-				P_SetObjectMomZ(snlf.mo, v*FRACUNIT)
+				P_InstaThrust(snlf.p.mo, snlf.p.mo.angle, h*FRACUNIT)
+				P_SetObjectMomZ(snlf.p.mo, v*FRACUNIT)
 
 				-- change some player state
 				snlf.p.pflags = $1 | PF_JUMPED
