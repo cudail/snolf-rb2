@@ -84,7 +84,6 @@ end
 -- resetting state to be used on death or level change
 reset_state = function(snlf, leave_mulls)
 	snlf.prev = { inair = false, momz = 0 }
-	snlf.charging = false
 	snlf.hdrive = 0
 	snlf.vdrive = 0
 	snlf.state = STATE_WAITING
@@ -281,7 +280,9 @@ end
 -- shot meter
 hud.add( function(v, player, camera)
 	if not is_snolf(player.mo) then return end
-	if not player.snolf.charging then return end
+
+	local state = player.snolf.state
+	if state != STATE_HCHARGE and state != STATE_VCHARGE then return end
 
 	local meter = v.getSpritePatch(SPR_SFMR)  -- shot meter sprite
 	local harrow = v.getSpritePatch(SPR_SFAH, 0, 4) -- shot meter arrow sprite 1
@@ -387,7 +388,6 @@ addHook("PreThinkFrame", function()
 		elseif snlf.state == STATE_READY then
 			-- jump is pressed
 			if snlf.ctrl.jmp == 1 then
-				snlf.charging = true
 				snlf.hdrive = -1
 				snlf.vdrive = -1
 				S_StartSoundAtVolume(pmo, sfx_spndsh, 64)
@@ -427,7 +427,6 @@ addHook("PreThinkFrame", function()
 
 				-- change some player state
 				snlf.p.pflags = $1 | PF_JUMPED
-				snlf.charging = false
 				snlf.shotcount = $1 + 1
 
 				snlf.state = STATE_WAITING
