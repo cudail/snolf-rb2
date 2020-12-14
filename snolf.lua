@@ -26,6 +26,8 @@ local TICKS_FOR_MULLIGAN = 35 -- how long to hold down the spin button to take a
 local BOUNCE_LIMIT = 10*FRACUNIT -- Snolf won't bounce if their vertical momentum is less than this
 local BOUNCE_FACTOR = FRACUNIT/2 -- when Snolf bounces their momentum is multiplied by this factor
 
+local STATE_WAITING, STATE_READY, STATE_HCHARGE, STATE_VCHARGE = 1, 2, 3, 4
+
 -- as it stands the max strength of a fully charged shot,
 -- the charge meter period and the max displacement of the charge meter arrows
 -- during the animation are all deterimned by these two constants, one each
@@ -35,103 +37,6 @@ local V_METER_LENGTH = 50
 local WATER_AIR_TIMER = 1050
 local SPACE_AIR_TIMER = 403
 
----------------------------------
--- player behaviour coroutines --
----------------------------------
--- sit ready until the player presses jump
-shot_ready = function(snolf_table)
-	local snlf = snolf_table
-
-	snlf.p.jumpfactor = 0 -- disable jump
-	snlf.p.accelstart = 0 -- disable movement
-	snlf.p.acceleration = 0
-	repeat
-		coroutine.yield()
-	until snlf.ctrl.jmp == 1
-	snlf.charging = true
-	snlf.hdrive = -1
-	snlf.vdrive = -1
-	S_StartSoundAtVolume(pmo, sfx_spndsh, 64)
-	snlf.routine = coroutine.create(horizontal_charge, snlf)
-end
-
--- setting horizontal shot force
-horizontal_charge = function(snolf_table)
-	local snlf = snolf_table
-	local increment = get_charge_increment(snlf)
-	repeat
-		snlf.p.pflags = $1 | PF_STARTDASH -- force spindash state
-		if snlf.hdrive >= H_METER_LENGTH then
-			increment = - get_charge_increment(snlf)
-		elseif snlf.hdrive <= 0 then
-			increment = get_charge_increment(snlf)
-		end
-		snlf.hdrive = $1 + increment
-		coroutine.yield()
-	until snlf.ctrl.jmp == 1
-	S_StartSoundAtVolume(pmo, sfx_spndsh, 100)
-	snlf.routine = coroutine.create(vertical_charge, snlf)
-end
-
--- setting vertical shot force
-vertical_charge = function(snolf_table)
-	local snlf = snolf_table
-	local increment = get_charge_increment(snlf)
-	repeat
-		snlf.p.pflags = $1 | PF_STARTDASH -- force spindash state
-		if snlf.vdrive >= V_METER_LENGTH then
-			increment = - get_charge_increment(snlf)
-		elseif snlf.vdrive <= 0 then
-			increment = get_charge_increment(snlf)
-		end
-		snlf.vdrive = $1 + increment
-		coroutine.yield()
-	until snlf.ctrl.jmp == 1
-
-	-- shoot
-	S_StartSound(pmo, sfx_zoom)
-	local h = sinusoidal_scale(snlf.hdrive, H_METER_LENGTH)
-	local v = sinusoidal_scale(snlf.vdrive, V_METER_LENGTH)
-	P_InstaThrust(snlf.mo, snlf.mo.angle, h*FRACUNIT)
-	P_SetObjectMomZ(snlf.mo, v*FRACUNIT)
-
-	-- change some player state
-	snlf.p.pflags = $1 | PF_JUMPED
-	snlf.charging = false
-	snlf.shotcount = $1 + 1
-	snlf.routine = coroutine.create(waiting_to_stop, snlf)
-end
-
-
--- wait until Snolf comes to a complete stop before they can take another shot
-waiting_to_stop = function(snolf_table)
-	local snlf = snolf_table
-
-	-- enable jumping after taking a shot. this is to allow players to dismount
-	-- level gimmicks like rolling boulders in Red Volcano Zone
-	-- this is here rather than at the end of the vertical_charge function so
-	-- that it happens the frame after Snolf has left the ground
-	snlf.p.jumpfactor = FRACUNIT
-	repeat
-		coroutine.yield()
-	until snlf:at_rest() or snlf:allow_air_snolf()
-
-	snlf.routine = coroutine.create(shot_ready, snlf)
-
-	-- try to set a mulligan point
-	local mo, mulls = snlf.mo, snlf.mull_pts
-	local lm = mulls[#mulls] -- last mulligan point
-
-	-- if we don't have a mulligan point yet
-	-- or if our last one does not match our current position
-	if not lm or not same_position(mo, lm) then
-		-- if there's already ten mulligan points stored then remove one
-		if #mulls > 9 then
-			table.remove(mulls, 1)
-		end
-		table.insert(mulls, {x = mo.x, y = mo.y, z = mo.z})
-	end
-end
 
 
 ---------------
@@ -145,9 +50,10 @@ snolf_setup = function(player)
 		p = player,
 		hudname = snolfify_name(skins[player.mo.skin].hudname),
 		-- Snolf shot state
-		charging = false,
+		state = STATE_WAITING,
 		hdrive = 0,
 		vdrive = 0,
+		chargegoingback = false,
 		-- previous tick state
 		prev = { inair = false, momz = 0 },
 		-- controls
@@ -459,11 +365,90 @@ addHook("PreThinkFrame", function()
 		snlf.ctrl.spn = p.cmd.buttons & BT_SPIN and $1+1 or 0
 		snlf.ctrl.ca1 = p.cmd.buttons & BT_CUSTOM1 and $1+1 or 0
 
-		-- run the player's current coroutine
-		local resumed, err = coroutine.resume(snlf.routine, snlf)
-		if not resumed then
-			snlf.routine = coroutine.create(waiting_to_stop)
+
+		-- state dependent update
+		-- waiting to come to rest
+		if snlf.state == STATE_WAITING then
+			if snlf:at_rest() or snlf:allow_air_snolf() then
+				-- try to set a mulligan point
+				local mo, mulls = snlf.mo, snlf.mull_pts
+				local lm = mulls[#mulls] -- last mulligan point
+
+				-- if we don't have a mulligan point yet
+				-- or if our last one does not match our current position
+				if not lm or not same_position(mo, lm) then
+					-- if there's already ten mulligan points stored then remove one
+					if #mulls > 9 then
+						table.remove(mulls, 1)
+					end
+					table.insert(mulls, {x = mo.x, y = mo.y, z = mo.z})
+				end
+				snlf.state = STATE_READY
+			end
+		-- ready to start taking a shot
+		elseif snlf.state == STATE_READY then
+			-- jump is pressed
+			if snlf.ctrl.jmp == 1 then
+				snlf.charging = true
+				snlf.hdrive = -1
+				snlf.vdrive = -1
+				S_StartSoundAtVolume(pmo, sfx_spndsh, 64)
+				snlf.chargegoingback = false
+				snlf.state = STATE_HCHARGE
+			end
+		-- choosing horizontal force
+		elseif snlf.state == STATE_HCHARGE then
+			-- jump is pressed
+			if snlf.ctrl.jmp == 1 then
+				S_StartSoundAtVolume(pmo, sfx_spndsh, 100)
+				snlf.chargegoingback = false
+				snlf.state = STATE_VCHARGE
+			else
+				local increment = get_charge_increment(snlf)
+				if snlf.chargegoingback then
+					increment = $1 * -1
+				end
+				snlf.p.pflags = $1 | PF_STARTDASH -- force spindash state
+				if snlf.hdrive >= H_METER_LENGTH then
+					snlf.chargegoingback = true
+				elseif snlf.hdrive <= 0 then
+					snlf.chargegoingback = false
+				end
+				snlf.hdrive = $1 + increment
+			end
+		-- choosing vertical force
+		elseif snlf.state == STATE_VCHARGE then
+			-- jump is pressed
+			if snlf.ctrl.jmp == 1 then
+				-- shoot
+				S_StartSound(pmo, sfx_zoom)
+				local h = sinusoidal_scale(snlf.hdrive, H_METER_LENGTH)
+				local v = sinusoidal_scale(snlf.vdrive, V_METER_LENGTH)
+				P_InstaThrust(snlf.mo, snlf.mo.angle, h*FRACUNIT)
+				P_SetObjectMomZ(snlf.mo, v*FRACUNIT)
+
+				-- change some player state
+				snlf.p.pflags = $1 | PF_JUMPED
+				snlf.charging = false
+				snlf.shotcount = $1 + 1
+				snlf.routine = coroutine.create(waiting_to_stop, snlf)
+
+				snlf.state = STATE_WAITING
+			else
+				local increment = get_charge_increment(snlf)
+				if snlf.chargegoingback then
+					increment = $1 * -1
+				end
+				snlf.p.pflags = $1 | PF_STARTDASH -- force spindash state
+				if snlf.vdrive >= V_METER_LENGTH then
+					snlf.chargegoingback = true
+				elseif snlf.vdrive <= 0 then
+					snlf.chargegoingback = false
+				end
+				snlf.vdrive = $1 + increment
+			end
 		end
+
 
 		-- take a mulligan
 		if snlf.ctrl.spn == TICKS_FOR_MULLIGAN then
