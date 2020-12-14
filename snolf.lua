@@ -6,7 +6,7 @@ freeslot("SPR_SFST", "SPR_SFAH", "SPR_SFAV", "SPR_SFMR", "SPR_SFHX")
 local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, is_snolf,
 	at_rest, take_a_mulligan, same_position, snolf_setup, reset_state,
 	sinusoidal_scale, get_charge_increment, in_black_core, allow_air_snolf,
-	cheat_toggle, snolfify_name
+	cheat_toggle, snolfify_name, is_snolf_setup
 
 local cheats = {
 	everybodys_snolf = false,
@@ -63,11 +63,6 @@ snolf_setup = function(player)
 		--stats
 		shotcount = 0,
 		mullcount = 0,
-		--functions
-		at_rest = at_rest,
-		take_a_mulligan = take_a_mulligan,
-		reset_state = reset_state,
-		allow_air_snolf = allow_air_snolf,
 	}
 
 	setmetatable(snolf, {
@@ -95,6 +90,10 @@ end
 
 is_snolf = function(mo)
 	return mo and mo.skin and (mo.skin == "snolf" or cheats.everybodys_snolf)
+end
+
+is_snolf_setup = function(mo)
+	return is_snolf(mo) and mo.player.snolf
 end
 
 
@@ -279,7 +278,7 @@ end
 -------------------
 -- shot meter
 hud.add( function(v, player, camera)
-	if not is_snolf(player.mo) then return end
+	if not is_snolf_setup(player.mo) then return end
 
 	local state = player.snolf.state
 	if state != STATE_HCHARGE and state != STATE_VCHARGE then return end
@@ -301,7 +300,7 @@ end, "game")
 
 -- shots count
 hud.add( function(v, player, camera)
-	if not is_snolf(player.mo) then return end
+	if not is_snolf_setup(player.mo) then return end
 
 	local hud_shots = v.getSpritePatch(SPR_SFST) -- SHOTS HUD element
 	local shotcount = player.snolf.shotcount + player.snolf.mullcount
@@ -368,7 +367,7 @@ addHook("PreThinkFrame", function()
 		-- state dependent update
 		-- waiting to come to rest
 		if snlf.state == STATE_WAITING then
-			if snlf:at_rest() or snlf:allow_air_snolf() then
+			if at_rest(snlf) or allow_air_snolf(snlf) then
 				-- try to set a mulligan point
 				local mo, mulls = snlf.mo, snlf.mull_pts
 				local lm = mulls[#mulls] -- last mulligan point
@@ -448,7 +447,7 @@ addHook("PreThinkFrame", function()
 
 		-- take a mulligan
 		if snlf.ctrl.spn == TICKS_FOR_MULLIGAN then
-			snlf:take_a_mulligan()
+			take_a_mulligan(snlf)
 		end
 
 		-- quick turn
@@ -502,7 +501,7 @@ end)
 
 addHook("PostThinkFrame", function()
 	for player in players.iterate do
-		if not is_snolf(player.mo) then continue end
+		if not is_snolf_setup(player.mo) then continue end
 		player.mo.state = S_PLAY_ROLL -- always force rolling animation
 	end
 end
@@ -510,7 +509,7 @@ end
 
 -- Hook to override default collision and make Snolf bounce off walls
 addHook("MobjMoveBlocked", function(mo)
-	if not is_snolf(mo) then return false end
+	if not is_snolf_setup(mo) then return false end
 
 	-- P_BounceMove doesn't bounce the player if they are on the ground
 	-- To get around this impart the tiniest possible vertical momentum the
@@ -525,8 +524,8 @@ end)
 
 -- reset state on death
 addHook("MobjDeath", function(mo)
-	if not is_snolf(mo) then return false end
-	mo.player.snolf:reset_state(cheats.snolf_death_mulligan)
+	if not is_snolf_setup(mo) then return false end
+	reset_state(mo.player.snolf, cheats.snolf_death_mulligan)
 
 	-- infinite lives cheat
 	if cheats.snolf_inf_lives then
@@ -537,16 +536,16 @@ end)
 -- reset state when a new map is loaded
 addHook("MapLoad", function(mapnumber)
 	for player in players.iterate do
-		if not is_snolf(player.mo) then continue end
-		player.snolf:reset_state()
+		if not is_snolf_setup(player.mo) then continue end
+		reset_state(player.snolf)
 	end
 end)
 
 
 -- cheat to return to last spot on death
 addHook("PlayerSpawn", function(player)
-	if is_snolf(player.mo) and cheats.snolf_death_mulligan then
-		player.snolf:take_a_mulligan(true)
+	if is_snolf_setup(player.mo) and cheats.snolf_death_mulligan then
+		take_a_mulligan(player.snolf, true)
 	end
 end)
 
