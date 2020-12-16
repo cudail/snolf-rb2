@@ -10,7 +10,7 @@ local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, is_snolf,
 
 local cheats = {
 	everybodys_snolf = false,
-	everybodys_snolf_name_override = true,
+	everybodys_snolf_name_override = 1,
 	snolf_inf_rings = false,
 	snolf_inf_lives = false,
 	snolf_inf_air = false,
@@ -321,7 +321,7 @@ end, "game")
 -- everybody's snolf life icon
 hud.add ( function(v, player, camera)
 
-	if cheats.everybodys_snolf and cheats.everybodys_snolf_name_override and
+	if cheats.everybodys_snolf and cheats.everybodys_snolf_name_override == 1 and
 		player.mo and player.mo.skin then
 
 		local life_x = v.getSpritePatch(SPR_SFHX)
@@ -570,7 +570,7 @@ COM_AddCommand("everybodys_snolf", function(player, arg)
 		end
 	end
 
-	if cheats.everybodys_snolf and cheats.everybodys_snolf_name_override then
+	if cheats.everybodys_snolf and cheats.everybodys_snolf_name_override > 0 then
 		hud.disable("lives")
 	else
 		hud.enable("lives")
@@ -579,9 +579,20 @@ end, COM_ADMIN)
 
 
 COM_AddCommand("everybodys_snolf_name_override", function(player, arg)
-	cheat_toggle("everybodys_snolf_name_override", arg)
+	if arg == nil then
+		cheats.everybodys_snolf_name_override = $1 == 0 and 1 or 0
+	elseif arg == "0" then
+		cheats.everybodys_snolf_name_override = 0
+	elseif arg == "1" then
+		cheats.everybodys_snolf_name_override = 1
+	elseif arg == "2" then
+		cheats.everybodys_snolf_name_override = 2
+	else
+		CONS_Printf("everybodys_snolf_name_override should be called with either 0, 1, 2 or no argument")
+	end
+	chatprint("everybodys_snolf_name_override has been "..(cheats.everybodys_snolf_name_override > 0 and "enabled" or "disabled")..".")
 
-	if cheats.everybodys_snolf and cheats.everybodys_snolf_name_override then
+	if cheats.everybodys_snolf and cheats.everybodys_snolf_name_override > 0 then
 		hud.disable("lives")
 	else
 		hud.enable("lives")
