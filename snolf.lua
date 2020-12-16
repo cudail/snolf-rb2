@@ -110,7 +110,9 @@ take_a_mulligan = function(snlf, dont_play_sound)
 		P_TeleportMove(mo, lm.x, lm.y, lm.z)
 		P_InstaThrust(mo, 0, 0)
 		P_SetObjectMomZ(mo, 0)
-		snlf.mullcount = $1 + 1
+		if snlf.p.pflags & PF_FINISHED == 0 then
+			snlf.mullcount = $1 + 1
+		end
 	end
 end
 
@@ -431,7 +433,9 @@ addHook("PreThinkFrame", function()
 
 				-- change some player state
 				snlf.p.pflags = $1 | PF_JUMPED
-				snlf.shotcount = $1 + 1
+				if p.pflags & PF_FINISHED == 0 then
+					snlf.shotcount = $1 + 1
+				end
 
 				snlf.state = STATE_WAITING
 			else
