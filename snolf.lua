@@ -562,7 +562,7 @@ COM_AddCommand("everybodys_snolf", function(player, arg)
 	cheat_toggle("everybodys_snolf", arg)
 	-- restore character stats
 	for player in players.iterate do
-		if not is_snolf(player.mo) then
+		if player.mo and not is_snolf(player.mo) then
 			local skin = skins[player.mo.skin]
 			player.jumpfactor = skin.jumpfactor
 			player.accelstart = skin.accelstart
