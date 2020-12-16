@@ -6,7 +6,7 @@ freeslot("SPR_SFST", "SPR_SFAH", "SPR_SFAV", "SPR_SFMR", "SPR_SFHX")
 local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, is_snolf,
 	at_rest, take_a_mulligan, same_position, snolf_setup, reset_state,
 	sinusoidal_scale, get_charge_increment, in_black_core, allow_air_snolf,
-	cheat_toggle, snolfify_name, is_snolf_setup
+	cheat_toggle, snolfify_name, is_snolf_setup, override_controls
 
 local cheats = {
 	everybodys_snolf = false,
@@ -175,6 +175,19 @@ allow_air_snolf = function(snlf)
 	end
 	-- for the last three bosses
 	return in_black_core()
+end
+
+
+override_controls = function(snlf)
+	local player = snlf.p
+	player.jumpfactor = 0 -- disable jump
+	if cheats.snolf_ground_control and snlf.state == STATE_WAITING then
+		player.accelstart = 96
+		player.acceleration = 40
+	else
+		player.accelstart = 0
+		player.acceleration = 0
+	end
 end
 
 
@@ -373,6 +386,7 @@ addHook("PreThinkFrame", function()
 					table.insert(mulls, {x = mo.x, y = mo.y, z = mo.z})
 				end
 				snlf.state = STATE_READY
+				override_controls(snlf)
 			end
 		-- ready to start taking a shot
 		elseif snlf.state == STATE_READY then
@@ -454,11 +468,7 @@ addHook("PreThinkFrame", function()
 			-- otherwise land
 			else
 				p.pflags = $1 | PF_SPINNING -- force spinning flag
-				p.jumpfactor = 0 -- disable jump
-				if cheats.snolf_ground_control then
-					player.accelstart = 96
-					player.acceleration = 40
-				end
+				override_controls(snlf)
 			end
 		end
 
