@@ -6,7 +6,7 @@ freeslot("SPR_SFST", "SPR_SFAH", "SPR_SFAV", "SPR_SFMR", "SPR_SFHX")
 local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, is_snolf,
 	at_rest, take_a_mulligan, same_position, snolf_setup, reset_state,
 	sinusoidal_scale, get_charge_increment, in_black_core, allow_air_snolf,
-	cheat_toggle, snolfify_name, is_snolf_setup, override_controls
+	cheat_toggle, snolfify_name, is_snolf_setup, override_controls, are_touching
 
 local cheats = {
 	everybodys_snolf = false,
@@ -63,6 +63,8 @@ snolf_setup = function(player)
 		--stats
 		shotcount = 0,
 		mullcount = 0,
+		--collision check
+		collided = false
 	}
 end
 
@@ -190,6 +192,18 @@ override_controls = function(snlf)
 		player.accelstart = 0
 		player.acceleration = 0
 	end
+end
+
+-- assume players are spheres of diameter = spinheight
+are_touching = function(play1, play2)
+	local r1 = P_GetPlayerSpinHeight(play1)/2/FRACUNIT
+	local r2 = P_GetPlayerSpinHeight(play2)/2/FRACUNIT
+
+	local x = abs(play1.mo.x - play2.mo.x)/FRACUNIT
+	local y = abs(play1.mo.y - play2.mo.y)/FRACUNIT
+	local z = abs(play1.mo.z - play2.mo.z)/FRACUNIT
+
+	return x*x+y*y+z*z<r1*r1+r2*r2+2*r1*r2
 end
 
 
@@ -497,9 +511,30 @@ addHook("PreThinkFrame", function()
 			end
 		end
 
-		-- store certain state attributes so we can check for changes next tick
-		snlf.prev.inair = not P_IsObjectOnGround(mo)
-		snlf.prev.momz = mo.momz
+
+	end
+end)
+
+
+addHook("ThinkFrame", function()
+	local snolf_players = {}
+	for play1 in players.iterate do
+		if not is_snolf_setup(play1.mo) then continue end
+		for play2 in players.iterate do
+			if play1 == play2 then continue end
+			if not is_snolf_setup(play2.mo) then continue end
+			if (play1.snolf.state == STATE_WAITING or play2.snolf.state == STATE_WAITING) and
+			not play1.snolf.collided and not play2.snolf.collided and
+			are_touching(play1, play2) then
+				play1.snolf.collided = true
+				play2.snolf.collided = true
+
+				local m1, m2 = play1.mo, play2.mo
+				m1.momx, m2.momx = m2.momx, m1.momx
+				m1.momy, m2.momy = m2.momy, m1.momy
+				m1.momz, m2.momz = m2.momz, m1.momz
+			end
+		end
 	end
 end)
 
@@ -508,6 +543,14 @@ addHook("PostThinkFrame", function()
 	for player in players.iterate do
 		if not is_snolf_setup(player.mo) then continue end
 		player.mo.state = S_PLAY_ROLL -- always force rolling animation
+
+		local snlf = player.snolf
+
+		snlf.collided = false
+
+		-- store certain state attributes so we can check for changes next tick
+		snlf.prev.inair = not P_IsObjectOnGround(player.mo)
+		snlf.prev.momz = player.mo.momz
 	end
 end
 )
