@@ -536,12 +536,11 @@ addHook("ThinkFrame", function()
 				-- to be inverse to their jumpfactor. That makes Knuckles the
 				-- heaviest and Amy the lightest
 
-				local m1 = FixedDiv(FRACUNIT, skins[play1.mo.skin].jumpfactor)
-				local m2 = FixedDiv(FRACUNIT, skins[play2.mo.skin].jumpfactor)
-
-
+				local j1 = skins[play1.mo.skin].jumpfactor
+				local j2 = skins[play2.mo.skin].jumpfactor
 				local mo1, mo2 = play1.mo, play2.mo
-				if m1 == m2 then -- just swap velocities
+
+				if j1 == j2 or j1 == 0 or j2 == 0 then -- swap velocities
 					mo1.momx, mo2.momx = mo2.momx, mo1.momx
 					mo1.momy, mo2.momy = mo2.momy, mo1.momy
 					mo1.momz, mo2.momz = mo2.momz, mo1.momz
@@ -549,6 +548,9 @@ addHook("ThinkFrame", function()
 					-- collision of two spheres
 					-- v1 = u1(m1-m2)/(m1+m2) + u2*m2*2/(m1+m2)
 					-- v2 = u1*m1*2/(m1+m2) + u2(m2-m1)/(m1+m2)
+
+					local m1 = j1 == 0 and FRACUNIT or FixedDiv(FRACUNIT, j1)
+					local m2 = j2 == 0 and FRACUNIT or FixedDiv(FRACUNIT, j2)
 					local mm1 = FixedDiv(2*m1, m1+m2)
 					local mm2 = FixedDiv(2*m2, m1+m2)
 					local mm3 = FixedDiv(m1-m2,m1+m2)
