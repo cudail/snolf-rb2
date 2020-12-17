@@ -58,7 +58,7 @@ snolf_setup = function(player)
 		vdrive = 0,
 		chargegoingback = false,
 		-- previous tick state
-		prev = { inair = false, momz = 0 },
+		prev = { momz = 0 },
 		-- controls
 		ctrl = { jmp = 0, spn = 0, ca1 = 0 },
 		-- mulligan points
@@ -74,7 +74,7 @@ end
 
 -- resetting state to be used on death or level change
 reset_state = function(snlf, leave_mulls)
-	snlf.prev = { inair = false, momz = 0 }
+	snlf.prev = { momz = 0 }
 	snlf.hdrive = 0
 	snlf.vdrive = 0
 	snlf.state = STATE_WAITING
@@ -490,7 +490,7 @@ addHook("PreThinkFrame", function()
 		end
 
 		-- check if we landed this turn
-		if snlf.prev.inair and P_IsObjectOnGround(mo) then
+		if mo.eflags & MFE_JUSTHITFLOOR > 0 then
 			-- if going fast enough when Snolf hits the ground, bounce
 			if abs(snlf.prev.momz) > BOUNCE_LIMIT then
 				P_SetObjectMomZ(mo, - FixedMul(snlf.prev.momz, BOUNCE_FACTOR))
@@ -523,7 +523,6 @@ addHook("PreThinkFrame", function()
 		end
 
 		-- store certain state attributes so we can check for changes next tick
-		snlf.prev.inair = not P_IsObjectOnGround(player.mo)
 		snlf.prev.momz = player.mo.momz
 	end
 end)
