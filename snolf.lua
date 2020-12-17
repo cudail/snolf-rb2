@@ -487,6 +487,7 @@ addHook("PreThinkFrame", function()
 			mo.momx = FixedMul($1, SKIM_FACTOR)
 			mo.momy = FixedMul($1, SKIM_FACTOR)
 			P_SetObjectMomZ(mo, -mo.momz)
+			S_StartSound(mo, sfx_splish)
 		end
 
 		-- check if we landed this turn
