@@ -25,6 +25,8 @@ local cheats = {
 local TICKS_FOR_MULLIGAN = 35 -- how long to hold down the spin button to take a mulligan
 local BOUNCE_LIMIT = 10*FRACUNIT -- Snolf won't bounce if their vertical momentum is less than this
 local BOUNCE_FACTOR = FRACUNIT/2 -- when Snolf bounces their momentum is multiplied by this factor
+local SKIM_THRESHOLD = 10*FRACUNIT -- Snolf must be going at least this fast horizontally to skip across water
+local SKIM_ANLGE = ANG20 -- Snolf will not skip if if angle of approach is greater than this
 
 local STATE_WAITING, STATE_READY, STATE_HCHARGE, STATE_VCHARGE = 1, 2, 3, 4
 
@@ -476,6 +478,12 @@ addHook("PreThinkFrame", function()
 		-- quick turn
 		if snlf.ctrl.ca1 == 1 then
 			mo.angle = $1 + ANGLE_180
+		end
+
+		-- skim across water
+		if mo.momz < 0 and p.speed > SKIM_THRESHOLD and mo.eflags & MFE_TOUCHWATER > 0 and
+		R_PointToAngle2(0, 0, p.speed, -mo.momz) < SKIM_ANLGE then
+			P_SetObjectMomZ(mo, -mo.momz)
 		end
 
 		-- check if we landed this turn
