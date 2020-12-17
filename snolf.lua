@@ -511,7 +511,9 @@ addHook("PreThinkFrame", function()
 			end
 		end
 
-
+		-- store certain state attributes so we can check for changes next tick
+		snlf.prev.inair = not P_IsObjectOnGround(player.mo)
+		snlf.prev.momz = player.mo.momz
 	end
 end)
 
@@ -573,10 +575,6 @@ addHook("PostThinkFrame", function()
 		local snlf = player.snolf
 
 		snlf.collided = false
-
-		-- store certain state attributes so we can check for changes next tick
-		snlf.prev.inair = not P_IsObjectOnGround(player.mo)
-		snlf.prev.momz = player.mo.momz
 	end
 end
 )
