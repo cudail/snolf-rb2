@@ -27,6 +27,7 @@ local BOUNCE_LIMIT = 10*FRACUNIT -- Snolf won't bounce if their vertical momentu
 local BOUNCE_FACTOR = FRACUNIT/2 -- when Snolf bounces their momentum is multiplied by this factor
 local SKIM_THRESHOLD = 10*FRACUNIT -- Snolf must be going at least this fast horizontally to skip across water
 local SKIM_ANLGE = ANG20 -- Snolf will not skip if if angle of approach is greater than this
+local SKIM_FACTOR = 4*FRACUNIT/5 -- when Snolf skims their momentum is multiplied by this factor
 
 local STATE_WAITING, STATE_READY, STATE_HCHARGE, STATE_VCHARGE = 1, 2, 3, 4
 
@@ -483,6 +484,8 @@ addHook("PreThinkFrame", function()
 		-- skim across water
 		if mo.momz < 0 and p.speed > SKIM_THRESHOLD and mo.eflags & MFE_TOUCHWATER > 0 and
 		R_PointToAngle2(0, 0, p.speed, -mo.momz) < SKIM_ANLGE then
+			mo.momx = FixedMul($1, SKIM_FACTOR)
+			mo.momy = FixedMul($1, SKIM_FACTOR)
 			P_SetObjectMomZ(mo, -mo.momz)
 		end
 
