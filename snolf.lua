@@ -523,16 +523,40 @@ addHook("ThinkFrame", function()
 		for play2 in players.iterate do
 			if play1 == play2 then continue end
 			if not is_snolf_setup(play2.mo) then continue end
-			if (play1.snolf.state == STATE_WAITING or play2.snolf.state == STATE_WAITING) and
-			not play1.snolf.collided and not play2.snolf.collided and
-			are_touching(play1, play2) then
+			if (not at_rest(play1.snolf) or not at_rest(play2.snolf)) and
+				not play1.snolf.collided and not play2.snolf.collided and
+				are_touching(play1, play2) then
+
 				play1.snolf.collided = true
 				play2.snolf.collided = true
 
-				local m1, m2 = play1.mo, play2.mo
-				m1.momx, m2.momx = m2.momx, m1.momx
-				m1.momy, m2.momy = m2.momy, m1.momy
-				m1.momz, m2.momz = m2.momz, m1.momz
+				-- I wanted some characters to be considered heavier than others
+				-- but weight is not an attribute characters have. I have opted
+				-- for some weird logic instead. A player's mass is considered
+				-- to be inverse to their jumpfactor. That makes Knuckles the
+				-- heaviest and Amy the lightest
+
+				local m1 = FixedDiv(FRACUNIT, skins[play1.mo.skin].jumpfactor)
+				local m2 = FixedDiv(FRACUNIT, skins[play2.mo.skin].jumpfactor)
+
+
+				local mo1, mo2 = play1.mo, play2.mo
+				if m1 == m2 then -- just swap velocities
+					mo1.momx, mo2.momx = mo2.momx, mo1.momx
+					mo1.momy, mo2.momy = mo2.momy, mo1.momy
+					mo1.momz, mo2.momz = mo2.momz, mo1.momz
+				else
+					-- collision of two spheres
+					-- v1 = u1(m1-m2)/(m1+m2) + u2*m2*2/(m1+m2)
+					-- v2 = u1*m1*2/(m1+m2) + u2(m2-m1)/(m1+m2)
+					local mm1 = FixedDiv(2*m1, m1+m2)
+					local mm2 = FixedDiv(2*m2, m1+m2)
+					local mm3 = FixedDiv(m1-m2,m1+m2)
+
+					mo1.momx, mo2.momx = FixedMul(mo1.momx,mm3)+FixedMul(mo2.momx,mm2), FixedMul(mo1.momx,mm2)+FixedMul(mo2.momx,-mm3)
+					mo1.momy, mo2.momy = FixedMul(mo1.momy,mm3)+FixedMul(mo2.momy,mm2), FixedMul(mo1.momy,mm2)+FixedMul(mo2.momy,-mm3)
+					mo1.momz, mo2.momz = FixedMul(mo1.momz,mm3)+FixedMul(mo2.momz,mm2), FixedMul(mo1.momz,mm2)+FixedMul(mo2.momz,-mm3)
+				end
 			end
 		end
 	end
