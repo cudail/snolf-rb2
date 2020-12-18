@@ -70,8 +70,6 @@ stop stop the drowning music and the normal stage music will not resume
 afterwards. You can get it back by disabling the command, waiting until the
 drowning music starts again, getting air the normal way so the stage music
 resumes, then activating the command again.
-* You cannot change away from the Snolf skin in multiplayer as the game never
-considers the player stationary due to forcing the spinning state at all times.
 
 
 ## Credits
