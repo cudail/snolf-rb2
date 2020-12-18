@@ -43,19 +43,24 @@ stuck.
 
 ## Commands
 
-The mod adds some modes that can be enabled or disabled by console command.
-Call the command without any argument to toggle on or off. You can also call
-them with an argument of 0 or 1 to disable or enable them.
+Snolf comes with some console commands to allow for some customisation. In a multiplayer game commands affect all players, can only be used by admins, and are announced in chat when called.
 
-* `everybodys_snolf`: Forces all characters to use Snolf controls. This is just
-for a bit of fun and will probably be very unstable and not work very well with
-other mods.
-* `snolf_inf_rings`: Forces ring counter to always be 999
-* `snolf_inf_lives`: Gives you an extra life every time you die
+### Everybody's Snolf
+
+The command `everybodys_snolf` can will force all character to play like Snolf, including characters from other mods. This could potentially be unstable and not play nicely with other mods. Use at your own risk. It can be called with no argument to toggle Everybody's Snolf mode on or off or called with `0` or `1` to disable and enable respectively.
+
+By default this mode will also override the default life count portion of the heads up display in order to display an altered character name. This behaviour can be changed with the `everybodys_snolf_name_override` command. Setting this to `0` will return to the HUD to normal. `1` is the default value and shows an altered character name. `2` will disable the life count entirely. This is for compatibility with other mods. Calling the command without any argument will toggle between 0 and 1.
+
+### Gameplay aids
+
+Because levels can be very difficult to complete with Snolf there are a bunch of commands to make the game a bit easier. All commands can be called with `0` to disable or `1` to enable, or no argument to toggle.
+
+* `snolf_inf_rings`: Ring count forced to 999
+* `snolf_inf_lives`: Extra life is refunded on death
 * `snolf_inf_air`: No drowning
-* `snolf_death_mulligan`: On death return to last mulligan point
+* `snolf_death_mulligan`: Return to last resting place on death
 * `snolf_ground_control`: Enable steering on the ground
-* `snolf_air_shot`: Allows you to take shots mid-air
+* `snolf_air_shot`: Shots can be taken in the air
 
 
 ## Known Issues
