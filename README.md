@@ -94,6 +94,8 @@ Life count icon from Mario Golf: Advance Tour.
 
 v2.0
 * Complete rewrite of Lua script
+* Snolf players can now collide with each other
+* Snolf can skim along the surface of water
 * Time it takes to mulligan reduced to one second
 * Replaced modifier input method with console commands
 * Added air snolf command
