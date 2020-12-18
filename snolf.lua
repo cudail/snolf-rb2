@@ -313,9 +313,12 @@ hud.add( function(v, player, camera)
 	local hpos = sinusoidal_scale(player.snolf.hdrive, H_METER_LENGTH)
 	local vpos = sinusoidal_scale(player.snolf.vdrive, V_METER_LENGTH)
 
+	if hpos < 1 then hpos = 1 end
+	if vpos < 1 then vpos = 1 end
+
 	v.draw(158, 103, meter)
 	v.draw(160+hpos, 151, harrow)
-	if player.snolf.vdrive ~= -1 then
+	if state == STATE_VCHARGE then
 		v.draw(159, 150-vpos, varrow)
 	end
 end, "game")
@@ -433,6 +436,7 @@ addHook("PreThinkFrame", function()
 				if snlf.hdrive >= H_METER_LENGTH then
 					snlf.chargegoingback = true
 				elseif snlf.hdrive <= 0 then
+					snlf.hdrive = 0
 					snlf.chargegoingback = false
 				end
 				snlf.hdrive = $1 + increment
@@ -464,6 +468,7 @@ addHook("PreThinkFrame", function()
 				if snlf.vdrive >= V_METER_LENGTH then
 					snlf.chargegoingback = true
 				elseif snlf.vdrive <= 0 then
+					snlf.vdrive = 0
 					snlf.chargegoingback = false
 				end
 				snlf.vdrive = $1 + increment
