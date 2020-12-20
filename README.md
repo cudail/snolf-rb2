@@ -98,7 +98,8 @@ Life count icon from Mario Golf: Advance Tour.
 ## Changelog
 
 v2.0
-* Complete rewrite of Lua script
+* Complete rewrite of Lua script using coroutines, metatables and instance methods to streamline the code
+* Large second rewrite of Lua script when I realised that coroutines, metatables and instance methods were incompatible with netplay
 * Snolf players can now collide with each other
 * Snolf can skim along the surface of water
 * Time it takes to mulligan reduced to one second
