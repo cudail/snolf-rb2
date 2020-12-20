@@ -432,7 +432,7 @@ addHook("PreThinkFrame", function()
 				if snlf.chargegoingback then
 					increment = $1 * -1
 				end
-				snlf.p.pflags = $1 | PF_STARTDASH | PF_SPINNING -- force spindash state
+				snlf.p.pflags = $1 | PF_STARTDASH -- force spindash state
 				if snlf.hdrive >= H_METER_LENGTH then
 					snlf.chargegoingback = true
 				elseif snlf.hdrive <= 0 then
@@ -464,7 +464,7 @@ addHook("PreThinkFrame", function()
 				if snlf.chargegoingback then
 					increment = $1 * -1
 				end
-				snlf.p.pflags = $1 | PF_STARTDASH | PF_SPINNING -- force spindash state
+				snlf.p.pflags = $1 | PF_STARTDASH -- force spindash state
 				if snlf.vdrive >= V_METER_LENGTH then
 					snlf.chargegoingback = true
 				elseif snlf.vdrive <= 0 then
