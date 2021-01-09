@@ -99,6 +99,7 @@ Life count icon from Mario Golf: Advance Tour.
 
 v2.1
 * Fixed commands displaying an unhelpful error message instead of the correct help message if used with the wrong arguments
+* Fix everybodys_snolf_name_override help message displaying for all users instead of just the user trying to use the command
 
 v2.0
 * Complete rewrite of Lua script using coroutines, metatables and instance methods to streamline the code
