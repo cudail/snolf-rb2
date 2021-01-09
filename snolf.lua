@@ -673,7 +673,7 @@ COM_AddCommand("everybodys_snolf_name_override", function(player, arg)
 	elseif arg == "2" then
 		cheats.everybodys_snolf_name_override = 2
 	else
-		CONS_Printf("everybodys_snolf_name_override should be called with either 0, 1, 2 or no argument")
+		CONS_Printf(player, "everybodys_snolf_name_override should be called with either 0, 1, 2 or no argument")
 	end
 	chatprint("everybodys_snolf_name_override has been "..(cheats.everybodys_snolf_name_override > 0 and "enabled" or "disabled")..".")
 
