@@ -500,7 +500,7 @@ addHook("PreThinkFrame", function()
 		-- check if we landed this turn
 		if mo.eflags & MFE_JUSTHITFLOOR > 0 then
 			-- if going fast enough when Snolf hits the ground, bounce
-			if abs(snlf.prev.momz) > BOUNCE_LIMIT then
+			if abs(snlf.prev.momz) > BOUNCE_LIMIT and p.playerstate ~= PST_DEAD then
 				P_SetObjectMomZ(mo, - FixedMul(snlf.prev.momz, BOUNCE_FACTOR))
 			-- otherwise land
 			else
