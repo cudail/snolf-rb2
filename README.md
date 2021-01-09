@@ -107,6 +107,7 @@ v2.0
 * Added air snolf command
 * Replaced Everybody's Snolf WAD with a console command
 * Removed idle animation sprites
+* Stopped Snolf bouncing on the ground when doing the death animation
 
 v1.6
 * Adjusted alignment of constellation sprites
