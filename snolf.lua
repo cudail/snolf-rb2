@@ -51,7 +51,6 @@ snolf_setup = function(player)
 	player.snolf = {
 		-- SRB2 data structures
 		p = player,
-		hudname = snolfify_name(skins[player.mo.skin].hudname),
 		-- Snolf shot state
 		state = STATE_WAITING,
 		hdrive = 0,
@@ -352,14 +351,17 @@ hud.add ( function(v, player, camera)
 			V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM,
 			v.getColormap(player.mo.skin, player.mo.color))
 		v.drawString(74, 184, player.lives, V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM, "right" )
-		if #player.snolf.hudname > 7 then
-			v.drawString(34, 176, player.snolf.hudname, V_YELLOWMAP|V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM, "thin")
-		elseif #player.snolf.hudname > 6 then
-			v.drawString(74, 176, player.snolf.hudname, V_YELLOWMAP|V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM, "thin-right")
-		elseif #player.snolf.hudname == 6 then
-			v.drawString(34, 176, player.snolf.hudname, V_YELLOWMAP|V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM, "left")
-		elseif #player.snolf.hudname < 6 then
-			v.drawString(74, 176, player.snolf.hudname, V_YELLOWMAP|V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM, "right")
+
+		local hudname = snolfify_name(skins[player.mo.skin].hudname)
+
+		if #hudname > 7 then
+			v.drawString(34, 176, hudname, V_YELLOWMAP|V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM, "thin")
+		elseif #hudname > 6 then
+			v.drawString(74, 176, hudname, V_YELLOWMAP|V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM, "thin-right")
+		elseif #hudname == 6 then
+			v.drawString(34, 176, hudname, V_YELLOWMAP|V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM, "left")
+		elseif #hudname < 6 then
+			v.drawString(74, 176, hudname, V_YELLOWMAP|V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM, "right")
 		end
 	end
 end, "game")
