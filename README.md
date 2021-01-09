@@ -97,6 +97,9 @@ Life count icon from Mario Golf: Advance Tour.
 
 ## Changelog
 
+v2.1
+* Fixed commands displaying an unhelpful error message instead of the correct help message if used with the wrong arguments
+
 v2.0
 * Complete rewrite of Lua script using coroutines, metatables and instance methods to streamline the code
 * Large second rewrite of Lua script when I realised that coroutines, metatables and instance methods were incompatible with netplay

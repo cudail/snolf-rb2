@@ -209,7 +209,7 @@ are_touching = function(play1, play2)
 end
 
 
-cheat_toggle = function(cheat_name, arg)
+cheat_toggle = function(cheat_name, arg, player)
 	local current_bool = cheats[cheat_name]
 	if arg == nil then
 		cheats[cheat_name] = not $1
@@ -644,7 +644,7 @@ end)
 --------------
 
 COM_AddCommand("everybodys_snolf", function(player, arg)
-	cheat_toggle("everybodys_snolf", arg)
+	cheat_toggle("everybodys_snolf", arg, player)
 	-- restore character stats
 	for player in players.iterate do
 		if player.mo and not is_snolf(player.mo) then
@@ -686,29 +686,29 @@ end, COM_ADMIN)
 
 
 COM_AddCommand("snolf_inf_rings", function(player, arg)
-	cheat_toggle("snolf_inf_rings", arg)
+	cheat_toggle("snolf_inf_rings", arg, player)
 end, COM_ADMIN)
 
 
 COM_AddCommand("snolf_inf_lives", function(player, arg)
-	cheat_toggle("snolf_inf_lives", arg)
+	cheat_toggle("snolf_inf_lives", arg, player)
 end, COM_ADMIN)
 
 
 COM_AddCommand("snolf_inf_air", function(player, arg)
-	cheat_toggle("snolf_inf_air", arg)
+	cheat_toggle("snolf_inf_air", arg, player)
 end, COM_ADMIN)
 
 
 COM_AddCommand("snolf_death_mulligan", function(player, arg)
-	cheat_toggle("snolf_death_mulligan", arg)
+	cheat_toggle("snolf_death_mulligan", arg, player)
 end, COM_ADMIN)
 
 
 COM_AddCommand("snolf_ground_control", function(player, arg)
-	cheat_toggle("snolf_ground_control", arg)
+	cheat_toggle("snolf_ground_control", arg, player)
 end, COM_ADMIN)
 
 COM_AddCommand("snolf_air_shot", function(player, arg)
-	cheat_toggle("snolf_air_shot", arg)
+	cheat_toggle("snolf_air_shot", arg, player)
 end, COM_ADMIN)
