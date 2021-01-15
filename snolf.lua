@@ -601,6 +601,11 @@ end
 addHook("MobjMoveBlocked", function(mo)
 	if not is_snolf_setup(mo) then return false end
 
+	local slope = mo.standingslope
+	if slope and slope.valid and slope.zangle >= ANGLE_45 then
+		return false
+	end
+
 	-- P_BounceMove doesn't bounce the player if they are on the ground
 	-- To get around this impart the tiniest possible vertical momentum the
 	-- engine will allow so Snolf is technically in the air for a single frame
