@@ -614,7 +614,7 @@ addHook("MobjMoveBlocked", function(mo)
 	end
 	P_BounceMove(mo)
 	return true
-end)
+end, MT_PLAYER)
 
 
 -- reset state on death
