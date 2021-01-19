@@ -97,7 +97,7 @@ Life count icon from Mario Golf: Advance Tour.
 
 v2.2
 * Fixed Snolf bouncing off steep slopes like quarter- and half-pipes instead of going off them as expected
-* Changed how characters with 0 jumpfactor are handled in collisons
+* Changed how characters with 0 jumpfactor are handled in collisions
 
 v2.1
 * Fixed commands displaying an unhelpful error message instead of the correct help message if used with the wrong arguments
