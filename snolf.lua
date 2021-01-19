@@ -560,7 +560,10 @@ addHook("ThinkFrame", function()
 				local j2 = skins[play2.mo.skin].jumpfactor
 				local mo1, mo2 = play1.mo, play2.mo
 
-				if j1 == j2 or j1 == 0 or j2 == 0 then -- swap velocities
+				if j1 == 0 then j1 = FRACUNIT end
+				if j2 == 0 then j2 = FRACUNIT end
+
+				if j1 == j2 then -- swap velocities
 					mo1.momx, mo2.momx = mo2.momx, mo1.momx
 					mo1.momy, mo2.momy = mo2.momy, mo1.momy
 					mo1.momz, mo2.momz = mo2.momz, mo1.momz
