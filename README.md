@@ -65,8 +65,6 @@ Because levels can be very difficult to complete with Snolf there are a bunch of
 
 ## Known Issues
 
-* Quarter- and half-pipe structures do not work correctly. Snolf will just
-bounce off them instead of being launched into the air.
 * Sometimes Snolf will get stuck unable to shoot while on a conveyor belt,
 especially when on the edge of one. If this happens all the player can do is
 wait to reach the end of the conveyor belt or use a mullgian.
@@ -96,6 +94,10 @@ Life count icon from Mario Golf: Advance Tour.
 
 
 ## Changelog
+
+v2.2
+* Fixed Snolf bouncing off steep slopes like quarter- and half-pipes instead of going off them as expected
+* Changed how characters with 0 jumpfactor are handled in collisons
 
 v2.1
 * Fixed commands displaying an unhelpful error message instead of the correct help message if used with the wrong arguments
