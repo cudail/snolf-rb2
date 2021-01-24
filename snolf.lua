@@ -5,7 +5,7 @@ freeslot("SPR_SFST", "SPR_SFAH", "SPR_SFAV", "SPR_SFMR", "SPR_SFHX")
 -- without causing parsing errors
 local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, is_snolf,
 	at_rest, take_a_mulligan, same_position, snolf_setup, reset_state,
-	sinusoidal_scale, get_charge_increment, in_black_core, allow_air_snolf,
+	sinusoidal_scale, get_charge_increment, in_black_core, in_boss, allow_air_snolf,
 	cheat_toggle, snolfify_name, is_snolf_setup, override_controls, are_touching
 
 local cheats = {
@@ -165,6 +165,18 @@ in_black_core = function()
 	return black_core_maps[gamemap]
 end
 
+
+in_boss = function()
+	if in_black_core() then return true end
+	local boss_maps = {
+		[3]=true,
+		[6]=true,
+		[9]=true,
+		[12]=true,
+		[15]=true
+	}
+	return boss_maps[gamemap]
+end
 
 -- situations where we want Snolf to be able to shoot mid-air
 allow_air_snolf = function(snlf)
@@ -499,6 +511,10 @@ addHook("PreThinkFrame", function()
 
 		-- check if we landed this turn
 		if mo.eflags & MFE_JUSTHITFLOOR > 0 then
+			--makes bosses easier
+			if in_boss() and snlf.state == STATE_WAITING then
+				snlf.state = STATE_READY
+			end
 			-- if going fast enough when Snolf hits the ground, bounce
 			if abs(snlf.prev.momz) > BOUNCE_LIMIT and p.playerstate ~= PST_DEAD then
 				P_SetObjectMomZ(mo, - FixedMul(snlf.prev.momz, BOUNCE_FACTOR))
