@@ -6,7 +6,8 @@ freeslot("SPR_SFST", "SPR_SFAH", "SPR_SFAV", "SPR_SFMR", "SPR_SFHX")
 local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, is_snolf,
 	at_rest, take_a_mulligan, same_position, snolf_setup, reset_state,
 	sinusoidal_scale, get_charge_increment, in_black_core, in_boss, allow_air_snolf,
-	cheat_toggle, snolfify_name, is_snolf_setup, override_controls, are_touching
+	cheat_toggle, snolfify_name, is_snolf_setup, override_controls, are_touching,
+	reset_shot_on_hit
 
 local cheats = {
 	everybodys_snolf = false,
@@ -308,7 +309,17 @@ snolfify_name = function(orig_name)
 	return orig_name
 end
 
-
+reset_shot_on_hit = function(boss, player_hopefully)
+	for player in players.iterate do
+		if player.mo ~= player_hopefully then
+			continue
+		end
+		print("hit a boss")
+		if is_snolf_setup(player.mo) and player.snolf.state == STATE_WAITING then
+			player.snolf.state = STATE_READY
+		end
+	end
+end
 
 -------------------
 -- HUD functions --
@@ -666,6 +677,16 @@ addHook("PlayerSpawn", function(player)
 		take_a_mulligan(player.snolf, true)
 	end
 end)
+
+-- Immediately allow player to take another shot if they hit a boss
+addHook("MobjCollide", reset_shot_on_hit, MT_EGGMOBILE)
+addHook("MobjCollide", reset_shot_on_hit, MT_EGGMOBILE2)
+addHook("MobjCollide", reset_shot_on_hit, MT_EGGMOBILE3)
+addHook("MobjCollide", reset_shot_on_hit, MT_EGGMOBILE4)
+addHook("MobjCollide", reset_shot_on_hit, MT_FANG)
+addHook("MobjCollide", reset_shot_on_hit, MT_BLACKEGGMAN)
+addHook("MobjCollide", reset_shot_on_hit, MT_CYBRAKDEMON)
+addHook("MobjCollide", reset_shot_on_hit, MT_METALSONIC_BATTLE)
 
 --------------
 -- Commands --
