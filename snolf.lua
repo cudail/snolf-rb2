@@ -199,6 +199,9 @@ end
 override_controls = function(snlf)
 	local player = snlf.p
 	player.jumpfactor = 0 -- disable jump
+	if player.charability2 == CA2_SPINDASH then
+		player.charability2 = CA2_NONE --disable spindash
+	end
 	if cheats.snolf_ground_control and snlf.state == STATE_WAITING then
 		player.accelstart = 96
 		player.acceleration = 40
@@ -676,6 +679,7 @@ COM_AddCommand("everybodys_snolf", function(player, arg)
 			player.jumpfactor = skin.jumpfactor
 			player.accelstart = skin.accelstart
 			player.acceleration = skin.acceleration
+			player.charability2 = skin.ability2
 		end
 	end
 
