@@ -314,7 +314,6 @@ reset_shot_on_hit = function(boss, player_hopefully)
 		if player.mo ~= player_hopefully then
 			continue
 		end
-		print("hit a boss")
 		if is_snolf_setup(player.mo) and player.snolf.state == STATE_WAITING then
 			player.snolf.state = STATE_READY
 		end
