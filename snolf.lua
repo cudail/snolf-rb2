@@ -520,6 +520,9 @@ addHook("PreThinkFrame", function()
 			mo.momy = FixedMul($1, SKIM_FACTOR)
 			P_SetObjectMomZ(mo, -mo.momz)
 			S_StartSound(mo, sfx_splish)
+			if in_boss() and snlf.state == STATE_WAITING then
+				snlf.state = STATE_READY
+			end
 		end
 
 		-- check if we landed this turn
