@@ -95,6 +95,12 @@ Life count icon from Mario Golf: Advance Tour.
 
 ## Changelog
 
+v2.3
+* Allow Snolf to take a shot immediately after hitting a boss
+* Allow Snolf to take a shot after bouncing off the ground when in a boss level
+* Allow Snolf to take a shot after skimming over water when in a boss level
+* Restored spindash behaviour for charging shots
+
 v2.2
 * Fixed Snolf bouncing off steep slopes like quarter- and half-pipes instead of going off them as expected
 * Changed how characters with 0 jumpfactor are handled in collisions
