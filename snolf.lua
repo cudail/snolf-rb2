@@ -521,6 +521,7 @@ addHook("PreThinkFrame", function()
 			-- if going fast enough when Snolf hits the ground, bounce
 			if abs(snlf.prev.momz) > BOUNCE_LIMIT and p.playerstate ~= PST_DEAD then
 				P_SetObjectMomZ(mo, - FixedMul(snlf.prev.momz, BOUNCE_FACTOR))
+				snlf.p.pflags = $1 | PF_JUMPED
 			-- otherwise land
 			else
 				p.pflags = $1 | PF_SPINNING -- force spinning flag
