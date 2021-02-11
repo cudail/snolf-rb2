@@ -645,6 +645,14 @@ addHook("MobjMoveBlocked", function(mo)
 		return false
 	end
 
+	--let player take a shot if they bounce off walls while fighting a boss
+	if in_boss() then
+		local player = mo.player
+		if is_snolf_setup(mo) and player.snolf.state == STATE_WAITING then
+			player.snolf.state = STATE_READY
+		end
+	end
+
 	-- P_BounceMove doesn't bounce the player if they are on the ground
 	-- To get around this impart the tiniest possible vertical momentum the
 	-- engine will allow so Snolf is technically in the air for a single frame
@@ -693,6 +701,7 @@ addHook("MobjCollide", reset_shot_on_hit, MT_BLACKEGGMAN)
 addHook("MobjCollide", reset_shot_on_hit, MT_CYBRAKDEMON)
 addHook("MobjCollide", reset_shot_on_hit, MT_METALSONIC_BATTLE)
 
+--allow player to take a shot after they've been hit by a boss
 addHook("MobjDamage", function(target, inflictor, source, damage, damagetype)
 	if not target or not target.player then
 		return
