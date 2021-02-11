@@ -416,24 +416,27 @@ addHook("PreThinkFrame", function()
 		snlf.ctrl.spn = p.cmd.buttons & BT_SPIN and $1+1 or 0
 		snlf.ctrl.ca1 = p.cmd.buttons & BT_CUSTOM1 and $1+1 or 0
 
+		-- try to set a mulligan point
+		if at_rest(snlf) then
+			local mo, mulls = snlf.p.mo, snlf.mull_pts
+			local lm = mulls[#mulls] -- last mulligan point
+
+			-- if we don't have a mulligan point yet
+			-- or if our last one does not match our current position
+			if not lm or not same_position(mo, lm) then
+				-- if there's already ten mulligan points stored then remove one
+				if #mulls > 9 then
+					table.remove(mulls, 1)
+				end
+				table.insert(mulls, {x = mo.x, y = mo.y, z = mo.z})
+			end
+		end
 
 		-- state dependent update
 		-- waiting to come to rest
 		if snlf.state == STATE_WAITING then
+			--allow a shot to happen
 			if at_rest(snlf) or allow_air_snolf(snlf) then
-				-- try to set a mulligan point
-				local mo, mulls = snlf.p.mo, snlf.mull_pts
-				local lm = mulls[#mulls] -- last mulligan point
-
-				-- if we don't have a mulligan point yet
-				-- or if our last one does not match our current position
-				if not lm or not same_position(mo, lm) then
-					-- if there's already ten mulligan points stored then remove one
-					if #mulls > 9 then
-						table.remove(mulls, 1)
-					end
-					table.insert(mulls, {x = mo.x, y = mo.y, z = mo.z})
-				end
 				snlf.state = STATE_READY
 				override_controls(snlf)
 			end
