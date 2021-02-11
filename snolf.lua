@@ -693,6 +693,21 @@ addHook("MobjCollide", reset_shot_on_hit, MT_BLACKEGGMAN)
 addHook("MobjCollide", reset_shot_on_hit, MT_CYBRAKDEMON)
 addHook("MobjCollide", reset_shot_on_hit, MT_METALSONIC_BATTLE)
 
+addHook("MobjDamage", function(target, inflictor, source, damage, damagetype)
+	if not target or not target.player then
+		return
+	end
+
+	local player = target.player
+	if ( source ~= nil and (source.type >= MT_BOSSEXPLODE and source.type <= MT_MSGATHER) )
+		or (  inflictor ~= nil and ( inflictor.type >= MT_BOSSEXPLODE and inflictor.type <= MT_MSGATHER ) ) then
+
+		if is_snolf_setup(player.mo) and player.snolf.state == STATE_WAITING then
+			player.snolf.state = STATE_READY
+		end
+	end
+end, MT_PLAYER)
+
 --------------
 -- Commands --
 --------------
