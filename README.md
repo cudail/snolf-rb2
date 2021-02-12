@@ -68,11 +68,6 @@ Because levels can be very difficult to complete with Snolf there are a bunch of
 * Sometimes Snolf will get stuck unable to shoot while on a conveyor belt,
 especially when on the edge of one. If this happens all the player can do is
 wait to reach the end of the conveyor belt or use a mullgian.
-* Enabling the no drowning command while the drowning music is playing will not
-stop stop the drowning music and the normal stage music will not resume
-afterwards. You can get it back by disabling the command, waiting until the
-drowning music starts again, getting air the normal way so the stage music
-resumes, then activating the command again.
 
 
 ## Credits
@@ -94,6 +89,19 @@ Life count icon from Mario Golf: Advance Tour.
 
 
 ## Changelog
+
+v2.4
+* Allow Snolf to take a shot after getting hit by a boss
+* Allow Snolf to take a shot after bounching off a wall when in a boss level
+* Changed mulligan point to be set whenever the player is at rest regardless of
+of current player state
+* Level music resumes when enabling infinite air command while drowning
+
+let player take a shot if they bounce off walls while fighting a boss
+Add hook to let players take a shot after being damaged by a boss
+Separate setting mulligan point from being in a waiting state
+
+
 
 v2.3
 * Allow Snolf to take a shot immediately after hitting a boss
