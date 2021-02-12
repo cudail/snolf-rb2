@@ -68,6 +68,7 @@ Because levels can be very difficult to complete with Snolf there are a bunch of
 * Sometimes Snolf will get stuck unable to shoot while on a conveyor belt,
 especially when on the edge of one. If this happens all the player can do is
 wait to reach the end of the conveyor belt or use a mullgian.
+* Snolf can not jump off Rollout Rocks in Red Volcano Zone.
 
 
 ## Credits
