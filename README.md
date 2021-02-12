@@ -97,12 +97,6 @@ v2.4
 of current player state
 * Level music resumes when enabling infinite air command while drowning
 
-let player take a shot if they bounce off walls while fighting a boss
-Add hook to let players take a shot after being damaged by a boss
-Separate setting mulligan point from being in a waiting state
-
-
-
 v2.3
 * Allow Snolf to take a shot immediately after hitting a boss
 * Allow Snolf to take a shot after bouncing off the ground when in a boss level
