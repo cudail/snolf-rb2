@@ -560,6 +560,7 @@ addHook("PreThinkFrame", function()
 		if cheats.snolf_inf_air then
 			if p.powers[pw_underwater] > 0 then
 				p.powers[pw_underwater] = WATER_AIR_TIMER
+				P_RestoreMusic(p)
 			end
 			if p.powers[pw_spacetime] > 0 then
 				p.powers[pw_spacetime] = SPACE_AIR_TIMER
