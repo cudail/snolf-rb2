@@ -27,6 +27,8 @@ local cheats = {
 	snolf_shot_on_touch_wall_when_in_boss = false
 }
 
+local bosses_health = {}
+
 ---------------
 -- constants --
 ---------------
@@ -321,22 +323,10 @@ on_hit_boss = function(boss, player_hopefully)
 		if player.mo ~= player_hopefully then
 			continue
 		end
+
 		if cheats.snolf_shot_on_hit_boss then
 			if is_snolf_setup(player.mo) and player.snolf.state == STATE_WAITING then
 				player.snolf.state = STATE_READY
-			end
-		end
-
-		--only on first frame of the boss's hurt animation
-		if cheats.snolf_rings_on_hit_boss and boss.state == boss.info.painstate and boss.tics == states[boss.state].tics then
-			S_StartSound(player.mo, sfx_itemup)
-			player.rings = $1 + 1
-			for i=0, 5 do
-				local ring = P_SpawnMobjFromMobj(boss, 0,0,0, MT_FLINGRING)
-				ring.fuse = 8*TICRATE
-				ring.momx = FixedMul(4*FRACUNIT, cos(ANG60*i))
-				ring.momy = FixedMul(4*FRACUNIT, sin(ANG60*i))
-				ring.momz = 3*FRACUNIT
 			end
 		end
 	end
@@ -437,6 +427,15 @@ addHook("PreThinkFrame", function()
 		snlf.ctrl.jmp = p.cmd.buttons & BT_JUMP and $1+1 or 0
 		snlf.ctrl.spn = p.cmd.buttons & BT_SPIN and $1+1 or 0
 		snlf.ctrl.ca1 = p.cmd.buttons & BT_CUSTOM1 and $1+1 or 0
+
+
+		for boss in pairs(bosses_health) do
+			print(boss)
+			print(bosses_health[boss])
+			if not boss or not boss.valid then
+				bosses_health[boss] = nil
+			end
+		end
 
 		-- try to set a mulligan point
 		if at_rest(snlf) then
@@ -744,6 +743,28 @@ addHook("MobjDamage", function(target, inflictor, source, damage, damagetype)
 		end
 	end
 end, MT_PLAYER)
+
+
+--track the health of bosses
+addHook("BossThinker", function(boss)
+	if not bosses_health[boss] then
+		bosses_health[boss] = boss.health
+	elseif bosses_health[boss] ~= boss.health then
+		bosses_health[boss] = boss.health
+
+		-- boss drops rings
+		if cheats.snolf_rings_on_hit_boss then
+			S_StartSound(boss, sfx_s3kb9)
+			for i=0, 5 do
+				local ring = P_SpawnMobjFromMobj(boss, 0,0,0, MT_FLINGRING)
+				ring.fuse = 8*TICRATE
+				ring.momx = FixedMul(4*FRACUNIT, cos(ANG60*i))
+				ring.momy = FixedMul(4*FRACUNIT, sin(ANG60*i))
+				ring.momz = 3*FRACUNIT
+			end
+		end
+	end
+end)
 
 --------------
 -- Commands --
