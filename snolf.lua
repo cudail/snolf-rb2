@@ -236,12 +236,12 @@ cheat_toggle = function(cheat_name, arg, player)
 	local current_bool = cheats[cheat_name]
 	if arg == nil then
 		cheats[cheat_name] = not $1
-	elseif arg == "0" then
+	elseif arg == "0" or arg == "off" or arg == "false" then
 		cheats[cheat_name] = false
-	elseif arg == "1" then
+	elseif arg == "1" or arg == "on" or arg == "true" then
 		cheats[cheat_name] = true
 	else
-		CONS_Printf(player, cheat_name.." should be called with either 0, 1 or no argument")
+		CONS_Printf(player, cheat_name.." should be called with either 'on', 'off', or no argument")
 		return
 	end
 	chatprint(cheat_name.." has been "..(cheats[cheat_name] and "enabled" or "disabled")..".")
@@ -766,9 +766,9 @@ end, COM_ADMIN)
 COM_AddCommand("everybodys_snolf_name_override", function(player, arg)
 	if arg == nil then
 		cheats.everybodys_snolf_name_override = $1 == 0 and 1 or 0
-	elseif arg == "0" then
+	elseif arg == "0" or arg == "off" or arg == "false" then
 		cheats.everybodys_snolf_name_override = 0
-	elseif arg == "1" then
+	elseif arg == "1" or arg == "on" or arg == "true" then
 		cheats.everybodys_snolf_name_override = 1
 	elseif arg == "2" then
 		cheats.everybodys_snolf_name_override = 2
