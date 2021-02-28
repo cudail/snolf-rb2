@@ -420,8 +420,6 @@ addHook("PreThinkFrame", function()
 
 
 		for boss in pairs(bosses_health) do
-			print(boss)
-			print(bosses_health[boss])
 			if not boss or not boss.valid then
 				bosses_health[boss] = nil
 			end
