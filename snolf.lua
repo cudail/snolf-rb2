@@ -7,17 +7,24 @@ local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, is_snolf,
 	at_rest, take_a_mulligan, same_position, snolf_setup, reset_state,
 	sinusoidal_scale, get_charge_increment, in_black_core, in_boss, allow_air_snolf,
 	cheat_toggle, snolfify_name, is_snolf_setup, override_controls, are_touching,
-	reset_shot_on_hit
+	on_hit_boss
 
 local cheats = {
 	everybodys_snolf = false,
 	everybodys_snolf_name_override = 1,
+
 	snolf_inf_rings = false,
 	snolf_inf_lives = false,
 	snolf_inf_air = false,
 	snolf_death_mulligan = false,
 	snolf_ground_control = false,
-	snolf_air_shot = false
+	snolf_air_shot = false,
+
+	snolf_shot_on_hit_boss = true,
+	snolf_shot_on_hit_by_boss = true,
+	snolf_rings_on_hit_boss = true,
+	snolf_shot_on_touch_ground_when_in_boss = true,
+	snolf_shot_on_touch_wall_when_in_boss = false
 }
 
 ---------------
@@ -309,13 +316,21 @@ snolfify_name = function(orig_name)
 	return orig_name
 end
 
-reset_shot_on_hit = function(boss, player_hopefully)
+on_hit_boss = function(boss, player_hopefully)
 	for player in players.iterate do
 		if player.mo ~= player_hopefully then
 			continue
 		end
-		if is_snolf_setup(player.mo) and player.snolf.state == STATE_WAITING then
-			player.snolf.state = STATE_READY
+		if cheats.snolf_shot_on_hit_boss then
+			if is_snolf_setup(player.mo) and player.snolf.state == STATE_WAITING then
+				player.snolf.state = STATE_READY
+			end
+		end
+
+		--only on first frame of the boss's hurt animation
+		if cheats.snolf_rings_on_hit_boss and boss.state == boss.info.painstate and boss.tics == states[boss.state].tics then
+			S_StartSound(player.mo, sfx_itemup)
+			player.rings = $1 + 1
 		end
 	end
 end
@@ -528,7 +543,7 @@ addHook("PreThinkFrame", function()
 			mo.momy = FixedMul($1, SKIM_FACTOR)
 			P_SetObjectMomZ(mo, -mo.momz)
 			S_StartSound(mo, sfx_splish)
-			if in_boss() and snlf.state == STATE_WAITING then
+			if in_boss() and cheats.snolf_shot_on_touch_ground_when_in_boss and snlf.state == STATE_WAITING then
 				snlf.state = STATE_READY
 			end
 		end
@@ -536,7 +551,7 @@ addHook("PreThinkFrame", function()
 		-- check if we landed this turn
 		if mo.eflags & MFE_JUSTHITFLOOR > 0 then
 			--makes bosses easier
-			if in_boss() and snlf.state == STATE_WAITING then
+			if in_boss() and cheats.snolf_shot_on_touch_ground_when_in_boss and snlf.state == STATE_WAITING then
 				snlf.state = STATE_READY
 			end
 			-- if going fast enough when Snolf hits the ground, bounce
@@ -652,7 +667,7 @@ addHook("MobjMoveBlocked", function(mo)
 	end
 
 	--let player take a shot if they bounce off walls while fighting a boss
-	if in_boss() then
+	if in_boss() and cheats.snolf_shot_on_touch_wall_when_in_boss then
 		local player = mo.player
 		if is_snolf_setup(mo) and player.snolf.state == STATE_WAITING then
 			player.snolf.state = STATE_READY
@@ -698,14 +713,14 @@ addHook("PlayerSpawn", function(player)
 end)
 
 -- Immediately allow player to take another shot if they hit a boss
-addHook("MobjCollide", reset_shot_on_hit, MT_EGGMOBILE)
-addHook("MobjCollide", reset_shot_on_hit, MT_EGGMOBILE2)
-addHook("MobjCollide", reset_shot_on_hit, MT_EGGMOBILE3)
-addHook("MobjCollide", reset_shot_on_hit, MT_EGGMOBILE4)
-addHook("MobjCollide", reset_shot_on_hit, MT_FANG)
-addHook("MobjCollide", reset_shot_on_hit, MT_BLACKEGGMAN)
-addHook("MobjCollide", reset_shot_on_hit, MT_CYBRAKDEMON)
-addHook("MobjCollide", reset_shot_on_hit, MT_METALSONIC_BATTLE)
+addHook("MobjCollide", on_hit_boss, MT_EGGMOBILE, S_EGGMOBILE_PAIN)
+addHook("MobjCollide", on_hit_boss, MT_EGGMOBILE2)
+addHook("MobjCollide", on_hit_boss, MT_EGGMOBILE3)
+addHook("MobjCollide", on_hit_boss, MT_EGGMOBILE4)
+addHook("MobjCollide", on_hit_boss, MT_FANG)
+addHook("MobjCollide", on_hit_boss, MT_BLACKEGGMAN)
+addHook("MobjCollide", on_hit_boss, MT_CYBRAKDEMON)
+addHook("MobjCollide", on_hit_boss, MT_METALSONIC_BATTLE)
 
 --allow player to take a shot after they've been hit by a boss
 addHook("MobjDamage", function(target, inflictor, source, damage, damagetype)
