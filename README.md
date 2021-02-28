@@ -100,6 +100,13 @@ Life count icon from Mario Golf: Advance Tour.
 
 ## Changelog
 
+v2.5
+* Snolf can jump off rollout rocks again
+* Bosses drop rings when hit
+* Changed boss mechanics to work for any level that contains a boss object, not just hardcoded levels
+* Added commands to toggle Snolf boss mechanics
+* Allow commands to be called with arguments "on", "off", "true" and "false"
+
 v2.4
 * Allow Snolf to take a shot after getting hit by a boss
 * Allow Snolf to take a shot after bounching off a wall when in a boss level
