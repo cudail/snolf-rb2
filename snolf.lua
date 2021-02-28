@@ -498,11 +498,6 @@ addHook("PreThinkFrame", function()
 					snlf.shotcount = $1 + 1
 				end
 
-				-- give back jump. It will be taken away again on landing
-				-- this is done so that players can jump off objects like
-				-- the rollout rocks in Red Volcano Zone
-				p.jumpfactor = skins[mo.skin].jumpfactor
-
 				snlf.state = STATE_WAITING
 			else
 				local increment = get_charge_increment(snlf)
@@ -563,6 +558,11 @@ addHook("PreThinkFrame", function()
 		-- enable jumping while on a water slide
 		if p.pflags & PF_SLIDING ~= 0 and p.jumpfactor == 0 then
 			p.jumpfactor = FRACUNIT
+		elseif not P_IsObjectOnGround(mo) then
+			-- give back jump. It will be taken away again on landing
+			-- this is done so that players can jump off objects like
+			-- the rollout rocks in Red Volcano Zone
+			p.jumpfactor = skins[mo.skin].jumpfactor
 		end
 
 		-- infinite rings cheat
