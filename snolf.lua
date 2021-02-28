@@ -789,21 +789,17 @@ COM_AddCommand("snolf_inf_rings", function(player, arg)
 	cheat_toggle("snolf_inf_rings", arg, player)
 end, COM_ADMIN)
 
-
 COM_AddCommand("snolf_inf_lives", function(player, arg)
 	cheat_toggle("snolf_inf_lives", arg, player)
 end, COM_ADMIN)
-
 
 COM_AddCommand("snolf_inf_air", function(player, arg)
 	cheat_toggle("snolf_inf_air", arg, player)
 end, COM_ADMIN)
 
-
 COM_AddCommand("snolf_death_mulligan", function(player, arg)
 	cheat_toggle("snolf_death_mulligan", arg, player)
 end, COM_ADMIN)
-
 
 COM_AddCommand("snolf_ground_control", function(player, arg)
 	cheat_toggle("snolf_ground_control", arg, player)
@@ -811,4 +807,24 @@ end, COM_ADMIN)
 
 COM_AddCommand("snolf_air_shot", function(player, arg)
 	cheat_toggle("snolf_air_shot", arg, player)
+end, COM_ADMIN)
+
+COM_AddCommand("snolf_shot_on_hit_boss", function(player, arg)
+	cheat_toggle("snolf_shot_on_hit_boss", arg, player)
+end, COM_ADMIN)
+
+COM_AddCommand("snolf_shot_on_hit_by_boss", function(player, arg)
+	cheat_toggle("snolf_shot_on_hit_by_boss", arg, player)
+end, COM_ADMIN)
+
+COM_AddCommand("snolf_rings_on_hit_boss", function(player, arg)
+	cheat_toggle("snolf_rings_on_hit_boss", arg, player)
+end, COM_ADMIN)
+
+COM_AddCommand("snolf_shot_on_touch_ground_when_in_boss", function(player, arg)
+	cheat_toggle("snolf_shot_on_touch_ground_when_in_boss", arg, player)
+end, COM_ADMIN)
+
+COM_AddCommand("snolf_shot_on_touch_wall_when_in_boss", function(player, arg)
+	cheat_toggle("snolf_shot_on_touch_wall_when_in_boss", arg, player)
 end, COM_ADMIN)
