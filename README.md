@@ -47,13 +47,13 @@ Snolf comes with some console commands to allow for some customisation. In a mul
 
 ### Everybody's Snolf
 
-The command `everybodys_snolf` can will force all character to play like Snolf, including characters from other mods. This could potentially be unstable and not play nicely with other mods. Use at your own risk. It can be called with no argument to toggle Everybody's Snolf mode on or off or called with `0` or `1` to disable and enable respectively.
+The command `everybodys_snolf` can will force all character to play like Snolf, including characters from other mods. This could potentially be unstable and not play nicely with other mods. Use at your own risk. It can be called with no argument to toggle Everybody's Snolf mode on or off or called with `on` or `off` to enable and disable respectively.
 
 By default this mode will also override the default life count portion of the heads up display in order to display an altered character name. This behaviour can be changed with the `everybodys_snolf_name_override` command. Setting this to `0` will return to the HUD to normal. `1` is the default value and shows an altered character name. `2` will disable the life count entirely. This is for compatibility with other mods. Calling the command without any argument will toggle between `0` and `1`.
 
 ### Gameplay aids
 
-Because levels can be very difficult to complete with Snolf there are a bunch of commands to make the game a bit easier. All commands can be called with `0` to disable or `1` to enable, or no argument to toggle.
+Because levels can be very difficult to complete with Snolf there are a bunch of commands to make the game a bit easier. All commands can be called with `on` to disable or `off` to enable, or no argument to toggle.
 
 * `snolf_inf_rings`: Ring count forced to 999
 * `snolf_inf_lives`: Extra life is refunded on death
@@ -62,13 +62,22 @@ Because levels can be very difficult to complete with Snolf there are a bunch of
 * `snolf_ground_control`: Enable steering on the ground
 * `snolf_air_shot`: Shots can be taken in the air
 
+### Boss behaviour
+
+The following commands change behaviour in boss fights to make them a bit easier to deal with. Most of these are on by default:
+
+* `snolf_shot_on_hit_boss`: Snolf can take a shot immediately after hitting a boss (default on)
+* `snolf_shot_on_hit_by_boss`: Snolf can take a shot immediately after being hit by a boss (default on)
+* `snolf_rings_on_hit_boss`: Snolf gets a ring after hitting a boss (default on)
+* `snolf_shot_on_touch_ground_when_in_boss`: When fighting a boss Snolf can take a shot immediately after hitting the ground or bouncing, instead of having to come to a rest (default on)
+* `snolf_shot_on_touch_wall_when_in_boss`: When fighting a boss Snolf can take a shot immediately after hitting a wall (default off)
+
 
 ## Known Issues
 
 * Sometimes Snolf will get stuck unable to shoot while on a conveyor belt,
 especially when on the edge of one. If this happens all the player can do is
 wait to reach the end of the conveyor belt or use a mullgian.
-* Snolf can not jump off Rollout Rocks in Red Volcano Zone.
 
 
 ## Credits
