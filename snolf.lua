@@ -5,7 +5,7 @@ freeslot("SPR_SFST", "SPR_SFAH", "SPR_SFAV", "SPR_SFMR", "SPR_SFHX")
 -- without causing parsing errors
 local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, is_snolf,
 	at_rest, take_a_mulligan, same_position, snolf_setup, reset_state,
-	sinusoidal_scale, get_charge_increment, in_black_core, in_boss, allow_air_snolf,
+	sinusoidal_scale, get_charge_increment, in_black_core, allow_air_snolf,
 	cheat_toggle, snolfify_name, is_snolf_setup, override_controls, are_touching,
 	on_hit_boss
 
@@ -28,6 +28,7 @@ local cheats = {
 }
 
 local bosses_health = {}
+local boss_level = false
 
 ---------------
 -- constants --
@@ -83,6 +84,7 @@ end
 
 -- resetting state to be used on death or level change
 reset_state = function(snlf, leave_mulls)
+	boss_level = false
 	snlf.prev = { momz = 0 }
 	snlf.hdrive = 0
 	snlf.vdrive = 0
@@ -175,18 +177,6 @@ in_black_core = function()
 	return black_core_maps[gamemap]
 end
 
-
-in_boss = function()
-	if in_black_core() then return true end
-	local boss_maps = {
-		[3]=true,
-		[6]=true,
-		[9]=true,
-		[12]=true,
-		[15]=true
-	}
-	return boss_maps[gamemap]
-end
 
 -- situations where we want Snolf to be able to shoot mid-air
 allow_air_snolf = function(snlf)
@@ -549,7 +539,7 @@ addHook("PreThinkFrame", function()
 			mo.momy = FixedMul($1, SKIM_FACTOR)
 			P_SetObjectMomZ(mo, -mo.momz)
 			S_StartSound(mo, sfx_splish)
-			if in_boss() and cheats.snolf_shot_on_touch_ground_when_in_boss and snlf.state == STATE_WAITING then
+			if boss_level and cheats.snolf_shot_on_touch_ground_when_in_boss and snlf.state == STATE_WAITING then
 				snlf.state = STATE_READY
 			end
 		end
@@ -557,7 +547,7 @@ addHook("PreThinkFrame", function()
 		-- check if we landed this turn
 		if mo.eflags & MFE_JUSTHITFLOOR > 0 then
 			--makes bosses easier
-			if in_boss() and cheats.snolf_shot_on_touch_ground_when_in_boss and snlf.state == STATE_WAITING then
+			if boss_level and cheats.snolf_shot_on_touch_ground_when_in_boss and snlf.state == STATE_WAITING then
 				snlf.state = STATE_READY
 			end
 			-- if going fast enough when Snolf hits the ground, bounce
@@ -673,7 +663,7 @@ addHook("MobjMoveBlocked", function(mo)
 	end
 
 	--let player take a shot if they bounce off walls while fighting a boss
-	if in_boss() and cheats.snolf_shot_on_touch_wall_when_in_boss then
+	if boss_level and cheats.snolf_shot_on_touch_wall_when_in_boss then
 		local player = mo.player
 		if is_snolf_setup(mo) and player.snolf.state == STATE_WAITING then
 			player.snolf.state = STATE_READY
@@ -764,6 +754,11 @@ addHook("BossThinker", function(boss)
 			end
 		end
 	end
+end)
+
+--if a boss is present then set boss_level flag
+addHook("BossThinker", function()
+	boss_level = true
 end)
 
 --------------
