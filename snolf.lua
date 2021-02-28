@@ -331,6 +331,13 @@ on_hit_boss = function(boss, player_hopefully)
 		if cheats.snolf_rings_on_hit_boss and boss.state == boss.info.painstate and boss.tics == states[boss.state].tics then
 			S_StartSound(player.mo, sfx_itemup)
 			player.rings = $1 + 1
+			for i=0, 5 do
+				local ring = P_SpawnMobjFromMobj(boss, 0,0,0, MT_FLINGRING)
+				ring.fuse = 8*TICRATE
+				ring.momx = FixedMul(4*FRACUNIT, cos(ANG60*i))
+				ring.momy = FixedMul(4*FRACUNIT, sin(ANG60*i))
+				ring.momz = 3*FRACUNIT
+			end
 		end
 	end
 end
