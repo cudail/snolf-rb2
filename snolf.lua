@@ -656,6 +656,7 @@ addHook("ThinkFrame", function()
 					mo1.momy, mo2.momy = FixedMul(mo1.momy,mm3)+FixedMul(mo2.momy,mm2), FixedMul(mo1.momy,mm2)+FixedMul(mo2.momy,-mm3)
 					mo1.momz, mo2.momz = FixedMul(mo1.momz,mm3)+FixedMul(mo2.momz,mm2), FixedMul(mo1.momz,mm2)+FixedMul(mo2.momz,-mm3)
 				end
+				S_StartSound(mo1, sfx_s3k7b)
 			end
 		end
 	end
