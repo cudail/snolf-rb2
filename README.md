@@ -36,8 +36,6 @@ horizontal and vertical power.
 **Mulligan:** Hold the Spin button to undo your last shot. Use this if you get
 stuck.
 
-**Quick Turn:** Press Custom Action 1 to do a 180° turn.
-
 *Tip:* If the camera is getting caught on a wall use first person view to aim.
 
 
@@ -105,6 +103,7 @@ v2.6
 * Added NiGHTS sprites
 * Adjust weight assigned to certain characters for collisions
 * Added sound effect when players bounce off each other
+* Remove quick turn from custom action 1
 
 v2.5
 * Snolf can jump off rollout rocks again
