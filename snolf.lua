@@ -621,20 +621,20 @@ addHook("ThinkFrame", function()
 				if string.find(n1, 'metal')~=nil or string.find(n1, 'gamma')~=nil or
 					string.find(n1, 'omega')~=nil or string.find(n1, 'egg robo')~=nil or
 					string.find(n1, 'milne')~=nil then
-					j1 = $1*2
+					j1 = $1/2
 				end
 				if string.find(n2, 'metal')~=nil or string.find(n2, 'gamma')~=nil or
 					string.find(n2, 'omega')~=nil or string.find(n2, 'egg robo')~=nil or
 					string.find(n2, 'milne')~=nil then
-					j2 = $1*2
+					j2 = $1/2
 				end
 
 				--or reduce weight for Doll
 				if string.find(n1, 'doll') ~= nil then
-					j1 = $1/2
+					j1 = $1*2
 				end
 				if string.find(n2, 'doll') ~= nil then
-					j2 = $1/2
+					j2 = $1*2
 				end
 
 				if j1 == j2 then -- swap velocities
