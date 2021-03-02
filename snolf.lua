@@ -521,11 +521,6 @@ addHook("PreThinkFrame", function()
 			take_a_mulligan(snlf)
 		end
 
-		-- quick turn
-		if snlf.ctrl.ca1 == 1 then
-			mo.angle = $1 + ANGLE_180
-		end
-
 		-- skim across water
 		if mo.momz < 0 and p.speed > SKIM_THRESHOLD and mo.eflags & MFE_TOUCHWATER > 0 and
 		R_PointToAngle2(0, 0, p.speed, -mo.momz) < SKIM_ANLGE then
