@@ -607,13 +607,35 @@ addHook("ThinkFrame", function()
 				-- for some weird logic instead. A player's mass is considered
 				-- to be inverse to their jumpfactor. That makes Knuckles the
 				-- heaviest and Amy the lightest
-
 				local j1 = skins[play1.mo.skin].jumpfactor
 				local j2 = skins[play2.mo.skin].jumpfactor
 				local mo1, mo2 = play1.mo, play2.mo
 
 				if j1 == 0 then j1 = FRACUNIT end
 				if j2 == 0 then j2 = FRACUNIT end
+
+				--for fun try to tell if we have a robot character (or Milne)
+				--and double their weight
+				local n1 = string.lower(skins[play1.mo.skin].realname)
+				local n2 = string.lower(skins[play2.mo.skin].realname)
+				if string.find(n1, 'metal')~=nil or string.find(n1, 'gamma')~=nil or
+					string.find(n1, 'omega')~=nil or string.find(n1, 'egg robo')~=nil or
+					string.find(n1, 'milne')~=nil then
+					j1 = $1*2
+				end
+				if string.find(n2, 'metal')~=nil or string.find(n2, 'gamma')~=nil or
+					string.find(n2, 'omega')~=nil or string.find(n2, 'egg robo')~=nil or
+					string.find(n2, 'milne')~=nil then
+					j2 = $1*2
+				end
+
+				--or reduce weight for Doll
+				if string.find(n1, 'doll') ~= nil then
+					j1 = $1/2
+				end
+				if string.find(n2, 'doll') ~= nil then
+					j2 = $1/2
+				end
 
 				if j1 == j2 then -- swap velocities
 					mo1.momx, mo2.momx = mo2.momx, mo1.momx
