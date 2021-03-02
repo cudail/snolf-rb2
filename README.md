@@ -100,6 +100,11 @@ Life count icon from Mario Golf: Advance Tour.
 
 ## Changelog
 
+v2.6
+* The angle of rings dropped by bosses now depend on where the boss is facing
+* Added NiGHTS sprites
+* Adjust weight assigned to certain characters for collisions
+
 v2.5
 * Snolf can jump off rollout rocks again
 * Bosses drop rings when hit
