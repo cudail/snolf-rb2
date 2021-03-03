@@ -7,7 +7,7 @@ local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, is_snolf,
 	at_rest, take_a_mulligan, same_position, snolf_setup, reset_state,
 	sinusoidal_scale, get_charge_increment, in_black_core, allow_air_snolf,
 	cheat_toggle, snolfify_name, is_snolf_setup, override_controls, are_touching,
-	on_hit_boss
+	on_hit_boss, calculate_weight
 
 local cheats = {
 	everybodys_snolf = false,
@@ -323,6 +323,34 @@ on_hit_boss = function(boss, player_hopefully)
 	end
 end
 
+
+-- I wanted some characters to be considered heavier than others but weight is
+-- not an attribute characters have. I have opted for some weird logic instead.
+-- A character's mass is considered to be inverse of their jumpfactor.
+-- So e.g. Knuckles is heavier than Sonic who is heavier than Amy.
+calculate_weight = function(mo)
+	local jumpfactor = skins[mo.skin].jumpfactor
+	if jumpfactor == 0 then jumpfactor = FRACUNIT end -- default in case it's 0
+
+	local mass = FixedDiv(FRACUNIT, jumpfactor)
+
+	-- try to guess if the character is a robot, Robotnik or Milne
+	-- if so, double their weight
+	local name = string.lower(skins[mo.skin].realname)
+	if string.find(name,'metal')~=nil or string.find(name,'gamma')~=nil or
+		string.find(name,'omega')~=nil or string.find(name,'robo')~=nil or
+		string.find(name,'milne')~=nil or string.find(name,'eggman')~=nil then
+		mass = $1*2
+	end
+
+	--or if it it's Tails Doll (or anything else named doll) reduce the weight
+	if string.find(name, 'doll') ~= nil then
+		mass = $1/2
+	end
+
+	return mass
+end
+
 -------------------
 -- HUD functions --
 -------------------
@@ -597,42 +625,12 @@ addHook("ThinkFrame", function()
 				play1.snolf.collided = true
 				play2.snolf.collided = true
 
-				-- I wanted some characters to be considered heavier than others
-				-- but weight is not an attribute characters have. I have opted
-				-- for some weird logic instead. A player's mass is considered
-				-- to be inverse to their jumpfactor. That makes Knuckles the
-				-- heaviest and Amy the lightest
-				local j1 = skins[play1.mo.skin].jumpfactor
-				local j2 = skins[play2.mo.skin].jumpfactor
 				local mo1, mo2 = play1.mo, play2.mo
 
-				if j1 == 0 then j1 = FRACUNIT end
-				if j2 == 0 then j2 = FRACUNIT end
+				local m1 = calculate_weight(mo1)
+				local m2 = calculate_weight(mo2)
 
-				--for fun try to tell if we have a robot character (or Milne)
-				--and double their weight
-				local n1 = string.lower(skins[play1.mo.skin].realname)
-				local n2 = string.lower(skins[play2.mo.skin].realname)
-				if string.find(n1, 'metal')~=nil or string.find(n1, 'gamma')~=nil or
-					string.find(n1, 'omega')~=nil or string.find(n1, 'egg robo')~=nil or
-					string.find(n1, 'milne')~=nil then
-					j1 = $1/2
-				end
-				if string.find(n2, 'metal')~=nil or string.find(n2, 'gamma')~=nil or
-					string.find(n2, 'omega')~=nil or string.find(n2, 'egg robo')~=nil or
-					string.find(n2, 'milne')~=nil then
-					j2 = $1/2
-				end
-
-				--or reduce weight for Doll
-				if string.find(n1, 'doll') ~= nil then
-					j1 = $1*2
-				end
-				if string.find(n2, 'doll') ~= nil then
-					j2 = $1*2
-				end
-
-				if j1 == j2 then -- swap velocities
+				if m1 == m2 then -- swap velocities
 					mo1.momx, mo2.momx = mo2.momx, mo1.momx
 					mo1.momy, mo2.momy = mo2.momy, mo1.momy
 					mo1.momz, mo2.momz = mo2.momz, mo1.momz
@@ -641,8 +639,6 @@ addHook("ThinkFrame", function()
 					-- v1 = u1(m1-m2)/(m1+m2) + u2*m2*2/(m1+m2)
 					-- v2 = u1*m1*2/(m1+m2) + u2(m2-m1)/(m1+m2)
 
-					local m1 = FixedDiv(FRACUNIT, j1)
-					local m2 = FixedDiv(FRACUNIT, j2)
 					local mm1 = FixedDiv(2*m1, m1+m2)
 					local mm2 = FixedDiv(2*m2, m1+m2)
 					local mm3 = FixedDiv(m1-m2,m1+m2)
