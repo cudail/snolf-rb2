@@ -53,12 +53,13 @@ By default this mode will also override the default life count portion of the he
 
 Because levels can be very difficult to complete with Snolf there are a bunch of commands to make the game a bit easier. All commands can be called with `on` to disable or `off` to enable, or no argument to toggle.
 
-* `snolf_inf_rings`: Ring count forced to 999
-* `snolf_inf_lives`: Extra life is refunded on death
-* `snolf_inf_air`: No drowning
-* `snolf_death_mulligan`: Return to last resting place on death
-* `snolf_ground_control`: Enable steering on the ground
-* `snolf_air_shot`: Shots can be taken in the air
+* `snolf_inf_rings`: Ring count forced to 999 (default: off)
+* `snolf_inf_lives`: Extra life is refunded on death (default: off)
+* `snolf_inf_air`: No drowning (default: off)
+* `snolf_death_mulligan`: Return to last resting place on death (default: off)
+* `snolf_ground_control`: Enable steering on the ground (default: off)
+* `snolf_air_shot`: Shots can be taken in the air (default: off)
+* `snolf_fire_shield`: Protects from spinning fire jets (but not other fire damage sources) (default: on)
 
 ### Boss behaviour
 
@@ -98,6 +99,9 @@ Life count icon from Mario Golf: Advance Tour.
 
 ## Changelog
 
+v2.7
+* Snolf is immune to spinning flame jets (toggleable with command)
+
 v2.6
 * The angle of rings dropped by bosses now depend on where the boss is facing
 * Added NiGHTS sprites
@@ -114,7 +118,7 @@ v2.5
 
 v2.4
 * Allow Snolf to take a shot after getting hit by a boss
-* Allow Snolf to take a shot after bounching off a wall when in a boss level
+* Allow Snolf to take a shot after bouncing off a wall when in a boss level
 * Changed mulligan point to be set whenever the player is at rest regardless of
 of current player state
 * Level music resumes when enabling infinite air command while drowning
@@ -169,7 +173,7 @@ are not counted towards total
 * Removed Super Sonic and NiGHTS sprites from WAD
 
 v1.3
-* Fixed Snolf breaking netplay gameas
+* Fixed Snolf breaking netplay games
 
 v1.2
 * Changed how Snolf mode was being checked to fix potential error messages when

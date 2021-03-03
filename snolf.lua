@@ -20,6 +20,8 @@ local cheats = {
 	snolf_ground_control = false,
 	snolf_air_shot = false,
 
+	snolf_fire_shield = true,
+
 	snolf_shot_on_hit_boss = true,
 	snolf_shot_on_hit_by_boss = true,
 	snolf_rings_on_hit_boss = true,
@@ -774,6 +776,16 @@ addHook("BossThinker", function()
 	boss_level = true
 end)
 
+
+addHook("MobjDamage", function(player, inflictor, source, damage, damagetype)
+	-- Snolf has an asbestos suit because Red Volcano is almost impossible
+	if cheats.snolf_fire_shield and inflictor and
+		inflictor.type ==  MT_FLAMEJETFLAMEB and is_snolf(player) then
+		return true
+	end
+end, MT_PLAYER)
+
+
 --------------
 -- Commands --
 --------------
@@ -843,6 +855,10 @@ end, COM_ADMIN)
 
 COM_AddCommand("snolf_air_shot", function(player, arg)
 	cheat_toggle("snolf_air_shot", arg, player)
+end, COM_ADMIN)
+
+COM_AddCommand("snolf_fire_shield", function(player, arg)
+	cheat_toggle("snolf_fire_shield", arg, player)
 end, COM_ADMIN)
 
 COM_AddCommand("snolf_shot_on_hit_boss", function(player, arg)
