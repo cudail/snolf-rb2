@@ -107,7 +107,7 @@ v2.6
 * Added NiGHTS sprites
 * Adjust weight assigned to certain characters for collisions
 * Added sound effect when players bounce off each other
-* Remove quick turn from custom action 1
+* Removed quick turn from custom action 1
 
 v2.5
 * Snolf can jump off rollout rocks again
