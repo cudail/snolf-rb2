@@ -54,11 +54,11 @@ By default this mode will also override the default life count portion of the he
 Because levels can be very difficult to complete with Snolf there are a bunch of commands to make the game a bit easier. All commands can be called with `on` to disable or `off` to enable, or no argument to toggle.
 
 * `snolf_inf_rings`: Ring count forced to 999 (default: off)
-* `snolf_inf_lives`: Extra life is refunded on death (default: off)
 * `snolf_inf_air`: No drowning (default: off)
 * `snolf_death_mulligan`: Return to last resting place on death (default: off)
 * `snolf_ground_control`: Enable steering on the ground (default: off)
 * `snolf_air_shot`: Shots can be taken in the air (default: off)
+* `snolf_inf_lives`: Extra life is refunded on death (default: on)
 * `snolf_fire_shield`: Protects from spinning fire jets (but not other fire damage sources) (default: on)
 
 ### Boss behaviour

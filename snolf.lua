@@ -14,7 +14,7 @@ local cheats = {
 	everybodys_snolf_name_override = 1,
 
 	snolf_inf_rings = false,
-	snolf_inf_lives = false,
+	snolf_inf_lives = true,
 	snolf_inf_air = false,
 	snolf_death_mulligan = false,
 	snolf_ground_control = false,
