@@ -101,6 +101,8 @@ Life count icon from Mario Golf: Advance Tour.
 
 v2.7
 * Snolf is immune to spinning flame jets (toggleable with command)
+* Infinite lives is enabled by default
+* Stopped boss mode triggering on Egg Rock Zone Act 2
 
 v2.6
 * The angle of rings dropped by bosses now depend on where the boss is facing
