@@ -772,8 +772,12 @@ addHook("BossThinker", function(boss)
 end)
 
 --if a boss is present then set boss_level flag
-addHook("BossThinker", function()
-	boss_level = true
+addHook("BossThinker", function(boss)
+	--unless it's Egg Rock Zone Act 2 because that has a secret boss and
+	--and I don't want to trigger boss effects for that entire level
+	if gamemap ~= 23 then
+		boss_level = true
+	end
 end)
 
 
