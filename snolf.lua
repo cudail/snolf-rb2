@@ -806,8 +806,8 @@ addHook("MobjDamage", function(player, inflictor, source, damage, damagetype)
 end, MT_PLAYER)
 
 
---force metal sonic to be metal snolf for the race
---find metal snolf
+--force metal sonic to be metal snolf
+--find metal snolf in the race
 addHook("MobjThinker", function(metal_sonic_race)
 	metal_snolf = metal_sonic_race
 end, MT_METALSONIC_RACE)
@@ -815,13 +815,11 @@ end, MT_METALSONIC_RACE)
 --force metal snolf into rolling animation
 addHook("PostThinkFrame", function()
 	if metal_snolf ~= nil and metal_snolf.valid then
-		--let finger wag play first
-		if metal_snolf_timer < TICRATE*2 then
+		-- for the race let finger wag play first
+		if metal_snolf_timer > TICRATE*3 - TICRATE/2  then
+			metal_snolf.state = S_PLAY_ROLL --force roll state
+		elseif gamemap == 25 then
 			metal_snolf_timer = $1+1
-		else
-			if metal_snolf.frame < 1000 then
-				metal_snolf.state = S_PLAY_ROLL
-			end
 		end
 	end
 end)
@@ -829,6 +827,7 @@ end)
 --record what level we're moving from when changing levels
 addHook("MapChange", function(mapnum)
 	oldmap = gamemap
+	metal_snolf_timer = 0
 end)
 
 --------------
