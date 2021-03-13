@@ -31,6 +31,8 @@ local cheats = {
 
 local bosses_health = {}
 local boss_level = false
+local metal_snolf_timer = 0
+local metal_snolf = nil
 
 ---------------
 -- constants --
@@ -780,7 +782,6 @@ addHook("BossThinker", function(boss)
 	end
 end)
 
-
 addHook("MobjDamage", function(player, inflictor, source, damage, damagetype)
 	-- Snolf has an asbestos suit because Red Volcano is almost impossible
 	if cheats.snolf_fire_shield and inflictor and
@@ -788,6 +789,27 @@ addHook("MobjDamage", function(player, inflictor, source, damage, damagetype)
 		return true
 	end
 end, MT_PLAYER)
+
+
+--force metal sonic to be metal snolf for the race
+--find metal snolf
+addHook("MobjThinker", function(metal_sonic_race)
+	metal_snolf = metal_sonic_race
+end, MT_METALSONIC_RACE)
+
+--force metal snolf into rolling animation
+addHook("PostThinkFrame", function()
+	if metal_snolf ~= nil and metal_snolf.valid then
+		--let finger wag play first
+		if metal_snolf_timer < TICRATE*2 then
+			metal_snolf_timer = $1+1
+		else
+			if metal_snolf.frame < 1000 then
+				metal_snolf.state = S_PLAY_ROLL
+			end
+		end
+	end
+end)
 
 
 --------------
