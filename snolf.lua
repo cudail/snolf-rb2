@@ -723,14 +723,9 @@ end)
 --play announcement when starting metal snolf race
 addHook("MapLoad", function(mapnumber)
 	--only play when loading map for the first time
-	print("!!!!!!!")
-	print(gamemap)
-	print(mapnumber)
-	print(oldmap)
 	if mapnumber == 25 and mapnumber ~= oldmap then
 		for player in players.iterate do
 			if player.mo then
-				print(player.mo.skin)
 				S_StartSound(player.mo, sfx_msnolf, player)
 			end
 		end
