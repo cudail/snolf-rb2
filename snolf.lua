@@ -1,5 +1,4 @@
-freeslot("SPR_SFST", "SPR_SFAH", "SPR_SFAV", "SPR_SFMR", "SPR_SFHX")
-
+freeslot("SPR_SFST", "SPR_SFAH", "SPR_SFAV", "SPR_SFMR", "SPR_SFHX", "sfx_msnolf")
 
 -- declare functions in advance so they can reference each other
 -- without causing parsing errors
@@ -33,6 +32,7 @@ local bosses_health = {}
 local boss_level = false
 local metal_snolf_timer = 0
 local metal_snolf = nil
+local oldmap = nil
 
 ---------------
 -- constants --
@@ -715,6 +715,26 @@ addHook("MapLoad", function(mapnumber)
 		if not is_snolf_setup(player.mo) then continue end
 		reset_state(player.snolf)
 	end
+
+
+end)
+
+
+--play announcement when starting metal snolf race
+addHook("MapLoad", function(mapnumber)
+	--only play when loading map for the first time
+	print("!!!!!!!")
+	print(gamemap)
+	print(mapnumber)
+	print(oldmap)
+	if mapnumber == 25 and mapnumber ~= oldmap then
+		for player in players.iterate do
+			if player.mo then
+				print(player.mo.skin)
+				S_StartSound(player.mo, sfx_msnolf, player)
+			end
+		end
+	end
 end)
 
 
@@ -811,6 +831,10 @@ addHook("PostThinkFrame", function()
 	end
 end)
 
+--record what level we're moving from when changing levels
+addHook("MapChange", function(mapnum)
+	oldmap = gamemap
+end)
 
 --------------
 -- Commands --
