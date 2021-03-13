@@ -100,6 +100,7 @@ Life count icon from Mario Golf: Advance Tour.
 ## Changelog
 
 v2.7
+* Added race (and battle?) against Metal Snolf
 * Snolf is immune to spinning flame jets (toggleable with command)
 * Infinite lives is enabled by default
 * Stopped boss mode triggering on Egg Rock Zone Act 2
