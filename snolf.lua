@@ -469,6 +469,8 @@ addHook("PreThinkFrame", function()
 		-- set some local variables as shortcuts
 		local p, mo, snlf = player, player.mo, player.snolf
 
+		if p.playerstate == PST_DEAD then continue end
+
 		-- check controls
 		snlf.ctrl.jmp = p.cmd.buttons & BT_JUMP and $1+1 or 0
 		snlf.ctrl.spn = p.cmd.buttons & BT_SPIN and $1+1 or 0
