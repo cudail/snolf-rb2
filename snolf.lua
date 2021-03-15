@@ -451,6 +451,12 @@ end, "game")
 
 -- main hook
 addHook("PreThinkFrame", function()
+	for boss in pairs(bosses_health) do
+		if not boss or not boss.valid then
+			bosses_health[boss] = nil
+		end
+	end
+
 	for player in players.iterate do
 
 		-- don't do anything if we're not Snolf
@@ -467,12 +473,6 @@ addHook("PreThinkFrame", function()
 		snlf.ctrl.jmp = p.cmd.buttons & BT_JUMP and $1+1 or 0
 		snlf.ctrl.spn = p.cmd.buttons & BT_SPIN and $1+1 or 0
 		snlf.ctrl.ca1 = p.cmd.buttons & BT_CUSTOM1 and $1+1 or 0
-
-		for boss in pairs(bosses_health) do
-			if not boss or not boss.valid then
-				bosses_health[boss] = nil
-			end
-		end
 
 		-- try to set a mulligan point
 		if at_rest(snlf) then
