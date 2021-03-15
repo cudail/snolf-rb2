@@ -587,6 +587,10 @@ addHook("PreThinkFrame", function()
 			if abs(snlf.prev.momz) > BOUNCE_LIMIT and p.playerstate ~= PST_DEAD then
 				P_SetObjectMomZ(mo, - FixedMul(snlf.prev.momz, BOUNCE_FACTOR))
 				snlf.p.pflags = $1 | PF_JUMPED
+				-- move slightly off the ground immediately so snolf doesn't
+				-- count as being classed as on the ground for the frame
+				-- otherwise they might be able to do a jump input when they shouldn't
+				P_TeleportMove(mo, mo.x, mo.y, mo.z+1)
 			-- otherwise land
 			else
 				p.pflags = $1 | PF_SPINNING -- force spinning flag
