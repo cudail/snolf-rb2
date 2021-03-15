@@ -719,14 +719,13 @@ addHook("MobjDeath", function(mo)
 	end
 end)
 
+
 -- reset state when a new map is loaded
 addHook("MapLoad", function(mapnumber)
 	for player in players.iterate do
 		if not is_snolf_setup(player.mo) then continue end
 		reset_state(player.snolf)
 	end
-
-
 end)
 
 
