@@ -733,7 +733,7 @@ end)
 --play announcement when starting metal snolf race
 addHook("MapLoad", function(mapnumber)
 	--only play when loading map for the first time
-	if mapnumber == 25 and mapnumber ~= oldmap then
+	if mapnumber == 25 and mapnumber ~= oldmap and is_anyone_snolf() then
 		for player in players.iterate do
 			if player.mo then
 				S_StartSound(player.mo, sfx_msnolf, player)
@@ -824,7 +824,7 @@ end, MT_METALSONIC_RACE)
 
 --force metal snolf into rolling animation
 addHook("PostThinkFrame", function()
-	if metal_snolf ~= nil and metal_snolf.valid then
+	if metal_snolf ~= nil and metal_snolf.valid and is_anyone_snolf() then
 		-- for the race let finger wag play first
 		if leveltime > TICRATE*3 - TICRATE/2  then
 			metal_snolf.state = S_PLAY_ROLL --force roll state
