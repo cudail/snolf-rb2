@@ -30,7 +30,6 @@ local cheats = {
 
 local bosses_health = {}
 local boss_level = false
-local metal_snolf_timer = 0
 local metal_snolf = nil
 local oldmap = nil
 
@@ -827,10 +826,8 @@ end, MT_METALSONIC_RACE)
 addHook("PostThinkFrame", function()
 	if metal_snolf ~= nil and metal_snolf.valid then
 		-- for the race let finger wag play first
-		if metal_snolf_timer > TICRATE*3 - TICRATE/2  then
+		if leveltime > TICRATE*3 - TICRATE/2  then
 			metal_snolf.state = S_PLAY_ROLL --force roll state
-		elseif gamemap == 25 then
-			metal_snolf_timer = $1+1
 		end
 	end
 end)
@@ -838,7 +835,6 @@ end)
 --record what level we're moving from when changing levels
 addHook("MapChange", function(mapnum)
 	oldmap = gamemap
-	metal_snolf_timer = 0
 end)
 
 --------------
