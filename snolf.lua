@@ -6,7 +6,7 @@ local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, is_snolf,
 	at_rest, take_a_mulligan, same_position, snolf_setup, reset_state,
 	sinusoidal_scale, get_charge_increment, in_black_core, allow_air_snolf,
 	cheat_toggle, snolfify_name, is_snolf_setup, override_controls, are_touching,
-	on_hit_boss, calculate_weight
+	on_hit_boss, calculate_weight, is_anyone_snolf
 
 local cheats = {
 	everybodys_snolf = false,
@@ -102,6 +102,17 @@ end
 is_snolf = function(mo)
 	return mo and mo.skin and (mo.skin == "snolf" or cheats.everybodys_snolf)
 end
+
+
+is_anyone_snolf = function()
+	for p in players.iterate do
+		if is_snolf(p.mo) then
+			return true
+		end
+	end
+	return false
+end
+
 
 is_snolf_setup = function(mo)
 	return is_snolf(mo) and mo.player.snolf
@@ -775,7 +786,7 @@ addHook("BossThinker", function(boss)
 		bosses_health[boss] = boss.health
 
 		-- boss drops rings
-		if cheats.snolf_rings_on_hit_boss then
+		if is_anyone_snolf() and cheats.snolf_rings_on_hit_boss then
 			S_StartSound(boss, sfx_s3kb9)
 			for i=0, 5 do
 				local ring = P_SpawnMobjFromMobj(boss, 0,0,0, MT_FLINGRING)
