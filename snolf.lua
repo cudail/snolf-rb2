@@ -1,4 +1,5 @@
-freeslot("SPR_SFST", "SPR_SFAH", "SPR_SFAV", "SPR_SFMR", "SPR_SFHX", "sfx_msnolf")
+freeslot("SPR_SFST", "SPR_SFAH", "SPR_SFAV", "SPR_SFMR", "SPR_SFHX", "SPR_MSNF",
+	"sfx_msnolf")
 
 -- declare functions in advance so they can reference each other
 -- without causing parsing errors
@@ -30,7 +31,8 @@ local cheats = {
 
 local bosses_health = {}
 local boss_level = false
-local metal_snolf = nil
+local metal_snolf_race = nil
+local metal_snolf_battle = nil
 local oldmap = nil
 
 ---------------
@@ -818,18 +820,28 @@ end, MT_PLAYER)
 --force metal sonic to be metal snolf
 --find metal snolf in the race
 addHook("MobjThinker", function(metal_sonic_race)
-	metal_snolf = metal_sonic_race
+	metal_snolf_race = metal_sonic_race
 end, MT_METALSONIC_RACE)
+
+--find metal snolf in the battle
+addHook("MobjThinker", function(metal_sonic_battle)
+	metal_snolf_battle = metal_sonic_battle
+end, MT_METALSONIC_BATTLE)
 
 --force metal snolf into rolling animation
 addHook("PostThinkFrame", function()
-	if metal_snolf ~= nil and metal_snolf.valid and is_anyone_snolf() then
+	if metal_snolf_race ~= nil and metal_snolf_race.valid and is_anyone_snolf() then
 		-- for the race let finger wag play first
 		if leveltime > TICRATE*3 - TICRATE/2  then
-			metal_snolf.state = S_PLAY_ROLL --force roll state
+			metal_snolf_race.state = S_PLAY_ROLL --force roll state
 		end
 	end
+
+	if metal_snolf_battle ~= nil and metal_snolf_battle.valid and is_anyone_snolf() then
+		metal_snolf_battle.sprite = SPR_MSNF
+	end
 end)
+
 
 --record what level we're moving from when changing levels
 addHook("MapChange", function(mapnum)
