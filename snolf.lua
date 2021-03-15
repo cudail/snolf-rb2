@@ -763,7 +763,7 @@ addHook("MobjCollide", on_hit_boss, MT_METALSONIC_BATTLE)
 
 --allow player to take a shot after they've been hit by a boss
 addHook("MobjDamage", function(target, inflictor, source, damage, damagetype)
-	if not target or not target.player then
+	if not target or not target.player or not cheats.snolf_shot_on_hit_by_boss then
 		return
 	end
 
