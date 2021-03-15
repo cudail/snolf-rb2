@@ -100,10 +100,13 @@ Life count icon from Mario Golf: Advance Tour.
 ## Changelog
 
 v2.7
-* Added race (and battle?) against Metal Snolf
+* Bossess only drop rings if a player is playing as Snolf
 * Snolf is immune to spinning flame jets (toggleable with command)
 * Infinite lives is enabled by default
-* Stopped boss mode triggering on Egg Rock Zone Act 2
+* Added Metal Snolf
+* Fixed boss mode triggering on Egg Rock Zone Act 2
+* Fixed not being able to turn off snolf_shot_on_hit_by_boss
+* Fixed Snolf being able to jump while bouncing off the ground
 
 v2.6
 * The angle of rings dropped by bosses now depend on where the boss is facing
