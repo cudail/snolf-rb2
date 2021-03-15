@@ -7,7 +7,7 @@ local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, is_snolf,
 	at_rest, take_a_mulligan, same_position, snolf_setup, reset_state,
 	sinusoidal_scale, get_charge_increment, in_black_core, allow_air_snolf,
 	cheat_toggle, snolfify_name, is_snolf_setup, override_controls, are_touching,
-	on_hit_boss, calculate_weight, is_anyone_snolf
+	on_hit_boss, calculate_weight, is_anyone_snolf, reversed_gravity
 
 local cheats = {
 	everybodys_snolf = false,
@@ -112,6 +112,11 @@ is_anyone_snolf = function()
 		end
 	end
 	return false
+end
+
+
+reversed_gravity = function(mo)
+	return P_GetMobjGravity(mo) > 0
 end
 
 
@@ -463,7 +468,6 @@ addHook("PreThinkFrame", function()
 		snlf.ctrl.spn = p.cmd.buttons & BT_SPIN and $1+1 or 0
 		snlf.ctrl.ca1 = p.cmd.buttons & BT_CUSTOM1 and $1+1 or 0
 
-
 		for boss in pairs(bosses_health) do
 			if not boss or not boss.valid then
 				bosses_health[boss] = nil
@@ -585,12 +589,12 @@ addHook("PreThinkFrame", function()
 			end
 			-- if going fast enough when Snolf hits the ground, bounce
 			if abs(snlf.prev.momz) > BOUNCE_LIMIT and p.playerstate ~= PST_DEAD then
-				P_SetObjectMomZ(mo, - FixedMul(snlf.prev.momz, BOUNCE_FACTOR))
+				P_SetObjectMomZ(mo, FixedMul(snlf.prev.momz, BOUNCE_FACTOR) * (reversed_gravity(mo) and 1 or -1))
 				snlf.p.pflags = $1 | PF_JUMPED
 				-- move slightly off the ground immediately so snolf doesn't
 				-- count as being classed as on the ground for the frame
 				-- otherwise they might be able to do a jump input when they shouldn't
-				P_TeleportMove(mo, mo.x, mo.y, mo.z+1)
+				P_TeleportMove(mo, mo.x, mo.y, mo.z + (reversed_gravity(mo) and -1 or 1))
 			-- otherwise land
 			else
 				p.pflags = $1 | PF_SPINNING -- force spinning flag
