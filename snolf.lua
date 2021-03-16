@@ -9,7 +9,7 @@ local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, is_snolf,
 	at_rest, take_a_mulligan, same_position, snolf_setup, reset_state,
 	sinusoidal_scale, get_charge_increment, in_black_core, allow_air_snolf,
 	cheat_toggle, snolfify_name, is_snolf_setup, override_controls, are_touching,
-	on_hit_boss, calculate_weight, is_anyone_snolf, reversed_gravity
+	on_hit_boss, calculate_weight, is_anyone_snolf, reversed_gravity, print2
 
 local cheats = {
 	everybodys_snolf = false,
@@ -63,6 +63,12 @@ local SPACE_AIR_TIMER = 403
 ---------------
 -- functions --
 ---------------
+
+-- just prints to normal console and also chat
+print2 = function(string)
+	print(string)
+	chatprint(string)
+end
 
 -- store all snolf-relevant state info in player_t.snolf
 snolf_setup = function(player)
@@ -259,7 +265,7 @@ cheat_toggle = function(cheat_name, arg, player)
 		CONS_Printf(player, cheat_name.." should be called with either 'on', 'off', or no argument")
 		return
 	end
-	chatprint(cheat_name.." has been "..(cheats[cheat_name] and "enabled" or "disabled")..".")
+	print2(cheat_name.." has been "..(cheats[cheat_name] and "enabled" or "disabled")..".")
 end
 
 
@@ -897,7 +903,7 @@ COM_AddCommand("everybodys_snolf_name_override", function(player, arg)
 	else
 		CONS_Printf(player, "everybodys_snolf_name_override should be called with either 0, 1, 2 or no argument")
 	end
-	chatprint("everybodys_snolf_name_override has been "..(cheats.everybodys_snolf_name_override > 0 and "enabled" or "disabled")..".")
+	print2("everybodys_snolf_name_override has been "..(cheats.everybodys_snolf_name_override > 0 and "enabled" or "disabled")..".")
 
 	if cheats.everybodys_snolf and cheats.everybodys_snolf_name_override > 0 then
 		hud.disable("lives")
