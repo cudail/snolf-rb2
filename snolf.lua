@@ -21,6 +21,7 @@ local cheats = {
 	snolf_death_mulligan = false,
 	snolf_ground_control = false,
 	snolf_air_shot = false,
+	snolf_save_states = false,
 
 	snolf_fire_shield = true,
 
@@ -86,6 +87,7 @@ snolf_setup = function(player)
 		ctrl = { jmp = 0, spn = 0, ca1 = 0 },
 		-- mulligan points
 		mull_pts = {},
+		save_pts = {},
 		--stats
 		shotcount = 0,
 		mullcount = 0,
@@ -140,21 +142,28 @@ at_rest = function(snlf)
 end
 
 
-take_a_mulligan = function(snlf, dont_play_sound)
-	local lm = snlf.mull_pts[#snlf.mull_pts] -- last mulligan point
+take_a_mulligan = function(snlf, pts, dont_play_sound)
+	local lm = pts[#pts] -- last mulligan point
 	local mo = snlf.p.mo
 	-- if we're still at the last mulligan point remove it and go back one
 	if lm and same_position(lm, mo) then
-		table.remove(snlf.mull_pts, #snlf.mull_pts)
-		lm = snlf.mull_pts[#snlf.mull_pts]
+		table.remove(pts, #pts)
+		lm = pts[#pts]
 	end
 	if lm then
 		if not dont_play_sound then
 			S_StartSound(mo, sfx_mixup)
 		end
+
 		P_TeleportMove(mo, lm.x, lm.y, lm.z)
-		P_InstaThrust(mo, 0, 0)
-		P_SetObjectMomZ(mo, 0)
+
+		local momx, momy, momz = lm.momx or 0, lm.momy or 0, lm.momz or 0
+		mo.momx = momx
+		mo.momy = momy
+		P_SetObjectMomZ(mo, momz)
+
+		if lm.rings ~= nil then snlf.p.rings = lm.rings end
+
 		if snlf.p.pflags & PF_FINISHED == 0 then
 			snlf.mullcount = $1 + 1
 		end
@@ -483,6 +492,8 @@ addHook("PreThinkFrame", function()
 		snlf.ctrl.jmp = p.cmd.buttons & BT_JUMP and $1+1 or 0
 		snlf.ctrl.spn = p.cmd.buttons & BT_SPIN and $1+1 or 0
 		snlf.ctrl.ca1 = p.cmd.buttons & BT_CUSTOM1 and $1+1 or 0
+		snlf.ctrl.ca2 = p.cmd.buttons & BT_CUSTOM2 and $1+1 or 0
+		snlf.ctrl.ca3 = p.cmd.buttons & BT_CUSTOM3 and $1+1 or 0
 
 		-- try to set a mulligan point
 		if at_rest(snlf) then
@@ -576,7 +587,34 @@ addHook("PreThinkFrame", function()
 
 		-- take a mulligan
 		if snlf.ctrl.spn == TICKS_FOR_MULLIGAN then
-			take_a_mulligan(snlf)
+			take_a_mulligan(snlf, snlf.mull_pts)
+		end
+
+		-- save and load player state manually
+		if cheats.snolf_save_states then
+			-- save player state
+			if snlf.ctrl.ca1 == 1 then
+				if #snlf.save_pts > 9 then
+					table.remove(snlf.save_pts, 1)
+				end
+				local state = {
+					x = mo.x,
+					y = mo.y,
+					z = mo.z,
+					momx = mo.momx,
+					momy = mo.momy,
+					momz = mo.momz,
+					rings = p.rings}
+				table.insert(snlf.save_pts, state)
+				S_StartSound(mo, sfx_s3k53, p)
+			end
+
+			-- load player state
+			if snlf.ctrl.ca2 == 2 and #snlf.save_pts > 0 then
+				--local sv = snlf.save_pts[#snlf.save_pts]
+				take_a_mulligan(snlf, snlf.save_pts)
+				S_StartSound(mo, sfx_mixup)
+			end
 		end
 
 		-- skim across water
@@ -745,6 +783,7 @@ addHook("MapLoad", function(mapnumber)
 	for player in players.iterate do
 		if not is_snolf_setup(player.mo) then continue end
 		reset_state(player.snolf)
+		player.snolf.save_pts = {}
 	end
 end)
 
@@ -765,7 +804,7 @@ end)
 -- cheat to return to last spot on death
 addHook("PlayerSpawn", function(player)
 	if is_snolf_setup(player.mo) and cheats.snolf_death_mulligan then
-		take_a_mulligan(player.snolf, true)
+		take_a_mulligan(player.snolf, player.snolf.mull_pts, true)
 	end
 end)
 
@@ -939,6 +978,10 @@ end, COM_ADMIN)
 
 COM_AddCommand("snolf_fire_shield", function(player, arg)
 	cheat_toggle("snolf_fire_shield", arg, player)
+end, COM_ADMIN)
+
+COM_AddCommand("snolf_save_states", function(player, arg)
+	cheat_toggle("snolf_save_states", arg, player)
 end, COM_ADMIN)
 
 COM_AddCommand("snolf_shot_on_hit_boss", function(player, arg)
