@@ -163,6 +163,10 @@ take_a_mulligan = function(snlf, pts, dont_play_sound)
 		P_SetObjectMomZ(mo, momz)
 
 		if lm.rings ~= nil then snlf.p.rings = lm.rings end
+		if lm.state ~= nil then snlf.state = lm.state end
+		if lm.hdrive ~= nil then snlf.hdrive = lm.hdrive end
+		if lm.vdrive ~= nil then snlf.vdrive = lm.vdrive end
+		if lm.chargegoingback ~= nil then snlf.chargegoingback = lm.chargegoingback end
 
 		if snlf.p.pflags & PF_FINISHED == 0 then
 			snlf.mullcount = $1 + 1
@@ -604,7 +608,11 @@ addHook("PreThinkFrame", function()
 					momx = mo.momx,
 					momy = mo.momy,
 					momz = mo.momz,
-					rings = p.rings}
+					rings = p.rings,
+					state = snlf.state,
+					hdrive = snlf.hdrive,
+					vdrive = snlf.vdrive,
+					chargegoingback = snlf.chargegoingback}
 				table.insert(snlf.save_pts, state)
 				S_StartSound(mo, sfx_pop, p)
 				CONS_Printf(p, "player state saved")
