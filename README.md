@@ -59,7 +59,12 @@ Because levels can be very difficult to complete with Snolf there are a bunch of
 * `snolf_ground_control`: Enable steering on the ground (default: off)
 * `snolf_air_shot`: Shots can be taken in the air (default: off)
 * `snolf_inf_lives`: Extra life is refunded on death (default: on)
+* `snolf_save_states`: Enables save states. See next section for details (default: off)
 * `snolf_fire_shield`: Protects from spinning fire jets (but not other fire damage sources) (default: on)
+
+### Save states
+
+If `snolf_save_states` is enabled then you save and load the player state with the custom action buttons. Custom action 1 saves the current player state, custom action 2 loads a state and custom action 3 undoes the last save state. The player state includes the player position, momentum, ring count and shot charge.
 
 ### Boss behaviour
 
@@ -103,6 +108,8 @@ v2.7
 * Bossess only drop rings if a player is playing as Snolf
 * Snolf is immune to spinning flame jets (toggleable with command)
 * Infinite lives is enabled by default
+* Added save state system
+* Commands print to the normal console again as well as the multiplayer chat log
 * Added Metal Snolf
 * Fixed boss mode triggering on Egg Rock Zone Act 2
 * Fixed not being able to turn off snolf_shot_on_hit_by_boss
