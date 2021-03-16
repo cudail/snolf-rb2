@@ -146,7 +146,7 @@ take_a_mulligan = function(snlf, pts, dont_play_sound)
 	local lm = pts[#pts] -- last mulligan point
 	local mo = snlf.p.mo
 	-- if we're still at the last mulligan point remove it and go back one
-	if lm and same_position(lm, mo) then
+	if lm and same_position(lm, mo) and lm.momx == nil then
 		table.remove(pts, #pts)
 		lm = pts[#pts]
 	end
@@ -606,14 +606,22 @@ addHook("PreThinkFrame", function()
 					momz = mo.momz,
 					rings = p.rings}
 				table.insert(snlf.save_pts, state)
-				S_StartSound(mo, sfx_s3k53, p)
+				S_StartSound(mo, sfx_pop, p)
+				CONS_Printf(p, "player state saved")
 			end
 
 			-- load player state
-			if snlf.ctrl.ca2 == 2 and #snlf.save_pts > 0 then
-				--local sv = snlf.save_pts[#snlf.save_pts]
+			if snlf.ctrl.ca2 == 1 and #snlf.save_pts > 0 then
 				take_a_mulligan(snlf, snlf.save_pts)
 				S_StartSound(mo, sfx_mixup)
+				CONS_Printf(p, "player state loaded")
+			end
+
+			-- unload save state
+			if snlf.ctrl.ca3 == 1 and #snlf.save_pts > 1 then
+				table.remove(snlf.save_pts, #snlf.save_pts)
+				S_StartSound(mo, sfx_skid)
+				CONS_Printf(p, "undid save state")
 			end
 		end
 
@@ -980,8 +988,8 @@ COM_AddCommand("snolf_fire_shield", function(player, arg)
 	cheat_toggle("snolf_fire_shield", arg, player)
 end, COM_ADMIN)
 
-COM_AddCommand("snolf_save_states", function(player, arg)
-	cheat_toggle("snolf_save_states", arg, player)
+COM_AddCommand("snolf_save_spot", function(player, arg)
+	cheat_toggle("snolf_save_spot", arg, player)
 end, COM_ADMIN)
 
 COM_AddCommand("snolf_shot_on_hit_boss", function(player, arg)
