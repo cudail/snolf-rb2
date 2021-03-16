@@ -58,8 +58,8 @@ Because levels can be very difficult to complete with Snolf there are a bunch of
 * `snolf_death_mulligan`: Return to last resting place on death (default: off)
 * `snolf_ground_control`: Enable steering on the ground (default: off)
 * `snolf_air_shot`: Shots can be taken in the air (default: off)
-* `snolf_inf_lives`: Extra life is refunded on death (default: on)
 * `snolf_save_states`: Enables save states. See next section for details (default: off)
+* `snolf_inf_lives`: Extra life is refunded on death (default: on)
 * `snolf_fire_shield`: Protects from spinning fire jets (but not other fire damage sources) (default: on)
 
 ### Save states
