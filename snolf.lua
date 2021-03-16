@@ -1,6 +1,8 @@
 freeslot("SPR_SFST", "SPR_SFAH", "SPR_SFAV", "SPR_SFMR", "SPR_SFHX", "SPR_MSNF",
 	"sfx_msnolf")
 
+sfxinfo[sfx_msnolf].caption = "Anomalous Metal Snolf"
+
 -- declare functions in advance so they can reference each other
 -- without causing parsing errors
 local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, is_snolf,
