@@ -105,7 +105,7 @@ Life count icon from Mario Golf: Advance Tour.
 ## Changelog
 
 v2.7
-* Bossess only drop rings if a player is playing as Snolf
+* Bosses only drop rings if a player is playing as Snolf
 * Snolf is immune to spinning flame jets (toggleable with command)
 * Infinite lives is enabled by default
 * Added save state system
