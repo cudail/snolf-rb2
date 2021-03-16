@@ -799,7 +799,9 @@ addHook("MapLoad", function(mapnumber)
 	for player in players.iterate do
 		if not is_snolf_setup(player.mo) then continue end
 		reset_state(player.snolf)
-		player.snolf.save_pts = {}
+		if mapnumber ~= oldmap then
+			player.snolf.save_pts = {}
+		end
 	end
 end)
 
@@ -996,8 +998,8 @@ COM_AddCommand("snolf_fire_shield", function(player, arg)
 	cheat_toggle("snolf_fire_shield", arg, player)
 end, COM_ADMIN)
 
-COM_AddCommand("snolf_save_spot", function(player, arg)
-	cheat_toggle("snolf_save_spot", arg, player)
+COM_AddCommand("snolf_save_states", function(player, arg)
+	cheat_toggle("snolf_save_states", arg, player)
 end, COM_ADMIN)
 
 COM_AddCommand("snolf_shot_on_hit_boss", function(player, arg)
