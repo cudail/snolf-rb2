@@ -171,6 +171,7 @@ take_a_mulligan = function(snlf, pts, dont_play_sound)
 		if snlf.p.pflags & PF_FINISHED == 0 then
 			snlf.mullcount = $1 + 1
 		end
+		override_controls(snlf)
 	end
 end
 
