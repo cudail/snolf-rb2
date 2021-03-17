@@ -104,6 +104,10 @@ Life count icon from Mario Golf: Advance Tour.
 
 ## Changelog
 
+v2.8
+* Egg Colosseum throws rings further than other bosses
+* Fixed jump being enabled when taking a mulligan
+
 v2.7
 * Bosses only drop rings if a player is playing as Snolf
 * Snolf is immune to spinning flame jets (toggleable with command)
