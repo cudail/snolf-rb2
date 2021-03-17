@@ -866,8 +866,9 @@ addHook("BossThinker", function(boss)
 			for i=0, 5 do
 				local ring = P_SpawnMobjFromMobj(boss, 0,0,0, MT_FLINGRING)
 				ring.fuse = 8*TICRATE
-				ring.momx = FixedMul(4*FRACUNIT, cos(ANG60*i + boss.angle))
-				ring.momy = FixedMul(4*FRACUNIT, sin(ANG60*i + boss.angle))
+				local ringmom = boss.type == MT_EGGMOBILE4 and 32*FRACUNIT or 4*FRACUNIT
+				ring.momx = FixedMul(ringmom, cos(ANG60*i + boss.angle))
+				ring.momy = FixedMul(ringmom, sin(ANG60*i + boss.angle))
 				ring.momz = 3*FRACUNIT
 			end
 		end
