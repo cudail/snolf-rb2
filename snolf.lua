@@ -746,11 +746,12 @@ end)
 addHook("PostThinkFrame", function()
 	for player in players.iterate do
 		if not is_snolf_setup(player.mo) then continue end
-		player.mo.state = S_PLAY_ROLL -- always force rolling animation
 
-		local snlf = player.snolf
+		if maptol & TOL_NIGHTS == 0 then -- unless we're in NiGHTS mode
+			player.mo.state = S_PLAY_ROLL -- always force rolling animation
+		end
 
-		snlf.collided = false
+		player.snolf.collided = false
 	end
 end
 )
