@@ -747,14 +747,16 @@ addHook("PostThinkFrame", function()
 	for player in players.iterate do
 		if not is_snolf_setup(player.mo) then continue end
 
-		if maptol & TOL_NIGHTS == 0 then -- unless we're in NiGHTS mode
-			player.mo.state = S_PLAY_ROLL -- always force rolling animation
+		-- force rolling animation
+		if maptol & TOL_NIGHTS == 0 -- if we're not in NiGHTS mode
+			and player.mo.sprite ~= SPR_NULL then -- if our sprite isn't null
+			player.mo.state = S_PLAY_ROLL
 		end
 
 		player.snolf.collided = false
 	end
-end
-)
+end)
+
 
 -- Hook to override default collision and make Snolf bounce off walls
 addHook("MobjMoveBlocked", function(mo)
