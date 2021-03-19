@@ -104,6 +104,10 @@ Life count icon from Mario Golf: Advance Tour.
 
 ## Changelog
 
+v2.9
+* Player state is no longer forced to S_PLAY_ROLL in NiGHTS mode, if player
+sprite is set to SPR_NULL or for non-Snolf characters during death animation
+
 v2.8
 * Egg Colosseum throws rings further than other bosses
 * Fixed jump being enabled when taking a mulligan
