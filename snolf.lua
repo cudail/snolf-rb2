@@ -530,7 +530,7 @@ addHook("PreThinkFrame", function()
 			if snlf.ctrl.jmp == 1 then
 				snlf.hdrive = -1
 				snlf.vdrive = -1
-				S_StartSoundAtVolume(pmo, sfx_spndsh, 64)
+				S_StartSoundAtVolume(mo, sfx_spndsh, 64)
 				snlf.chargegoingback = false
 				snlf.state = STATE_HCHARGE
 			end
@@ -538,7 +538,7 @@ addHook("PreThinkFrame", function()
 		elseif snlf.state == STATE_HCHARGE then
 			-- jump is pressed
 			if snlf.ctrl.jmp == 1 then
-				S_StartSoundAtVolume(pmo, sfx_spndsh, 100)
+				S_StartSoundAtVolume(mo, sfx_spndsh, 100)
 				snlf.chargegoingback = false
 				snlf.state = STATE_VCHARGE
 			else
@@ -560,7 +560,7 @@ addHook("PreThinkFrame", function()
 			-- jump is pressed
 			if snlf.ctrl.jmp == 1 then
 				-- shoot
-				S_StartSound(pmo, sfx_zoom)
+				S_StartSound(mo, sfx_zoom)
 				local h = sinusoidal_scale(snlf.hdrive, H_METER_LENGTH)
 				local v = sinusoidal_scale(snlf.vdrive, V_METER_LENGTH)
 				P_InstaThrust(snlf.p.mo, snlf.p.mo.angle, h*FRACUNIT)
