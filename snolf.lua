@@ -573,6 +573,56 @@ addHook("PreThinkFrame", function()
 				end
 
 				snlf.state = STATE_WAITING
+
+
+				-- WIP: Draw shot trajectory in advance
+				-- TODO: trajectory curves the wrong way in reversed gravity
+				-- TODO: trajectory does not take slopes into account
+				-- TODO: trajectory does not handle gravity changing on shot path (i.e. entering and exiting water)
+				-- TODO: replace MT_UNKNOWN a custom trail object
+				-- TODO: trail should stop if it hits a wall
+				-- TODO: move this to when shot is being aimed rather than when fired
+				-- Predict the trajectory of the shot
+				local x, y, z, mz = mo.x, mo.y, mo.z -- current position
+				local mx = FixedMul(h*FRACUNIT, cos(mo.angle)) -- force we will take off with
+				local my = FixedMul(h*FRACUNIT, sin(mo.angle))
+				local mz = v*FRACUNIT
+
+				-- The full x and y force will only be applied once
+				x = $1 + mx
+				y = $1 + my
+
+				-- On the first frame friction will be applied to the player's momentum
+				-- Thereafter the player will airborne where there is no friction
+				mx = FixedMul($1, mo.friction)
+				my = FixedMul($1, mo.friction)
+
+				-- Hacky but this makes the path turn out correct
+				-- I think perhaps gravity is not applied on the first frame (on the ground)
+				-- sot his counteracts it?
+				local g = P_GetMobjGravity(mo)
+				--if reversed_gravity(mo) then g = -g end
+				mz = $1 - g
+
+				-- Draw a shot trajectory
+				for i = 0, 200
+
+					-- according to the wiki gravity is applied twice if momz == 0
+					if mz == 0 then
+						mz = $1 + g
+					end
+
+					-- apply gravity
+					mz = $1 + g
+
+					x = $1 + mx
+					y = $1 + my
+					z = $1 + mz
+
+					-- spawn a trail
+					local dot = P_SpawnMobj(x, y, z, MT_UNKNOWN)
+					dot.sprite = SPR_HOOP
+				end
 			else
 				local increment = get_charge_increment(snlf)
 				if snlf.chargegoingback then
