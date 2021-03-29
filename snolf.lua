@@ -82,6 +82,7 @@ snolf_setup = function(player)
 		hdrive = 0,
 		vdrive = 0,
 		chargegoingback = false,
+		verticalfirst = false,
 		-- previous tick state
 		prev = { momz = 0 },
 		-- controls
@@ -497,23 +498,25 @@ end
 -- shot meter
 hud.add( function(v, player, camera)
 	if not is_snolf_setup(player.mo) then return end
-
-	local state = player.snolf.state
+	local snlf = player.snolf
+	local state = snlf.state
 	if state != STATE_CHARGE1 and state != STATE_CHARGE2 then return end
 
 	local meter = v.getSpritePatch(SPR_SFMR)  -- shot meter sprite
 	local harrow = v.getSpritePatch(SPR_SFAH, 0, 4) -- shot meter arrow sprite 1
 	local varrow = v.getSpritePatch(SPR_SFAV, 0, 5) -- shot meter arrow sprite 2
 
-	local hpos = sinusoidal_scale(player.snolf.hdrive, H_METER_LENGTH)
-	local vpos = sinusoidal_scale(player.snolf.vdrive, V_METER_LENGTH)
+	local hpos = sinusoidal_scale(snlf.hdrive, H_METER_LENGTH)
+	local vpos = sinusoidal_scale(snlf.vdrive, V_METER_LENGTH)
 
 	if hpos < 1 then hpos = 1 end
 	if vpos < 1 then vpos = 1 end
 
 	v.draw(158, 103, meter)
-	v.draw(160+hpos, 151, harrow)
-	if state == STATE_CHARGE2 then
+	if state == STATE_CHARGE2 or not snlf.verticalfirst then
+		v.draw(160+hpos, 151, harrow)
+	end
+	if state == STATE_CHARGE2 or snlf.verticalfirst then
 		v.draw(159, 150-vpos, varrow)
 	end
 end, "game")
@@ -625,11 +628,12 @@ addHook("PreThinkFrame", function()
 		elseif snlf.state == STATE_READY then
 			-- jump is pressed
 			if snlf.ctrl.jmp == 1 then
-				snlf.hdrive = -1
-				snlf.vdrive = -1
+				snlf.hdrive = 1
+				snlf.vdrive = 1
 				S_StartSoundAtVolume(mo, sfx_spndsh, 64)
 				snlf.chargegoingback = false
 				snlf.state = STATE_CHARGE1
+				snlf.verticalfirst = false
 			end
 		-- choosing horizontal force
 		elseif snlf.state == STATE_CHARGE1 then
@@ -639,7 +643,7 @@ addHook("PreThinkFrame", function()
 				snlf.chargegoingback = false
 				snlf.state = STATE_CHARGE2
 			else
-				shot_charge(snlf)
+				shot_charge(snlf, snlf.verticalfirst)
 			end
 		-- choosing vertical force
 		elseif snlf.state == STATE_CHARGE2 then
@@ -660,7 +664,7 @@ addHook("PreThinkFrame", function()
 
 				snlf.state = STATE_WAITING
 			else
-				shot_charge(snlf, true)
+				shot_charge(snlf, not snlf.verticalfirst)
 			end
 		end
 
