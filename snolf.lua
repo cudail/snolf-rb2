@@ -9,7 +9,8 @@ local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, is_snolf,
 	at_rest, take_a_mulligan, same_position, snolf_setup, reset_state,
 	sinusoidal_scale, get_charge_increment, in_black_core, allow_air_snolf,
 	cheat_toggle, snolfify_name, is_snolf_setup, override_controls, are_touching,
-	on_hit_boss, calculate_weight, is_anyone_snolf, reversed_gravity, print2
+	on_hit_boss, calculate_weight, is_anyone_snolf, reversed_gravity, print2,
+	draw_trajectory
 
 local cheats = {
 	everybodys_snolf = false,
@@ -367,6 +368,59 @@ on_hit_boss = function(boss, player_hopefully)
 end
 
 
+draw_trajectory = function(snlf)
+	-- WIP: Draw shot trajectory in advance
+	-- TODO: trajectory curves the wrong way in reversed gravity
+	-- TODO: trajectory does not take slopes into account
+	-- TODO: trajectory does not handle gravity changing on shot path (i.e. entering and exiting water)
+	-- TODO: trail should stop if it hits a wall
+	-- Predict the trajectory of the shot
+	local h = sinusoidal_scale(snlf.hdrive, H_METER_LENGTH)
+	local v = sinusoidal_scale(snlf.vdrive, V_METER_LENGTH)
+	local mo = snlf.p.mo
+	local x, y, z, mz = mo.x, mo.y, mo.z -- current position
+	local mx = FixedMul(h*FRACUNIT, cos(mo.angle)) -- force we will take off with
+	local my = FixedMul(h*FRACUNIT, sin(mo.angle))
+	local mz = v*FRACUNIT
+
+	-- The full x and y force will only be applied once
+	x = $1 + mx
+	y = $1 + my
+
+	-- On the first frame friction will be applied to the player's momentum
+	-- Thereafter the player will airborne where there is no friction
+	mx = FixedMul($1, mo.friction)
+	my = FixedMul($1, mo.friction)
+
+	-- Hacky but this makes the path turn out correct
+	-- I think perhaps gravity is not applied on the first frame (on the ground)
+	-- sot his counteracts it?
+	local g = P_GetMobjGravity(mo)
+	--if reversed_gravity(mo) then g = -g end
+	mz = $1 - g
+
+	-- Draw a shot trajectory
+	for i = 0, 200
+
+		-- according to the wiki gravity is applied twice if momz == 0
+		if mz == 0 then
+			mz = $1 + g
+		end
+
+		-- apply gravity
+		mz = $1 + g
+
+		x = $1 + mx
+		y = $1 + my
+		z = $1 + mz
+
+		-- spawn a trail
+		local dot = P_SpawnMobj(x, y, z,  MT_CYBRAKDEMON_TARGET_DOT)
+		dot.sprite = SPR_HOOP
+	end
+end
+
+
 -- I wanted some characters to be considered heavier than others but weight is
 -- not an attribute characters have. I have opted for some weird logic instead.
 -- A character's mass is considered to be inverse of their jumpfactor.
@@ -554,6 +608,8 @@ addHook("PreThinkFrame", function()
 					snlf.chargegoingback = false
 				end
 				snlf.hdrive = $1 + increment
+
+				draw_trajectory(snlf)
 			end
 		-- choosing vertical force
 		elseif snlf.state == STATE_VCHARGE then
@@ -573,56 +629,6 @@ addHook("PreThinkFrame", function()
 				end
 
 				snlf.state = STATE_WAITING
-
-
-				-- WIP: Draw shot trajectory in advance
-				-- TODO: trajectory curves the wrong way in reversed gravity
-				-- TODO: trajectory does not take slopes into account
-				-- TODO: trajectory does not handle gravity changing on shot path (i.e. entering and exiting water)
-				-- TODO: replace MT_UNKNOWN a custom trail object
-				-- TODO: trail should stop if it hits a wall
-				-- TODO: move this to when shot is being aimed rather than when fired
-				-- Predict the trajectory of the shot
-				local x, y, z, mz = mo.x, mo.y, mo.z -- current position
-				local mx = FixedMul(h*FRACUNIT, cos(mo.angle)) -- force we will take off with
-				local my = FixedMul(h*FRACUNIT, sin(mo.angle))
-				local mz = v*FRACUNIT
-
-				-- The full x and y force will only be applied once
-				x = $1 + mx
-				y = $1 + my
-
-				-- On the first frame friction will be applied to the player's momentum
-				-- Thereafter the player will airborne where there is no friction
-				mx = FixedMul($1, mo.friction)
-				my = FixedMul($1, mo.friction)
-
-				-- Hacky but this makes the path turn out correct
-				-- I think perhaps gravity is not applied on the first frame (on the ground)
-				-- sot his counteracts it?
-				local g = P_GetMobjGravity(mo)
-				--if reversed_gravity(mo) then g = -g end
-				mz = $1 - g
-
-				-- Draw a shot trajectory
-				for i = 0, 200
-
-					-- according to the wiki gravity is applied twice if momz == 0
-					if mz == 0 then
-						mz = $1 + g
-					end
-
-					-- apply gravity
-					mz = $1 + g
-
-					x = $1 + mx
-					y = $1 + my
-					z = $1 + mz
-
-					-- spawn a trail
-					local dot = P_SpawnMobj(x, y, z, MT_UNKNOWN)
-					dot.sprite = SPR_HOOP
-				end
 			else
 				local increment = get_charge_increment(snlf)
 				if snlf.chargegoingback then
@@ -636,6 +642,8 @@ addHook("PreThinkFrame", function()
 					snlf.chargegoingback = false
 				end
 				snlf.vdrive = $1 + increment
+
+				draw_trajectory(snlf)
 			end
 		end
 
