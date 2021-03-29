@@ -10,7 +10,7 @@ local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, is_snolf,
 	sinusoidal_scale, get_charge_increment, in_black_core, allow_air_snolf,
 	cheat_toggle, snolfify_name, is_snolf_setup, override_controls, are_touching,
 	on_hit_boss, calculate_weight, is_anyone_snolf, reversed_gravity, print2,
-	draw_trajectory
+	draw_trajectory, shot_charge
 
 local cheats = {
 	everybodys_snolf = false,
@@ -49,7 +49,7 @@ local SKIM_THRESHOLD = 10*FRACUNIT -- Snolf must be going at least this fast hor
 local SKIM_ANLGE = ANG20 -- Snolf will not skip if if angle of approach is greater than this
 local SKIM_FACTOR = 4*FRACUNIT/5 -- when Snolf skims their momentum is multiplied by this factor
 
-local STATE_WAITING, STATE_READY, STATE_HCHARGE, STATE_VCHARGE = 1, 2, 3, 4
+local STATE_WAITING, STATE_READY, STATE_CHARGE1, STATE_CHARGE2 = 1, 2, 3, 4
 
 -- as it stands the max strength of a fully charged shot,
 -- the charge meter period and the max displacement of the charge meter arrows
@@ -461,6 +461,35 @@ calculate_weight = function(mo)
 	return mass
 end
 
+
+shot_charge = function(snlf, vertical)
+	local increment = get_charge_increment(snlf)
+	if snlf.chargegoingback then
+		increment = $1 * -1
+	end
+	snlf.p.pflags = $1 | PF_STARTDASH | PF_SPINNING -- force spindash state
+
+	local charge = vertical and snlf.vdrive or snlf.hdrive
+	local limit = vertical and V_METER_LENGTH or H_METER_LENGTH
+	if charge >= limit then
+		snlf.chargegoingback = true
+	elseif charge <= 0 then
+		if vertical then
+			snlf.vdrive = 0
+		else
+			snlf.hdrive = 0
+		end
+		snlf.chargegoingback = false
+	end
+	if vertical then
+		snlf.vdrive = $1 + increment
+	else
+		snlf.hdrive = $1 + increment
+	end
+	draw_trajectory(snlf)
+end
+
+
 -------------------
 -- HUD functions --
 -------------------
@@ -469,7 +498,7 @@ hud.add( function(v, player, camera)
 	if not is_snolf_setup(player.mo) then return end
 
 	local state = player.snolf.state
-	if state != STATE_HCHARGE and state != STATE_VCHARGE then return end
+	if state != STATE_CHARGE1 and state != STATE_CHARGE2 then return end
 
 	local meter = v.getSpritePatch(SPR_SFMR)  -- shot meter sprite
 	local harrow = v.getSpritePatch(SPR_SFAH, 0, 4) -- shot meter arrow sprite 1
@@ -483,7 +512,7 @@ hud.add( function(v, player, camera)
 
 	v.draw(158, 103, meter)
 	v.draw(160+hpos, 151, harrow)
-	if state == STATE_VCHARGE then
+	if state == STATE_CHARGE2 then
 		v.draw(159, 150-vpos, varrow)
 	end
 end, "game")
@@ -599,33 +628,20 @@ addHook("PreThinkFrame", function()
 				snlf.vdrive = -1
 				S_StartSoundAtVolume(mo, sfx_spndsh, 64)
 				snlf.chargegoingback = false
-				snlf.state = STATE_HCHARGE
+				snlf.state = STATE_CHARGE1
 			end
 		-- choosing horizontal force
-		elseif snlf.state == STATE_HCHARGE then
+		elseif snlf.state == STATE_CHARGE1 then
 			-- jump is pressed
 			if snlf.ctrl.jmp == 1 then
 				S_StartSoundAtVolume(mo, sfx_spndsh, 100)
 				snlf.chargegoingback = false
-				snlf.state = STATE_VCHARGE
+				snlf.state = STATE_CHARGE2
 			else
-				local increment = get_charge_increment(snlf)
-				if snlf.chargegoingback then
-					increment = $1 * -1
-				end
-				snlf.p.pflags = $1 | PF_STARTDASH | PF_SPINNING -- force spindash state
-				if snlf.hdrive >= H_METER_LENGTH then
-					snlf.chargegoingback = true
-				elseif snlf.hdrive <= 0 then
-					snlf.hdrive = 0
-					snlf.chargegoingback = false
-				end
-				snlf.hdrive = $1 + increment
-
-				draw_trajectory(snlf)
+				shot_charge(snlf)
 			end
 		-- choosing vertical force
-		elseif snlf.state == STATE_VCHARGE then
+		elseif snlf.state == STATE_CHARGE2 then
 			-- jump is pressed
 			if snlf.ctrl.jmp == 1 then
 				-- shoot
@@ -643,20 +659,7 @@ addHook("PreThinkFrame", function()
 
 				snlf.state = STATE_WAITING
 			else
-				local increment = get_charge_increment(snlf)
-				if snlf.chargegoingback then
-					increment = $1 * -1
-				end
-				snlf.p.pflags = $1 | PF_STARTDASH | PF_SPINNING -- force spindash state
-				if snlf.vdrive >= V_METER_LENGTH then
-					snlf.chargegoingback = true
-				elseif snlf.vdrive <= 0 then
-					snlf.vdrive = 0
-					snlf.chargegoingback = false
-				end
-				snlf.vdrive = $1 + increment
-
-				draw_trajectory(snlf)
+				shot_charge(snlf, true)
 			end
 		end
 
