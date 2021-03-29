@@ -374,6 +374,7 @@ draw_trajectory = function(snlf)
 	-- TODO: trajectory does not take slopes into account
 	-- TODO: trajectory does not handle gravity changing on shot path (i.e. entering and exiting water)
 	-- TODO: trail should stop if it hits a wall
+	-- TODO: make optional with command
 	-- Predict the trajectory of the shot
 	local h = sinusoidal_scale(snlf.hdrive, H_METER_LENGTH)
 	local v = sinusoidal_scale(snlf.vdrive, V_METER_LENGTH)
