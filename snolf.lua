@@ -427,6 +427,7 @@ draw_trajectory = function(snlf)
 	if blocked then
 		local reticule = P_SpawnMobj(dummy.x, dummy.y, dummy.z,  MT_CYBRAKDEMON_TARGET_DOT)
 		reticule.sprite = SPR_TARG
+		reticule.rollangle = leveltime*ANG1*3
 	end
 	dummy.type = MT_NULL
 	P_KillMobj(dummy)
