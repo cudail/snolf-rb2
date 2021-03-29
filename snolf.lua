@@ -399,9 +399,11 @@ draw_trajectory = function(snlf)
 	--if reversed_gravity(mo) then g = -g end
 	mz = $1 - g
 
+	local dummy = P_SpawnMobj(x, y, z, MT_PLAYER)
+	local blocked = false
 	-- Draw a shot trajectory
-	for i = 0, 200
-
+	local i = 0
+	while not blocked and i < 200 do
 		-- according to the wiki gravity is applied twice if momz == 0
 		if mz == 0 then
 			mz = $1 + g
@@ -410,6 +412,9 @@ draw_trajectory = function(snlf)
 		-- apply gravity
 		mz = $1 + g
 
+		dummy.z = $1 + mz
+		blocked = not P_TryMove(dummy, x+mx, y+my)
+
 		x = $1 + mx
 		y = $1 + my
 		z = $1 + mz
@@ -417,7 +422,14 @@ draw_trajectory = function(snlf)
 		-- spawn a trail
 		local dot = P_SpawnMobj(x, y, z,  MT_CYBRAKDEMON_TARGET_DOT)
 		dot.sprite = SPR_HOOP
+		i = $1+1
 	end
+	if blocked then
+		local reticule = P_SpawnMobj(dummy.x, dummy.y, dummy.z,  MT_CYBRAKDEMON_TARGET_DOT)
+		reticule.sprite = SPR_TARG
+	end
+	dummy.type = MT_NULL
+	P_KillMobj(dummy)
 end
 
 
