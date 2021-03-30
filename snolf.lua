@@ -406,6 +406,8 @@ draw_trajectory = function(snlf)
 	-- Draw a shot trajectory
 	local i = 0
 	while not blocked and i < 200 do
+		g = P_GetMobjGravity(dummy)
+
 		-- according to the wiki gravity is applied twice if momz == 0
 		if mz == 0 then
 			mz = $1 + g
