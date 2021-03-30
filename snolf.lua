@@ -380,7 +380,7 @@ draw_trajectory = function(snlf)
 	local h = sinusoidal_scale(snlf.hdrive, H_METER_LENGTH)
 	local v = sinusoidal_scale(snlf.vdrive, V_METER_LENGTH)
 	local mo = snlf.p.mo
-	local x, y, z, mz = mo.x, mo.y, mo.z -- current position
+	local x, y, z = mo.x, mo.y, mo.z -- current position
 	local mx = FixedMul(h*FRACUNIT, cos(mo.angle)) -- force we will take off with
 	local my = FixedMul(h*FRACUNIT, sin(mo.angle))
 	local mz = v*FRACUNIT
@@ -398,13 +398,17 @@ draw_trajectory = function(snlf)
 	-- I think perhaps gravity is not applied on the first frame (on the ground)
 	-- sot his counteracts it?
 	local g = P_GetMobjGravity(mo)
-	--if reversed_gravity(mo) then g = -g end
-	mz = $1 - g
+	local grev = reversed_gravity(mo)
 
 	local dummy = P_SpawnMobj(x, y, z, MT_PLAYER)
+	if grev then dummy.flags2 = $1 | MF2_OBJECTFLIP end
+	if grev then mz = -$1 end
+	mz = $1 - g
+
 	local blocked = false
 	-- Draw a shot trajectory
 	local i = 0
+
 	while not blocked and i < 1000 do
 		g = P_GetMobjGravity(dummy)
 
