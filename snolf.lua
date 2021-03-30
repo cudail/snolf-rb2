@@ -415,7 +415,7 @@ draw_trajectory = function(snlf)
 		mz = $1 + g
 
 		dummy.z = $1 + mz
-		blocked = not P_TryMove(dummy, x+mx, y+my)
+		blocked = not P_TryMove(dummy, x+mx, y+my, true)
 
 		x = $1 + mx
 		y = $1 + my
