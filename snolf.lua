@@ -434,7 +434,6 @@ draw_trajectory = function(snlf)
 
 		-- spawn a trail
 		local dot = P_SpawnMobj(x, y, z,  MT_CYBRAKDEMON_TARGET_DOT)
-		dot.sprite = SPR_HOOP
 		i = $1+1
 	end
 	if blocked then
