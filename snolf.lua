@@ -24,6 +24,8 @@ local cheats = {
 	snolf_air_shot = false,
 	snolf_save_states = false,
 
+	snolf_shot_guide = false,
+
 	snolf_fire_shield = true,
 
 	snolf_shot_on_hit_boss = true,
@@ -354,6 +356,7 @@ snolfify_name = function(orig_name)
 	return orig_name
 end
 
+
 on_hit_boss = function(boss, player_hopefully)
 	for player in players.iterate do
 		if player.mo ~= player_hopefully then
@@ -369,11 +372,8 @@ on_hit_boss = function(boss, player_hopefully)
 end
 
 
+-- Predict the trajectory of the currently charging shot
 draw_trajectory = function(snlf)
-	-- WIP: Draw shot trajectory in advance
-	-- TOOD: trajectory prematurely colliding with the floor when gravity is reversed
-	-- TODO: make optional with command
-	-- Predict the trajectory of the shot
 	local h = sinusoidal_scale(snlf.hdrive, H_METER_LENGTH)
 	local v = sinusoidal_scale(snlf.vdrive, V_METER_LENGTH)
 	local mo = snlf.p.mo
@@ -499,7 +499,10 @@ shot_charge = function(snlf, vertical)
 	else
 		snlf.hdrive = $1 + increment
 	end
-	draw_trajectory(snlf)
+
+	if cheats.snolf_shot_guide then
+		draw_trajectory(snlf)
+	end
 end
 
 
@@ -1088,6 +1091,10 @@ end, COM_ADMIN)
 
 COM_AddCommand("snolf_air_shot", function(player, arg)
 	cheat_toggle("snolf_air_shot", arg, player)
+end, COM_ADMIN)
+
+COM_AddCommand("snolf_shot_guide", function(player, arg)
+	cheat_toggle("snolf_shot_guide", arg, player)
 end, COM_ADMIN)
 
 COM_AddCommand("snolf_fire_shield", function(player, arg)
