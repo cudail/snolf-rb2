@@ -385,6 +385,14 @@ draw_trajectory = function(snlf)
 	local my = FixedMul(h*FRACUNIT, sin(mo.angle))
 	local mz = v*FRACUNIT
 
+	local slope = mo.standingslope
+	if slope then
+		local hcomp = FixedMul(mz, sin(slope.zangle))
+		mz = FixedMul($1, cos(slope.zangle))
+		mx = $1 - FixedMul(hcomp,cos(slope.xydirection))
+		my = $1 - FixedMul(hcomp,sin(slope.xydirection))
+	end
+
 	-- The full x and y force will only be applied once
 	x = $1 + mx
 	y = $1 + my
