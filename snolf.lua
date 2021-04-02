@@ -294,9 +294,19 @@ snolfify_name = function(orig_name)
 	local sep = string.char(30)
 
 	-- hardcoding some names for certain characters, including from other mods
-	local name_lookup = {
+	local name_replacement = {
 		sonic = "Snolf",
 		knuckles = "Knolf",
+		tails = "Tolf"
+	}
+
+	for k, v in pairs(name_replacement) do
+		if orig_name:find(k) ~= nil then
+			return orig_name:gsub(k, v)
+		end
+	end
+
+	local name_lookup = {
 		amy = "Amy Rolf",
 		metal = "M"..sep.."Snolf",
 		robotnik = "Robotnolf",
@@ -307,8 +317,7 @@ snolfify_name = function(orig_name)
 		dickkickem = "Dolf Snolfem"}
 	name_lookup["k"..sep.."t"..sep.."e"] = "Knolf"
 	name_lookup["amy"..sep.."r"] = "Amy Rolf"
-	name_lookup["tails doll"] = "Tolf doll"
-	name_lookup["m"..sep.."k"] = "M"..sep.."knolf"
+	name_lookup["m"..sep.."k"] = "M"..sep.."Knolf"
 	name_lookup["egg robo"] = "Egg Robolf"
 	local consonants = "bcdfghjklmnpqrstvwxyz"
 
