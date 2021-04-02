@@ -622,6 +622,11 @@ addHook("PreThinkFrame", function()
 		snlf.ctrl.ca2 = p.cmd.buttons & BT_CUSTOM2 and $1+1 or 0
 		snlf.ctrl.ca3 = p.cmd.buttons & BT_CUSTOM3 and $1+1 or 0
 
+		-- eat jump inputs entirely if Everybody's Snolf is enabled
+		if is_snolf(mo) and snlf.state != STATE_WAITING then
+			p.cmd.buttons = $1 & (!BT_JUMP)
+		end
+
 		-- skim across water
 		if mo.momz < 0 and p.speed > SKIM_THRESHOLD and mo.eflags & MFE_TOUCHWATER > 0 and
 		R_PointToAngle2(0, 0, p.speed, -mo.momz) < SKIM_ANLGE then
