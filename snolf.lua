@@ -24,7 +24,7 @@ local cheats = {
 	snolf_air_shot = false,
 	snolf_save_states = false,
 
-	snolf_shot_guide = false,
+	snolf_shot_guide = true,
 
 	snolf_fire_shield = true,
 
@@ -413,8 +413,9 @@ draw_trajectory = function(snlf)
 	local blocked = false
 	-- Draw a shot trajectory
 	local i = 0
-
-	while not blocked and i < 1000 do
+	local prev_floorz = mo.floorz + 1
+	local prev_ceilingz = mo.ceilingz - 1
+	while not blocked and i < 200 do
 		g = P_GetMobjGravity(dummy)
 
 		-- according to the wiki gravity is applied twice if momz == 0
@@ -426,7 +427,11 @@ draw_trajectory = function(snlf)
 		mz = $1 + g
 
 		dummy.z = $1 + mz
-		blocked = not P_TryMove(dummy, x+mx, y+my, true)
+
+		local hblocked = not P_TryMove(dummy, x+mx, y+my, true)
+		local fblocked = dummy.z <= prev_floorz
+		local cblocked = mo.height + dummy.z >= prev_ceilingz
+		blocked = hblocked or fblocked or cblocked
 
 		x = $1 + mx
 		y = $1 + my
@@ -434,7 +439,10 @@ draw_trajectory = function(snlf)
 
 		-- spawn a trail
 		local dot = P_SpawnMobj(x, y, z,  MT_CYBRAKDEMON_TARGET_DOT)
+
 		i = $1+1
+		prev_ceilingz = dummy.ceilingz
+		prev_floorz = dummy.floorz
 	end
 	if blocked then
 		local reticule = P_SpawnMobj(dummy.x, dummy.y, dummy.z,  MT_CYBRAKDEMON_TARGET_DOT)
