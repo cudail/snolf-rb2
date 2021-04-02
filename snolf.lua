@@ -622,6 +622,39 @@ addHook("PreThinkFrame", function()
 		snlf.ctrl.ca2 = p.cmd.buttons & BT_CUSTOM2 and $1+1 or 0
 		snlf.ctrl.ca3 = p.cmd.buttons & BT_CUSTOM3 and $1+1 or 0
 
+		-- skim across water
+		if mo.momz < 0 and p.speed > SKIM_THRESHOLD and mo.eflags & MFE_TOUCHWATER > 0 and
+		R_PointToAngle2(0, 0, p.speed, -mo.momz) < SKIM_ANLGE then
+			mo.momx = FixedMul($1, SKIM_FACTOR)
+			mo.momy = FixedMul($1, SKIM_FACTOR)
+			P_SetObjectMomZ(mo, -mo.momz)
+			S_StartSound(mo, sfx_splish)
+			if boss_level and cheats.snolf_shot_on_touch_ground_when_in_boss and snlf.state == STATE_WAITING then
+				snlf.state = STATE_READY
+			end
+		end
+
+		-- check if we landed this turn
+		if mo.eflags & MFE_JUSTHITFLOOR > 0 then
+			--makes bosses easier
+			if boss_level and cheats.snolf_shot_on_touch_ground_when_in_boss and snlf.state == STATE_WAITING then
+				snlf.state = STATE_READY
+			end
+			-- if going fast enough when Snolf hits the ground, bounce
+			if abs(snlf.prev.momz) > BOUNCE_LIMIT and p.playerstate ~= PST_DEAD then
+				P_SetObjectMomZ(mo, FixedMul(snlf.prev.momz, BOUNCE_FACTOR) * (reversed_gravity(mo) and 1 or -1))
+				snlf.p.pflags = $1 | PF_JUMPED
+				-- move slightly off the ground immediately so snolf doesn't
+				-- count as being classed as on the ground for the frame
+				-- otherwise they might be able to do a jump input when they shouldn't
+				P_TeleportMove(mo, mo.x, mo.y, mo.z + (reversed_gravity(mo) and -1 or 1))
+			-- otherwise land
+			else
+				p.pflags = $1 | PF_SPINNING -- force spinning flag
+				override_controls(snlf)
+			end
+		end
+
 		-- try to set a mulligan point
 		if at_rest(snlf) then
 			local mo, mulls = snlf.p.mo, snlf.mull_pts
@@ -732,39 +765,6 @@ addHook("PreThinkFrame", function()
 				table.remove(snlf.save_pts, #snlf.save_pts)
 				S_StartSound(mo, sfx_skid)
 				CONS_Printf(p, "undid save state")
-			end
-		end
-
-		-- skim across water
-		if mo.momz < 0 and p.speed > SKIM_THRESHOLD and mo.eflags & MFE_TOUCHWATER > 0 and
-		R_PointToAngle2(0, 0, p.speed, -mo.momz) < SKIM_ANLGE then
-			mo.momx = FixedMul($1, SKIM_FACTOR)
-			mo.momy = FixedMul($1, SKIM_FACTOR)
-			P_SetObjectMomZ(mo, -mo.momz)
-			S_StartSound(mo, sfx_splish)
-			if boss_level and cheats.snolf_shot_on_touch_ground_when_in_boss and snlf.state == STATE_WAITING then
-				snlf.state = STATE_READY
-			end
-		end
-
-		-- check if we landed this turn
-		if mo.eflags & MFE_JUSTHITFLOOR > 0 then
-			--makes bosses easier
-			if boss_level and cheats.snolf_shot_on_touch_ground_when_in_boss and snlf.state == STATE_WAITING then
-				snlf.state = STATE_READY
-			end
-			-- if going fast enough when Snolf hits the ground, bounce
-			if abs(snlf.prev.momz) > BOUNCE_LIMIT and p.playerstate ~= PST_DEAD then
-				P_SetObjectMomZ(mo, FixedMul(snlf.prev.momz, BOUNCE_FACTOR) * (reversed_gravity(mo) and 1 or -1))
-				snlf.p.pflags = $1 | PF_JUMPED
-				-- move slightly off the ground immediately so snolf doesn't
-				-- count as being classed as on the ground for the frame
-				-- otherwise they might be able to do a jump input when they shouldn't
-				P_TeleportMove(mo, mo.x, mo.y, mo.z + (reversed_gravity(mo) and -1 or 1))
-			-- otherwise land
-			else
-				p.pflags = $1 | PF_SPINNING -- force spinning flag
-				override_controls(snlf)
 			end
 		end
 
