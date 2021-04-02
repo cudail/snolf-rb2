@@ -24,7 +24,7 @@ local cheats = {
 	snolf_air_shot = false,
 	snolf_save_states = false,
 
-	snolf_shot_guide = true,
+	snolf_shot_guide = false,
 
 	snolf_fire_shield = true,
 
