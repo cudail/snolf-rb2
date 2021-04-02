@@ -617,6 +617,7 @@ addHook("PreThinkFrame", function()
 		-- check controls
 		snlf.ctrl.jmp = p.cmd.buttons & BT_JUMP and $1+1 or 0
 		snlf.ctrl.spn = p.cmd.buttons & BT_SPIN and $1+1 or 0
+		snlf.ctrl.up  = p.cmd.forwardmove >  20 and $1+1 or 0
 		snlf.ctrl.ca1 = p.cmd.buttons & BT_CUSTOM1 and $1+1 or 0
 		snlf.ctrl.ca2 = p.cmd.buttons & BT_CUSTOM2 and $1+1 or 0
 		snlf.ctrl.ca3 = p.cmd.buttons & BT_CUSTOM3 and $1+1 or 0
@@ -654,7 +655,7 @@ addHook("PreThinkFrame", function()
 				S_StartSoundAtVolume(mo, sfx_spndsh, 64)
 				snlf.chargegoingback = false
 				snlf.state = STATE_CHARGE1
-				snlf.verticalfirst = false
+				snlf.verticalfirst = snlf.ctrl.up > 0
 			end
 		-- choosing horizontal force
 		elseif snlf.state == STATE_CHARGE1 then
