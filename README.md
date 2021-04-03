@@ -8,13 +8,13 @@ and use the jump button to start charging a shot. Use the jump button again to
 time your shot power.
 
 
+
 ## Installation
 
 Download and install [Sonic Robo Blast 2].
 
-Download the Snolf WAD file. See the Sonic Robo Blast 2 wiki for
-[how to load a WAD file]. Snolf will appear as a separate character in the
-character select
+Download the Snolf WAD file. See the Sonic Robo Blast 2 wiki for [how to load a
+WAD file]. Snolf will appear as a separate character in the character select
 menu.
 
 Sonic Robo Blast 2 does not allow saving with addons loaded by default. In order
@@ -25,82 +25,102 @@ to enable saving use [V_customsave-v1.soc].
 [V_customsave-v1.soc]: https://mb.srb2.org/showthread.php?t=45730
 
 
-## Controls
 
-Snolf cannot move or jump like a normal character. Instead they must take a golf
-swing.
+## Gameplay
+
+Snolf cannot move or jump like a normal character. They can only move via golf.
 
 **Swing:** Aim with the camera and use the Jump button to time your shots'
-horizontal and vertical power.
+horizontal and vertical power. You can also hold the forward button when you
+press Jump to charge vertical power first.
 
 **Mulligan:** Hold the Spin button to undo your last shot. Use this if you get
 stuck.
 
 *Tip:* If the camera is getting caught on a wall use first person view to aim.
 
+You must come to a full stop before you can take your next shot, so choose each
+shot wisely. Because Snolf can be very difficult to control they have infinite
+lives. Snolf is also immune to the spinning fire jets in Red Volcano Zone.
 
-## Commands
 
-Snolf comes with some console commands to allow for some customisation. In a
-multiplayer game commands affect all players, can only be used by admins, and
-are announced in chat when called.
+### Boss Mode
+
+When fighting a boss Snolf gets some extra leeway. Against a boss you can take a
+shot after touching the ground (even if you bounce or roll), after hitting the
+boss or after getting hit by the boss. Bosses also drop six rings when hit.
+These features can be toggled off if you prefer (see below).
+
 
 ### Everybody's Snolf
 
-The command `everybodys_snolf` can will force all character to play like Snolf,
-including characters from other mods. This could potentially be unstable and not
-play nicely with other mods. Use at your own risk. It can be called with no
-argument to toggle Everybody's Snolf mode on or off or called with `on` or `off`
-to enable and disable respectively.
+Snolf isn't just for Snolf. With Everybody's Snolf everybody can snolf. Use the
+`everybodys_snolf` command to get everyone in on the fun. It even works with
+characters from other addons, but I can't guarantee it won't break anything.
 
-By default this mode will also override the default life count portion of the
-heads up display in order to display an altered character name. This behaviour
-can be changed with the `everybodys_snolf_name_override` command. Setting this
-to `0` will return to the HUD to normal. `1` is the default value and shows an
-altered character name. `2` will disable the life count entirely. This is for
-compatibility with other mods. Calling the command without any argument will
-toggle between `0` and `1`.
 
-### Gameplay aids
+### Shot Guide
 
-Because levels can be very difficult to complete with Snolf there are a bunch of
-commands to make the game a bit easier. All commands can be called with `on` to
-disable or `off` to enable, or no argument to toggle.
+If you want some help with aiming your shots you can use the `snolf_shot_guide`
+command to enable a targetting system.
 
-* `snolf_inf_rings`: Ring count forced to 999 (default: off)
-* `snolf_inf_air`: No drowning (default: off)
-* `snolf_death_mulligan`: Return to last resting place on death (default: off)
-* `snolf_ground_control`: Enable steering on the ground (default: off)
-* `snolf_air_shot`: Shots can be taken in the air (default: off)
-* `snolf_save_states`: Enables save states. See next section for details
-(default: off)
-* `snolf_inf_lives`: Extra life is refunded on death (default: on)
-* `snolf_fire_shield`: Protects from spinning fire jets (but not other fire
-damage sources)(default: on)
 
 ### Save states
 
-If `snolf_save_states` is enabled then you save and load the player state with
-the custom action buttons. Custom action 1 saves the current player state,
-custom action 2 loads a state and custom action 3 undoes the last save state.
-The player state includes the player position, momentum, ring count and shot
-charge.
+To help even more, if `snolf_save_states` is enabled then you save and load the
+player state with the custom action buttons. Custom action 1 saves the current
+player state, custom action 2 loads a state and custom action 3 undoes the last
+save state. The player state includes the player position, momentum, ring count
+and shot charge. This is not a full save state like you would have in an
+emulator. It only affects the player and can't be used between dying and
+respawning.
 
-### Boss behaviour
 
-The following commands change behaviour in boss fights to make them a bit easier
-to deal with. Most of these are on by default:
 
-* `snolf_shot_on_hit_boss`: Snolf can take a shot immediately after hitting a
-boss (default on)
-* `snolf_shot_on_hit_by_boss`: Snolf can take a shot immediately after being hit
-by a boss (default on)
-* `snolf_rings_on_hit_boss`: Snolf gets a ring after hitting a boss (default on)
-* `snolf_shot_on_touch_ground_when_in_boss`: When fighting a boss Snolf can take
-a shot immediately after hitting the ground or bouncing, instead of having to
-come to a rest (default on)
-* `snolf_shot_on_touch_wall_when_in_boss`: When fighting a boss Snolf can take a
-shot immediately after hitting a wall (default off)
+## Commands
+
+In addition to the ones mentioned above there are many commands provided to
+let you customise Snolf. Generally commands can be toggled on or off by calling
+them without any argument or can be called followed by `on` or `off`.
+
+In multiplayer games these settings affect all players, can only be used by
+admins, and are announced in chat when activated.
+
+Commands listed have their default value listed after them in square brackets.
+
+
+### Boss Settings
+
+* `snolf_shot_on_hit_boss` [on]: Take a shot immediately after hitting a boss
+* `snolf_shot_on_hit_by_boss` [on]: Take a shot after getting hit by a boss
+* `snolf_rings_on_hit_boss` [on]: Bosses drop rings on hit
+* `snolf_shot_on_touch_ground_when_in_boss` [on]: When fighting a boss Snolf can
+take a shot immediately after touching the ground
+* `snolf_shot_on_touch_wall_when_in_boss` [off]: When fighting a boss Snolf can
+take a shot immediately after touching the ground
+
+
+### Everybody's Snolf
+
+* `everybodys_snolf` [off]: Force all characters to control like Snolf.
+* `everybodys_snolf_name_override` [on]: Changes the name displayed on the life
+counter in the head's up display for non-Snolf characters. Turning it off
+returns the life count display to normal. Can also be set to `2` in to disable
+the life counter entirely.
+
+
+### Other Gameplay Settings
+
+* `snolf_inf_lives` [on]: Extra life is refunded on death
+* `snolf_fire_shield` [on]: Protects from spinning fire jets in Red Volcano
+* `snolf_shot_guide` [off]: Display a shot guide to help aim
+* `snolf_save_states` [off]: Enables save states with the custom action buttons
+* `snolf_inf_air` [off]: No drowning in water or space
+* `snolf_inf_rings` [off]: Ring count forced to 999
+* `snolf_ground_control` [off]: Enable steering on the ground
+* `snolf_death_mulligan` [off]: Return to last resting place on death
+* `snolf_air_shot` [off]: Shots can be taken in the air
+
 
 
 ## Known Issues
