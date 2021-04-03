@@ -28,7 +28,8 @@ to enable saving use [V_customsave-v1.soc].
 
 ## Gameplay
 
-Snolf cannot move or jump like a normal character. They can only move via golf.
+Snolf cannot move or jump like a normal character. They can only move via the
+power of golf.
 
 **Swing:** Aim with the camera and use the Jump button to time your shots'
 horizontal and vertical power. You can also hold the forward button when you
