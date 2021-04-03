@@ -41,40 +41,66 @@ stuck.
 
 ## Commands
 
-Snolf comes with some console commands to allow for some customisation. In a multiplayer game commands affect all players, can only be used by admins, and are announced in chat when called.
+Snolf comes with some console commands to allow for some customisation. In a
+multiplayer game commands affect all players, can only be used by admins, and
+are announced in chat when called.
 
 ### Everybody's Snolf
 
-The command `everybodys_snolf` can will force all character to play like Snolf, including characters from other mods. This could potentially be unstable and not play nicely with other mods. Use at your own risk. It can be called with no argument to toggle Everybody's Snolf mode on or off or called with `on` or `off` to enable and disable respectively.
+The command `everybodys_snolf` can will force all character to play like Snolf,
+including characters from other mods. This could potentially be unstable and not
+play nicely with other mods. Use at your own risk. It can be called with no
+argument to toggle Everybody's Snolf mode on or off or called with `on` or `off`
+to enable and disable respectively.
 
-By default this mode will also override the default life count portion of the heads up display in order to display an altered character name. This behaviour can be changed with the `everybodys_snolf_name_override` command. Setting this to `0` will return to the HUD to normal. `1` is the default value and shows an altered character name. `2` will disable the life count entirely. This is for compatibility with other mods. Calling the command without any argument will toggle between `0` and `1`.
+By default this mode will also override the default life count portion of the
+heads up display in order to display an altered character name. This behaviour
+can be changed with the `everybodys_snolf_name_override` command. Setting this
+to `0` will return to the HUD to normal. `1` is the default value and shows an
+altered character name. `2` will disable the life count entirely. This is for
+compatibility with other mods. Calling the command without any argument will
+toggle between `0` and `1`.
 
 ### Gameplay aids
 
-Because levels can be very difficult to complete with Snolf there are a bunch of commands to make the game a bit easier. All commands can be called with `on` to disable or `off` to enable, or no argument to toggle.
+Because levels can be very difficult to complete with Snolf there are a bunch of
+commands to make the game a bit easier. All commands can be called with `on` to
+disable or `off` to enable, or no argument to toggle.
 
 * `snolf_inf_rings`: Ring count forced to 999 (default: off)
 * `snolf_inf_air`: No drowning (default: off)
 * `snolf_death_mulligan`: Return to last resting place on death (default: off)
 * `snolf_ground_control`: Enable steering on the ground (default: off)
 * `snolf_air_shot`: Shots can be taken in the air (default: off)
-* `snolf_save_states`: Enables save states. See next section for details (default: off)
+* `snolf_save_states`: Enables save states. See next section for details
+(default: off)
 * `snolf_inf_lives`: Extra life is refunded on death (default: on)
-* `snolf_fire_shield`: Protects from spinning fire jets (but not other fire damage sources) (default: on)
+* `snolf_fire_shield`: Protects from spinning fire jets (but not other fire
+damage sources)(default: on)
 
 ### Save states
 
-If `snolf_save_states` is enabled then you save and load the player state with the custom action buttons. Custom action 1 saves the current player state, custom action 2 loads a state and custom action 3 undoes the last save state. The player state includes the player position, momentum, ring count and shot charge.
+If `snolf_save_states` is enabled then you save and load the player state with
+the custom action buttons. Custom action 1 saves the current player state,
+custom action 2 loads a state and custom action 3 undoes the last save state.
+The player state includes the player position, momentum, ring count and shot
+charge.
 
 ### Boss behaviour
 
-The following commands change behaviour in boss fights to make them a bit easier to deal with. Most of these are on by default:
+The following commands change behaviour in boss fights to make them a bit easier
+to deal with. Most of these are on by default:
 
-* `snolf_shot_on_hit_boss`: Snolf can take a shot immediately after hitting a boss (default on)
-* `snolf_shot_on_hit_by_boss`: Snolf can take a shot immediately after being hit by a boss (default on)
+* `snolf_shot_on_hit_boss`: Snolf can take a shot immediately after hitting a
+boss (default on)
+* `snolf_shot_on_hit_by_boss`: Snolf can take a shot immediately after being hit
+by a boss (default on)
 * `snolf_rings_on_hit_boss`: Snolf gets a ring after hitting a boss (default on)
-* `snolf_shot_on_touch_ground_when_in_boss`: When fighting a boss Snolf can take a shot immediately after hitting the ground or bouncing, instead of having to come to a rest (default on)
-* `snolf_shot_on_touch_wall_when_in_boss`: When fighting a boss Snolf can take a shot immediately after hitting a wall (default off)
+* `snolf_shot_on_touch_ground_when_in_boss`: When fighting a boss Snolf can take
+a shot immediately after hitting the ground or bouncing, instead of having to
+come to a rest (default on)
+* `snolf_shot_on_touch_wall_when_in_boss`: When fighting a boss Snolf can take a
+shot immediately after hitting a wall (default off)
 
 
 ## Known Issues
@@ -92,26 +118,29 @@ Inspired by the original Snolf ROM hacks by [Melon].
 
 Character portrait by [Mike Tona].
 
-Made using the [Sonic Robo Blast 2 Custom Character Preset] by Blu The Hedgehog.
+Made using the [Sonic Robo Blast 2 Character Preset] by Blu The Hedgehog.
 
 Life count icon from Mario Golf: Advance Tour.
 
 [Caoimhe Ní Chaoimh]: https://oakreef.ie/
 [Melon]: https://melon.zone/
 [Mike Tona]: https://miketona.carrd.co/
-[Sonic Robo Blast 2 Custom Character Preset]: https://gamebanana.com/skins/181950
+[Sonic Robo Blast 2 Character Preset]: https://gamebanana.com/skins/181950
 
 
 ## Changelog
 
 v2.10
 * Added shot guide that can be activated with snolf_shot_guide
-* Added the ability to  charge vertical shot power first by holding forward when pressing jump
-* Disable jump inputs while taking a shot so other characters abilties don't interfere with Everybody's Snolf
+* Added the ability to  charge vertical shot power first by holding forward when
+pressing jump
+* Disable jump inputs while taking a shot so other characters abilties don't
+interfere with Everybody's Snolf
 * Adjustments to how names are set in Everybody's Snolf
 * Prevent mulligan points from being set when moving on a coveyor belt
 * Fixed sounds not playing from the right source
-* Fixed Snolf being able to take a shot after bouncing on the ground with no horizontal momentum
+* Fixed Snolf being able to take a shot after bouncing on the ground with no
+horizontal momentum
 
 v2.9
 * Player state is no longer forced to S_PLAY_ROLL in NiGHTS mode, if player
@@ -142,7 +171,8 @@ v2.6
 v2.5
 * Snolf can jump off rollout rocks again
 * Bosses drop rings when hit
-* Changed boss mechanics to work for any level that contains a boss object, not just hardcoded levels
+* Changed boss mechanics to work for any level that contains a boss object, not
+just hardcoded levels
 * Added commands to toggle Snolf boss mechanics
 * Allow commands to be called with arguments "on", "off", "true" and "false"
 
@@ -160,16 +190,21 @@ v2.3
 * Restored spindash behaviour for charging shots
 
 v2.2
-* Fixed Snolf bouncing off steep slopes like quarter- and half-pipes instead of going off them as expected
+* Fixed Snolf bouncing off steep slopes like quarter- and half-pipes instead of
+going off them as expected
 * Changed how characters with 0 jumpfactor are handled in collisions
 
 v2.1
-* Fixed commands displaying an unhelpful error message instead of the correct help message if used with the wrong arguments
-* Fix everybodys_snolf_name_override help message displaying for all users instead of just the user trying to use the command
+* Fixed commands displaying an unhelpful error message instead of the correct
+help message if used with the wrong arguments
+* Fix everybodys_snolf_name_override help message displaying for all users
+instead of just the user trying to use the command
 
 v2.0
-* Complete rewrite of Lua script using coroutines, metatables and instance methods to streamline the code
-* Large second rewrite of Lua script when I realised that coroutines, metatables and instance methods were incompatible with netplay
+* Complete rewrite of Lua script using coroutines, metatables and instance
+methods to streamline the code
+* Large second rewrite of Lua script when I realised that coroutines, metatables
+and instance methods were incompatible with netplay
 * Snolf players can now collide with each other
 * Snolf can skim along the surface of water
 * Time it takes to mulligan reduced to one second
