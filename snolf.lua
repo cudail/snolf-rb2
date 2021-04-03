@@ -10,7 +10,7 @@ local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, is_snolf,
 	sinusoidal_scale, get_charge_increment, in_black_core, allow_air_snolf,
 	cheat_toggle, snolfify_name, is_snolf_setup, override_controls, are_touching,
 	on_hit_boss, calculate_weight, is_anyone_snolf, reversed_gravity, print2,
-	draw_trajectory, shot_charge
+	draw_trajectory, shot_charge, update_state
 
 local cheats = {
 	everybodys_snolf = false,
@@ -81,6 +81,7 @@ snolf_setup = function(player)
 		p = player,
 		-- Snolf shot state
 		state = STATE_WAITING,
+		statetimer = 0,
 		hdrive = 0,
 		vdrive = 0,
 		chargegoingback = false,
@@ -107,7 +108,7 @@ reset_state = function(snlf, leave_mulls)
 	snlf.prev = { momz = 0 }
 	snlf.hdrive = 0
 	snlf.vdrive = 0
-	snlf.state = STATE_WAITING
+	update_state(snlf, STATE_WAITING)
 	if not leave_mulls then
 		snlf.mull_pts = {}
 	end
@@ -374,7 +375,7 @@ on_hit_boss = function(boss, player_hopefully)
 
 		if cheats.snolf_shot_on_hit_boss then
 			if is_snolf_setup(player.mo) and player.snolf.state == STATE_WAITING then
-				player.snolf.state = STATE_READY
+				update_state(player.snolf, STATE_READY)
 			end
 		end
 	end
@@ -522,6 +523,12 @@ shot_charge = function(snlf, vertical)
 end
 
 
+update_state = function(snolf, state)
+	snolf.state = state
+	snolf.statetimer = 0
+end
+
+
 -------------------
 -- HUD functions --
 -------------------
@@ -631,11 +638,6 @@ addHook("PreThinkFrame", function()
 		snlf.ctrl.ca2 = p.cmd.buttons & BT_CUSTOM2 and $1+1 or 0
 		snlf.ctrl.ca3 = p.cmd.buttons & BT_CUSTOM3 and $1+1 or 0
 
-		-- eat jump inputs entirely if Everybody's Snolf is enabled
-		if is_snolf(mo) and snlf.state != STATE_WAITING then
-			p.cmd.buttons = $1 & (!BT_JUMP)
-		end
-
 		-- skim across water
 		if mo.momz < 0 and p.speed > SKIM_THRESHOLD and mo.eflags & MFE_TOUCHWATER > 0 and
 		R_PointToAngle2(0, 0, p.speed, -mo.momz) < SKIM_ANLGE then
@@ -644,7 +646,7 @@ addHook("PreThinkFrame", function()
 			P_SetObjectMomZ(mo, -mo.momz)
 			S_StartSound(mo, sfx_splish)
 			if boss_level and cheats.snolf_shot_on_touch_ground_when_in_boss and snlf.state == STATE_WAITING then
-				snlf.state = STATE_READY
+				update_state(snlf, STATE_READY)
 			end
 		end
 
@@ -652,7 +654,7 @@ addHook("PreThinkFrame", function()
 		if mo.eflags & MFE_JUSTHITFLOOR > 0 then
 			--makes bosses easier
 			if boss_level and cheats.snolf_shot_on_touch_ground_when_in_boss and snlf.state == STATE_WAITING then
-				snlf.state = STATE_READY
+				update_state(snlf, STATE_READY)
 			end
 			-- if going fast enough when Snolf hits the ground, bounce
 			if abs(snlf.prev.momz) > BOUNCE_LIMIT and p.playerstate ~= PST_DEAD then
@@ -690,7 +692,7 @@ addHook("PreThinkFrame", function()
 		if snlf.state == STATE_WAITING then
 			--allow a shot to happen
 			if at_rest(snlf) or allow_air_snolf(snlf) then
-				snlf.state = STATE_READY
+				update_state(snlf, STATE_READY)
 				override_controls(snlf)
 			end
 		-- ready to start taking a shot
@@ -701,7 +703,7 @@ addHook("PreThinkFrame", function()
 				snlf.vdrive = 1
 				S_StartSoundAtVolume(mo, sfx_spndsh, 64)
 				snlf.chargegoingback = false
-				snlf.state = STATE_CHARGE1
+				update_state(snlf, STATE_CHARGE1)
 				snlf.verticalfirst = snlf.ctrl.up > 0
 			end
 		-- choosing horizontal force
@@ -710,7 +712,7 @@ addHook("PreThinkFrame", function()
 			if snlf.ctrl.jmp == 1 then
 				S_StartSoundAtVolume(mo, sfx_spndsh, 100)
 				snlf.chargegoingback = false
-				snlf.state = STATE_CHARGE2
+				update_state(snlf, STATE_CHARGE2)
 			else
 				shot_charge(snlf, snlf.verticalfirst)
 			end
@@ -731,7 +733,7 @@ addHook("PreThinkFrame", function()
 					snlf.shotcount = $1 + 1
 				end
 
-				snlf.state = STATE_WAITING
+				update_state(snlf, STATE_WAITING)
 			else
 				shot_charge(snlf, not snlf.verticalfirst)
 			end
@@ -809,8 +811,17 @@ addHook("PreThinkFrame", function()
 			end
 		end
 
+		-- eat jump inputs entirely so other characters can't use jump abilties
+		-- while taking a shot when using Everybody's Snolf
+		if snlf.state != STATE_WAITING or snlf.statetimer < TICRATE/5 then
+			p.cmd.buttons = $1 & (!BT_JUMP)
+		end
+
 		-- store certain state attributes so we can check for changes next tick
 		snlf.prev.momz = player.mo.momz
+
+		-- state timer
+		snlf.statetimer = $1 + 1
 	end
 end)
 
@@ -887,7 +898,7 @@ addHook("MobjMoveBlocked", function(mo)
 	if boss_level and cheats.snolf_shot_on_touch_wall_when_in_boss then
 		local player = mo.player
 		if is_snolf_setup(mo) and player.snolf.state == STATE_WAITING then
-			player.snolf.state = STATE_READY
+			update_state(player.snolf, STATE_READY)
 		end
 	end
 
@@ -967,7 +978,7 @@ addHook("MobjDamage", function(target, inflictor, source, damage, damagetype)
 		or (  inflictor ~= nil and ( inflictor.type >= MT_BOSSEXPLODE and inflictor.type <= MT_MSGATHER ) ) then
 
 		if is_snolf_setup(player.mo) and player.snolf.state == STATE_WAITING then
-			player.snolf.state = STATE_READY
+			update_state(player.snolf, STATE_READY)
 		end
 	end
 end, MT_PLAYER)
