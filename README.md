@@ -45,12 +45,12 @@ shot wisely. Because Snolf can be very difficult to control they have infinite
 lives. Snolf is also immune to the spinning fire jets in Red Volcano Zone.
 
 
-### Boss Mode
+### Boss mode
 
 When fighting a boss Snolf gets some extra leeway. Against a boss you can take a
 shot after touching the ground (even if you bounce or roll), after hitting the
 boss or after getting hit by the boss. Bosses also drop six rings when hit.
-These features can be toggled off if you prefer (see below).
+These features can be toggled off if you prefer (see commands section below).
 
 
 ### Everybody's Snolf
@@ -60,7 +60,7 @@ Snolf isn't just for Snolf. With Everybody's Snolf everybody can snolf. Use the
 characters from other addons, but I can't guarantee it won't break anything.
 
 
-### Shot Guide
+### Shot guide
 
 If you want some help with aiming your shots you can use the `snolf_shot_guide`
 command to enable a targetting system.
@@ -90,7 +90,7 @@ admins, and are announced in chat when activated.
 Commands listed have their default value listed after them in square brackets.
 
 
-### Boss Settings
+### Boss settings
 
 * `snolf_shot_on_hit_boss` [on]: Take a shot immediately after hitting a boss
 * `snolf_shot_on_hit_by_boss` [on]: Take a shot after getting hit by a boss
@@ -110,7 +110,7 @@ returns the life count display to normal. Can also be set to `2` in to disable
 the life counter entirely.
 
 
-### Other Gameplay Settings
+### Other gameplay settings
 
 * `snolf_inf_lives` [on]: Extra life is refunded on death
 * `snolf_fire_shield` [on]: Protects from spinning fire jets in Red Volcano
@@ -124,7 +124,7 @@ the life counter entirely.
 
 
 
-## Known Issues
+## Known issues
 
 * Sometimes Snolf will get stuck unable to shoot while on a conveyor belt,
 especially when on the edge of one. If this happens all the player can do is
