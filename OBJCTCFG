@@ -1,12 +1,14 @@
 Character
 SkinName = Snolf
 DisplayName = Snolf
-TagTextColor = SKINCOLOR_APRICOT
-TagOutlineColor = SKINCOLOR_RASPBERRY
+TagTextColor = SKINCOLOR_VIOLET
+TagOutlineColor = SKINCOLOR_NEON
 OppositeColor = SKINCOLOR_RASPBERRY
-PlayerText = Snolf cannot move normally and controls like a golf game. Aim with the camera and use the jump button to time your shots' horizontal and vertical power.
+PlayerText = Snolf can only move via the power of golf.
+
+Aim with the camera and use the Jump button to time your shots' horizontal and vertical power. Hold forward to charge vertical power first.
 
 ^1Ability:^0 Mulligan
-Hold the spin button to undo your last shot.
+Hold the Spin button to undo your last shot.
 
-^9Tip:^0 If the camera is getting caught on a wall use first person view to aim.
+^9Tip:^0 If the camera is getting caught on a wall use the first person view to aim.
