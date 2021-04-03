@@ -104,6 +104,15 @@ Life count icon from Mario Golf: Advance Tour.
 
 ## Changelog
 
+v2.10
+* Added shot guide that can be activated with snolf_shot_guide
+* Added the ability to  charge vertical shot power first by holding forward when pressing jump
+* Disable jump inputs while taking a shot so other characters abilties don't interfere with Everybody's Snolf
+* Adjustments to how names are set in Everybody's Snolf
+* Prevent mulligan points from being set when moving on a coveyor belt
+* Fixed sounds not playing from the right source
+* Fixed Snolf being able to take a shot after bouncing on the ground with no horizontal momentum
+
 v2.9
 * Player state is no longer forced to S_PLAY_ROLL in NiGHTS mode, if player
 sprite is set to SPR_NULL or for non-Snolf characters during death animation
