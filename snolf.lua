@@ -922,7 +922,7 @@ addHook("MobjDeath", function(mo)
 	if cheats.snolf_inf_lives then
 		mo.player.lives = $1 + 1
 	end
-end)
+end, MT_PLAYER)
 
 
 -- reset state when a new map is loaded
