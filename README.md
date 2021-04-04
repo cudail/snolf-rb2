@@ -151,6 +151,13 @@ Life count icon from Mario Golf: Advance Tour.
 
 ## Changelog
 
+v2.11
+* New signpost/save file sprite
+* Changed character select colour scheme
+* Snolf now leaves a dust trail when rolling
+* Updated the on death hook to only run for player objects
+* Check for SF_MACHINE flag when calculating character weights
+
 v2.10
 * Added shot guide that can be activated with snolf_shot_guide
 * Added the ability to  charge vertical shot power first by holding forward when
