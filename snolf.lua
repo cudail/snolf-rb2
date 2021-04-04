@@ -476,10 +476,10 @@ calculate_weight = function(mo)
 
 	-- try to guess if the character is a robot, Robotnik or Milne
 	-- if so, double their weight
-	local name = string.lower(skins[mo.skin].realname)
-	if string.find(name,'metal')~=nil or string.find(name,'gamma')~=nil or
-		string.find(name,'omega')~=nil or string.find(name,'robo')~=nil or
-		string.find(name,'milne')~=nil or string.find(name,'eggman')~=nil then
+	local skin = skins[mo.skin]
+	local name = string.lower(skin.realname)
+	if skin.flags & SF_MACHINE > 0 or string.find(name,'milne') or
+		string.find(name,'eggman') or string.find(name,'robotnik') then
 		mass = $1*2
 	end
 
