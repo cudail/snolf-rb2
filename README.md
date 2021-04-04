@@ -152,7 +152,8 @@ Life count icon from Mario Golf: Advance Tour.
 ## Changelog
 
 v2.12
-* Shield and air abilities (thok, etc.) can no longer be used after bouncing.
+* Shield and air abilities (thok, etc.) can no longer be used after bouncing
+* Change text highlight colours on character select screen
 
 v2.11
 * New signpost/save file sprite
