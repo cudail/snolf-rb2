@@ -8,5 +8,6 @@ normalspeed = 10000
 accelstart = 0
 acceleration = 0
 prefcolor = Blue
+prefoppositecolor = Forest
 Supercolor = Gold
 jumpfactor = 1
