@@ -11,3 +11,4 @@ prefcolor = Blue
 prefoppositecolor = Forest
 Supercolor = Gold
 jumpfactor = 1
+spinitem = MT_DUST
