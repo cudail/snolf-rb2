@@ -8,11 +8,11 @@ sfxinfo[sfx_msnolf].caption = "Anomalous Metal Snolf"
 local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, is_snolf,
 	at_rest, take_a_mulligan, same_position, snolf_setup, reset_state,
 	sinusoidal_scale, get_charge_increment, in_black_core, allow_air_snolf,
-	cheat_toggle, snolfify_name, is_snolf_setup, override_controls, are_touching,
+	option_toggle, snolfify_name, is_snolf_setup, override_controls, are_touching,
 	on_hit_boss, calculate_weight, is_anyone_snolf, reversed_gravity, print2,
 	draw_trajectory, shot_charge, update_state
 
-local cheats = {
+local options = {
 	everybodys_snolf = false,
 	everybodys_snolf_name_override = 1,
 
@@ -116,7 +116,7 @@ end
 
 
 is_snolf = function(mo)
-	return mo and mo.skin and (mo.skin == "snolf" or cheats.everybodys_snolf)
+	return mo and mo.skin and (mo.skin == "snolf" or options.everybodys_snolf)
 end
 
 
@@ -228,8 +228,8 @@ end
 
 -- situations where we want Snolf to be able to shoot mid-air
 allow_air_snolf = function(snlf)
-	-- air snolf cheat
-	if cheats.snolf_air_shot then
+	-- air snolf option
+	if options.snolf_air_shot then
 		return true
 	end
 	-- Super Snolf
@@ -250,7 +250,7 @@ override_controls = function(snlf)
 	if player.charability2 == CA2_SPINDASH then
 		player.charability2 = CA2_NONE --disable spindash
 	end
-	if cheats.snolf_ground_control and snlf.state == STATE_WAITING then
+	if options.snolf_ground_control and snlf.state == STATE_WAITING then
 		player.accelstart = 96
 		player.acceleration = 40
 	else
@@ -272,19 +272,19 @@ are_touching = function(play1, play2)
 end
 
 
-cheat_toggle = function(cheat_name, arg, player)
-	local current_bool = cheats[cheat_name]
+option_toggle = function(option_name, arg, player)
+	local current_bool = options[option_name]
 	if arg == nil then
-		cheats[cheat_name] = not $1
+		options[option_name] = not $1
 	elseif arg == "0" or arg == "off" or arg == "false" then
-		cheats[cheat_name] = false
+		options[option_name] = false
 	elseif arg == "1" or arg == "on" or arg == "true" then
-		cheats[cheat_name] = true
+		options[option_name] = true
 	else
-		CONS_Printf(player, cheat_name.." should be called with either 'on', 'off', or no argument")
+		CONS_Printf(player, option_name.." should be called with either 'on', 'off', or no argument")
 		return
 	end
-	print2(cheat_name.." has been "..(cheats[cheat_name] and "enabled" or "disabled")..".")
+	print2(option_name.." has been "..(options[option_name] and "enabled" or "disabled")..".")
 end
 
 
@@ -373,7 +373,7 @@ on_hit_boss = function(boss, player_hopefully)
 			continue
 		end
 
-		if cheats.snolf_shot_on_hit_boss then
+		if options.snolf_shot_on_hit_boss then
 			if is_snolf_setup(player.mo) and player.snolf.state == STATE_WAITING then
 				update_state(player.snolf, STATE_READY)
 			end
@@ -517,7 +517,7 @@ shot_charge = function(snlf, vertical)
 		snlf.hdrive = $1 + increment
 	end
 
-	if cheats.snolf_shot_guide then
+	if options.snolf_shot_guide then
 		draw_trajectory(snlf)
 	end
 end
@@ -576,7 +576,7 @@ end, "game")
 -- everybody's snolf life icon
 hud.add ( function(v, player, camera)
 
-	if cheats.everybodys_snolf and cheats.everybodys_snolf_name_override == 1 and
+	if options.everybodys_snolf and options.everybodys_snolf_name_override == 1 and
 		player.mo and player.mo.skin then
 
 		local life_x = v.getSpritePatch(SPR_SFHX)
@@ -645,7 +645,7 @@ addHook("PreThinkFrame", function()
 			mo.momy = FixedMul($1, SKIM_FACTOR)
 			P_SetObjectMomZ(mo, -mo.momz)
 			S_StartSound(mo, sfx_splish)
-			if boss_level and cheats.snolf_shot_on_touch_ground_when_in_boss and snlf.state == STATE_WAITING then
+			if boss_level and options.snolf_shot_on_touch_ground_when_in_boss and snlf.state == STATE_WAITING then
 				update_state(snlf, STATE_READY)
 			end
 		end
@@ -653,7 +653,7 @@ addHook("PreThinkFrame", function()
 		-- check if we landed this turn
 		if mo.eflags & MFE_JUSTHITFLOOR > 0 then
 			--makes bosses easier
-			if boss_level and cheats.snolf_shot_on_touch_ground_when_in_boss and snlf.state == STATE_WAITING then
+			if boss_level and options.snolf_shot_on_touch_ground_when_in_boss and snlf.state == STATE_WAITING then
 				update_state(snlf, STATE_READY)
 			end
 			-- if going fast enough when Snolf hits the ground, bounce
@@ -746,7 +746,7 @@ addHook("PreThinkFrame", function()
 		end
 
 		-- save and load player state manually
-		if cheats.snolf_save_states then
+		if options.snolf_save_states then
 			-- save player state
 			if snlf.ctrl.ca1 == 1 then
 				if #snlf.save_pts > 9 then
@@ -794,14 +794,14 @@ addHook("PreThinkFrame", function()
 			p.jumpfactor = skins[mo.skin].jumpfactor
 		end
 
-		-- infinite rings cheat
-		if cheats.snolf_inf_rings then
+		-- infinite rings option
+		if options.snolf_inf_rings then
 			p.xtralife = 99
 			p.rings = 999
 		end
 
-		-- no drowning cheat
-		if cheats.snolf_inf_air then
+		-- no drowning option
+		if options.snolf_inf_air then
 			if p.powers[pw_underwater] > 0 then
 				p.powers[pw_underwater] = WATER_AIR_TIMER
 				P_RestoreMusic(p)
@@ -900,7 +900,7 @@ addHook("MobjMoveBlocked", function(mo)
 	end
 
 	--let player take a shot if they bounce off walls while fighting a boss
-	if boss_level and cheats.snolf_shot_on_touch_wall_when_in_boss then
+	if boss_level and options.snolf_shot_on_touch_wall_when_in_boss then
 		local player = mo.player
 		if is_snolf_setup(mo) and player.snolf.state == STATE_WAITING then
 			update_state(player.snolf, STATE_READY)
@@ -921,10 +921,10 @@ end, MT_PLAYER)
 -- reset state on death
 addHook("MobjDeath", function(mo)
 	if not is_snolf_setup(mo) then return false end
-	reset_state(mo.player.snolf, cheats.snolf_death_mulligan)
+	reset_state(mo.player.snolf, options.snolf_death_mulligan)
 
-	-- infinite lives cheat
-	if cheats.snolf_inf_lives then
+	-- infinite lives option
+	if options.snolf_inf_lives then
 		mo.player.lives = $1 + 1
 	end
 end, MT_PLAYER)
@@ -955,9 +955,9 @@ addHook("MapLoad", function(mapnumber)
 end)
 
 
--- cheat to return to last spot on death
+-- option to return to last spot on death
 addHook("PlayerSpawn", function(player)
-	if is_snolf_setup(player.mo) and cheats.snolf_death_mulligan then
+	if is_snolf_setup(player.mo) and options.snolf_death_mulligan then
 		take_a_mulligan(player.snolf, player.snolf.mull_pts, true)
 	end
 end)
@@ -974,7 +974,7 @@ addHook("MobjCollide", on_hit_boss, MT_METALSONIC_BATTLE)
 
 --allow player to take a shot after they've been hit by a boss
 addHook("MobjDamage", function(target, inflictor, source, damage, damagetype)
-	if not target or not target.player or not cheats.snolf_shot_on_hit_by_boss then
+	if not target or not target.player or not options.snolf_shot_on_hit_by_boss then
 		return
 	end
 
@@ -997,7 +997,7 @@ addHook("BossThinker", function(boss)
 		bosses_health[boss] = boss.health
 
 		-- boss drops rings
-		if is_anyone_snolf() and cheats.snolf_rings_on_hit_boss then
+		if is_anyone_snolf() and options.snolf_rings_on_hit_boss then
 			S_StartSound(boss, sfx_s3kb9)
 			for i=0, 5 do
 				local ring = P_SpawnMobjFromMobj(boss, 0,0,0, MT_FLINGRING)
@@ -1022,7 +1022,7 @@ end)
 
 addHook("MobjDamage", function(player, inflictor, source, damage, damagetype)
 	-- Snolf has an asbestos suit because Red Volcano is almost impossible
-	if cheats.snolf_fire_shield and inflictor and
+	if options.snolf_fire_shield and inflictor and
 		inflictor.type ==  MT_FLAMEJETFLAMEB and is_snolf(player) then
 		return true
 	end
@@ -1063,7 +1063,7 @@ end)
 
 --sync game state when joining game
 addHook("NetVars", function(network)
-    cheats = network($)
+    options = network($)
 	bosses_health = network($)
 	boss_level = network($)
 	metal_snolf_race = network($)
@@ -1077,7 +1077,7 @@ end)
 --------------
 
 COM_AddCommand("everybodys_snolf", function(player, arg)
-	cheat_toggle("everybodys_snolf", arg, player)
+	option_toggle("everybodys_snolf", arg, player)
 	-- restore character stats
 	for player in players.iterate do
 		if player.mo and not is_snolf(player.mo) then
@@ -1089,7 +1089,7 @@ COM_AddCommand("everybodys_snolf", function(player, arg)
 		end
 	end
 
-	if cheats.everybodys_snolf and cheats.everybodys_snolf_name_override > 0 then
+	if options.everybodys_snolf and options.everybodys_snolf_name_override > 0 then
 		hud.disable("lives")
 	else
 		hud.enable("lives")
@@ -1099,19 +1099,19 @@ end, COM_ADMIN)
 
 COM_AddCommand("everybodys_snolf_name_override", function(player, arg)
 	if arg == nil then
-		cheats.everybodys_snolf_name_override = $1 == 0 and 1 or 0
+		options.everybodys_snolf_name_override = $1 == 0 and 1 or 0
 	elseif arg == "0" or arg == "off" or arg == "false" then
-		cheats.everybodys_snolf_name_override = 0
+		options.everybodys_snolf_name_override = 0
 	elseif arg == "1" or arg == "on" or arg == "true" then
-		cheats.everybodys_snolf_name_override = 1
+		options.everybodys_snolf_name_override = 1
 	elseif arg == "2" then
-		cheats.everybodys_snolf_name_override = 2
+		options.everybodys_snolf_name_override = 2
 	else
 		CONS_Printf(player, "everybodys_snolf_name_override should be called with either 0, 1, 2 or no argument")
 	end
-	print2("everybodys_snolf_name_override has been "..(cheats.everybodys_snolf_name_override > 0 and "enabled" or "disabled")..".")
+	print2("everybodys_snolf_name_override has been "..(options.everybodys_snolf_name_override > 0 and "enabled" or "disabled")..".")
 
-	if cheats.everybodys_snolf and cheats.everybodys_snolf_name_override > 0 then
+	if options.everybodys_snolf and options.everybodys_snolf_name_override > 0 then
 		hud.disable("lives")
 	else
 		hud.enable("lives")
@@ -1120,57 +1120,57 @@ end, COM_ADMIN)
 
 
 COM_AddCommand("snolf_inf_rings", function(player, arg)
-	cheat_toggle("snolf_inf_rings", arg, player)
+	option_toggle("snolf_inf_rings", arg, player)
 end, COM_ADMIN)
 
 COM_AddCommand("snolf_inf_lives", function(player, arg)
-	cheat_toggle("snolf_inf_lives", arg, player)
+	option_toggle("snolf_inf_lives", arg, player)
 end, COM_ADMIN)
 
 COM_AddCommand("snolf_inf_air", function(player, arg)
-	cheat_toggle("snolf_inf_air", arg, player)
+	option_toggle("snolf_inf_air", arg, player)
 end, COM_ADMIN)
 
 COM_AddCommand("snolf_death_mulligan", function(player, arg)
-	cheat_toggle("snolf_death_mulligan", arg, player)
+	option_toggle("snolf_death_mulligan", arg, player)
 end, COM_ADMIN)
 
 COM_AddCommand("snolf_ground_control", function(player, arg)
-	cheat_toggle("snolf_ground_control", arg, player)
+	option_toggle("snolf_ground_control", arg, player)
 end, COM_ADMIN)
 
 COM_AddCommand("snolf_air_shot", function(player, arg)
-	cheat_toggle("snolf_air_shot", arg, player)
+	option_toggle("snolf_air_shot", arg, player)
 end, COM_ADMIN)
 
 COM_AddCommand("snolf_shot_guide", function(player, arg)
-	cheat_toggle("snolf_shot_guide", arg, player)
+	option_toggle("snolf_shot_guide", arg, player)
 end, COM_ADMIN)
 
 COM_AddCommand("snolf_fire_shield", function(player, arg)
-	cheat_toggle("snolf_fire_shield", arg, player)
+	option_toggle("snolf_fire_shield", arg, player)
 end, COM_ADMIN)
 
 COM_AddCommand("snolf_save_states", function(player, arg)
-	cheat_toggle("snolf_save_states", arg, player)
+	option_toggle("snolf_save_states", arg, player)
 end, COM_ADMIN)
 
 COM_AddCommand("snolf_shot_on_hit_boss", function(player, arg)
-	cheat_toggle("snolf_shot_on_hit_boss", arg, player)
+	option_toggle("snolf_shot_on_hit_boss", arg, player)
 end, COM_ADMIN)
 
 COM_AddCommand("snolf_shot_on_hit_by_boss", function(player, arg)
-	cheat_toggle("snolf_shot_on_hit_by_boss", arg, player)
+	option_toggle("snolf_shot_on_hit_by_boss", arg, player)
 end, COM_ADMIN)
 
 COM_AddCommand("snolf_rings_on_hit_boss", function(player, arg)
-	cheat_toggle("snolf_rings_on_hit_boss", arg, player)
+	option_toggle("snolf_rings_on_hit_boss", arg, player)
 end, COM_ADMIN)
 
 COM_AddCommand("snolf_shot_on_touch_ground_when_in_boss", function(player, arg)
-	cheat_toggle("snolf_shot_on_touch_ground_when_in_boss", arg, player)
+	option_toggle("snolf_shot_on_touch_ground_when_in_boss", arg, player)
 end, COM_ADMIN)
 
 COM_AddCommand("snolf_shot_on_touch_wall_when_in_boss", function(player, arg)
-	cheat_toggle("snolf_shot_on_touch_wall_when_in_boss", arg, player)
+	option_toggle("snolf_shot_on_touch_wall_when_in_boss", arg, player)
 end, COM_ADMIN)
