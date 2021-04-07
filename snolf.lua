@@ -97,7 +97,7 @@ snolf_setup = function(player)
 		shotcount = 0,
 		mullcount = 0,
 		--collision check
-		collided = false
+		collided = nil
 	}
 end
 
@@ -837,8 +837,8 @@ addHook("ThinkFrame", function()
 				not play1.snolf.collided and not play2.snolf.collided and
 				are_touching(play1, play2) then
 
-				play1.snolf.collided = true
-				play2.snolf.collided = true
+				play1.snolf.collided = play2
+				play2.snolf.collided = play1
 
 				local mo1, mo2 = play1.mo, play2.mo
 
@@ -880,7 +880,12 @@ addHook("PostThinkFrame", function()
 			player.mo.state = S_PLAY_ROLL
 		end
 
-		player.snolf.collided = false
+		if player.snolf.collided then
+			if not are_touching(player, player.snolf.collided) then
+				player.snolf.collided.snolf.collided = nil
+				player.snolf.collided = nil
+			end
+		end
 	end
 end)
 
