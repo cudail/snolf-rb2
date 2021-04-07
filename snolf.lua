@@ -142,8 +142,10 @@ end
 
 at_rest = function(snlf)
 	-- player is on the ground and not on a waterslide and not moving
+	local momx = snlf.p.mo.momx - snlf.p.cmomx
+	local momy = snlf.p.mo.momy - snlf.p.cmomy
 	return P_IsObjectOnGround(snlf.p.mo) and snlf.p.pflags & PF_SLIDING == 0 and
-		snlf.p.speed == 0 and snlf.p.mo.momz == 0
+		momx == 0 and momy == 0
 end
 
 
