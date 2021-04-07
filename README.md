@@ -124,13 +124,6 @@ the life counter entirely.
 
 
 
-## Known issues
-
-* Sometimes Snolf will get stuck unable to shoot while on a conveyor belt,
-especially when on the edge of one. If this happens all the player can do is
-wait to reach the end of the conveyor belt or use a mullgian.
-
-
 ## Credits
 
 Snolf Robo Blast 2 by [Caoimhe Ní Chaoimh].
@@ -150,6 +143,11 @@ Life count icon from Mario Golf: Advance Tour.
 
 
 ## Changelog
+
+v2.13
+* Sync variables when joining multiplayer games
+* Fix issue where Snolf players could get stuck on each other
+* Fix issue where Snolf would get stuck on the edge of a conveyor belt
 
 v2.12
 * Shield and air abilities (thok, etc.) can no longer be used after bouncing
