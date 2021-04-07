@@ -1055,6 +1055,18 @@ addHook("MapChange", function(mapnum)
 	oldmap = gamemap
 end)
 
+
+--sync game state when joining game
+addHook("NetVars", function(network)
+    cheats = network($)
+	bosses_health = network($)
+	boss_level = network($)
+	metal_snolf_race = network($)
+	metal_snolf_battle = network($)
+	oldmap = network($)
+end)
+
+
 --------------
 -- Commands --
 --------------
