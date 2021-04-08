@@ -789,9 +789,14 @@ addHook("PreThinkFrame", function()
 		-- enable jumping while on a water slide
 		if p.pflags & PF_SLIDING ~= 0 and p.jumpfactor == 0 then
 			p.jumpfactor = FRACUNIT
+		elseif P_IsObjectOnGround(mo) then
+			-- I don't like forcing stat changes every frame but other mods can
+			-- also mess with these values so we need to be defensive about it
+			-- to ensure Snolf works correctly with them
+			p.jumpfactor = 0
 		elseif not P_IsObjectOnGround(mo) then
-			-- give back jump. It will be taken away again on landing
-			-- this is done so that players can jump off objects like
+			-- Give back jump when in the air. It will be taken away again on
+			-- landing. This is done so that players can jump off objects like
 			-- the rollout rocks in Red Volcano Zone
 			p.jumpfactor = skins[mo.skin].jumpfactor
 		end

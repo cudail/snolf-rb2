@@ -144,6 +144,9 @@ Life count icon from Mario Golf: Advance Tour.
 
 ## Changelog
 
+v2.14
+* Improve compatibility with mods that alter character stats like X Momentum
+
 v2.13
 * Sync variables when joining multiplayer games
 * Fix issue where Snolf players could get stuck on each other
