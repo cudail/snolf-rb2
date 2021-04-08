@@ -1,4 +1,4 @@
-name = Snolf
+name = snolf
 flags = SF_SUPER|SF_NONIGHTSSUPER
 RealName = Snolf the Golfball
 HudName = Snolf
