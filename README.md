@@ -144,8 +144,11 @@ Life count icon from Mario Golf: Advance Tour.
 
 ## Changelog
 
+v2.15
+* Snolf grants Kirby the Ball ability if copied
+
 v2.14
-* Improve compatibility with mods that alter character stats like X Momentum
+* Improved compatibility with mods that alter character stats like X Momentum
 
 v2.13
 * Sync variables when joining multiplayer games
