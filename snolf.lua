@@ -1181,3 +1181,13 @@ end, COM_ADMIN)
 COM_AddCommand("snolf_shot_on_touch_wall_when_in_boss", function(player, arg)
 	option_toggle("snolf_shot_on_touch_wall_when_in_boss", arg, player)
 end, COM_ADMIN)
+
+
+-----------------------
+-- Addon integration --
+-----------------------
+
+if not(kirbyabilitytable) then
+	rawset(_G, "kirbyabilitytable", {})
+end
+kirbyabilitytable["snolf"] = 9 // Snolf gives Kirby the Ball ability
