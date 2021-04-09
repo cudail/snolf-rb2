@@ -4,8 +4,7 @@
 
 local K_Snolf = function(checkflags, destroy, late, player)
 	if checkflags then
-		return 0
-		--return AF_NOJUMP|AF_NOSWIM|AF_NODUCK
+		return AF_NOJUMP|AF_NOSWIM|AF_NODUCK
 	elseif destroy then
 		--reset stats
 		local skin = skins[player.mo.skin]
