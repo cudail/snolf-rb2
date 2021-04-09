@@ -89,7 +89,7 @@ snolf_setup = function(player)
 		-- previous tick state
 		prev = { momz = 0 },
 		-- controls
-		ctrl = { jmp = 0, spn = 0, ca1 = 0 },
+		ctrl = { jmp = 0, spn = 0, up = 0, ca1 = 0, ca2 = 0, ca3 = 0 },
 		-- mulligan points
 		mull_pts = {},
 		save_pts = {},
