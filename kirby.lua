@@ -21,7 +21,7 @@ end
 
 addHook("PreThinkFrame", function()
 	if K_AddAbility and kirbyabilitytable and not kirby_snolf_ability then
-		rawset(_G, "kirby_snolf_ability", K_AddAbility( K_Snolf, false, "GOLF"))
+		rawset(_G, "kirby_snolf_ability", K_AddAbility( K_Snolf, true, "GOLF"))
 		kirbyabilitytable["snolf"] = kirby_snolf_ability
 	end
 end)
