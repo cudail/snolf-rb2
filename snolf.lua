@@ -116,7 +116,20 @@ end
 
 
 is_snolf = function(mo)
-	return mo and mo.skin and (mo.skin == "snolf" or options.everybodys_snolf)
+	if not mo or not mo.player or not mo.skin then
+		return false
+	end
+
+	if options.everybodys_snolf or mo.skin == "snolf" then
+		return true
+	end
+
+	if mo.skin == "kirby" and kirby_snolf_ability
+	and mo.player.kvars.ability == kirby_snolf_ability then
+		return true
+	end
+
+	return false
 end
 
 
@@ -840,6 +853,19 @@ addHook("ThinkFrame", function()
 		for play2 in players.iterate do
 			if play1 == play2 then continue end
 			if not is_snolf_setup(play2.mo) then continue end
+			-- If a player is Kirby and only just copied Snolf make them immune to
+			-- collisions for a second. This prevents Snolf from getting stuck in
+			-- Kirby while being ejected
+			if play1.kvars and kirby_snolf_ability
+			and play1.kvars.ability == kirby_snolf_ability
+			and play1.kvars.ablvar1 < TICRATE then
+				continue
+			end
+			if play2.kvars and kirby_snolf_ability
+			and play2.kvars.ability == kirby_snolf_ability
+			and play2.kvars.ablvar1 < TICRATE then
+				continue
+			end
 			if (not at_rest(play1.snolf) or not at_rest(play2.snolf)) and
 				not play1.snolf.collided and not play2.snolf.collided and
 				are_touching(play1, play2) then
@@ -1181,13 +1207,3 @@ end, COM_ADMIN)
 COM_AddCommand("snolf_shot_on_touch_wall_when_in_boss", function(player, arg)
 	option_toggle("snolf_shot_on_touch_wall_when_in_boss", arg, player)
 end, COM_ADMIN)
-
-
------------------------
--- Addon integration --
------------------------
-
-if not(kirbyabilitytable) then
-	rawset(_G, "kirbyabilitytable", {})
-end
-kirbyabilitytable["snolf"] = 9 // Snolf gives Kirby the Ball ability
