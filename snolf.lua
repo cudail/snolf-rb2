@@ -912,7 +912,7 @@ addHook("PostThinkFrame", function()
 			and player.mo.sprite ~= SPR_NULL -- if our sprite isn't null
 			and (player.playerstate ~= PST_DEAD or player.mo.skin == "snolf") then -- if we're not dead or Snolf Classic
 
-			if P_IsObjectOnGround(player.mo) and player.mo.state ~= S_PLAY_ROLL then
+			if P_IsObjectOnGround(player.mo) and player.mo.state ~= S_PLAY_ROLL and player.mo.state < S_NAMECHECK then
 				player.mo.state = S_PLAY_ROLL
 			end
 		end
