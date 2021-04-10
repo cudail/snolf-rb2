@@ -910,7 +910,10 @@ addHook("PostThinkFrame", function()
 		if maptol & TOL_NIGHTS == 0 -- if we're not in NiGHTS mode
 			and player.mo.sprite ~= SPR_NULL -- if our sprite isn't null
 			and (player.playerstate ~= PST_DEAD or player.mo.skin == "snolf") then -- if we're not dead or Snolf Classic
-			player.mo.state = S_PLAY_ROLL
+
+			if player.mo.state ~= S_PLAY_ROLL then
+				player.mo.state = S_PLAY_ROLL
+			end
 		end
 
 		if player.snolf.collided then
