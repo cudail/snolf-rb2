@@ -912,7 +912,14 @@ addHook("PostThinkFrame", function()
 			and player.mo.sprite ~= SPR_NULL -- if our sprite isn't null
 			and (player.playerstate ~= PST_DEAD or player.mo.skin == "snolf") then -- if we're not dead or Snolf Classic
 
-			if P_IsObjectOnGround(player.mo) and player.mo.state ~= S_PLAY_ROLL and player.mo.state < S_NAMECHECK then
+			if P_IsObjectOnGround(player.mo) then
+				-- don't force rolling animation if the player is in a mod-added state
+				-- only do it for default ones like standing, running, etc.
+				if player.mo.state ~= S_PLAY_ROLL and player.mo.state < S_NAMECHECK then
+					player.mo.state = S_PLAY_ROLL
+				end
+			elseif player.mo.state == S_PLAY_FALL then
+				-- if in the air only force the rolling animation if the player is currently in the falling animation
 				player.mo.state = S_PLAY_ROLL
 			end
 		end
