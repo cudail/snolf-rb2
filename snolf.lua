@@ -1125,12 +1125,21 @@ COM_AddCommand("everybodys_snolf", function(player, arg)
 	option_toggle("everybodys_snolf", arg, player)
 	-- restore character stats
 	for player in players.iterate do
-		if player.mo and not is_snolf(player.mo) then
-			local skin = skins[player.mo.skin]
-			player.jumpfactor = skin.jumpfactor
-			player.accelstart = skin.accelstart
-			player.acceleration = skin.acceleration
-			player.charability2 = skin.ability2
+		if player.mo then
+			if is_snolf(player.mo) then
+				if not player.snolf then
+					snolf_setup(player)
+				end
+				if P_IsObjectOnGround(player.mo) then
+					override_controls(player.snolf)
+				end
+			else
+				local skin = skins[player.mo.skin]
+				player.jumpfactor = skin.jumpfactor
+				player.accelstart = skin.accelstart
+				player.acceleration = skin.acceleration
+				player.charability2 = skin.ability2
+			end
 		end
 	end
 
