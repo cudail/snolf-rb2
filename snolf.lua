@@ -11,7 +11,7 @@ local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, at_rest,
 	snolfify_name, is_golf_setup, override_controls, are_touching, on_hit_boss,
 	calculate_weight, is_anyone_snolfing, reversed_gravity, print2, shot_charge,
 	draw_trajectory, update_state, is_snolf, is_snolfing, is_golfing,
-	is_anyone_snolf
+	is_anyone_snolf, update_hud
 
 local options = {
 	everybodys_snolf = false,
@@ -559,6 +559,16 @@ update_state = function(snolf, state)
 	snolf.state = state
 	snolf.statetimer = 0
 end
+
+
+update_hud = function()
+	if options.everybodys_snolf and options.everybodys_snolf_name_override > 0 then
+		hud.disable("lives")
+	else
+		hud.enable("lives")
+	end
+end
+
 
 
 -------------------
@@ -1147,6 +1157,12 @@ addHook("NetVars", function(network)
 end)
 
 
+addHook("PlayerJoin", function(playernum)
+	update_hud()
+end)
+
+
+
 --------------
 -- Commands --
 --------------
@@ -1173,11 +1189,7 @@ COM_AddCommand("everybodys_snolf", function(player, arg)
 		end
 	end
 
-	if options.everybodys_snolf and options.everybodys_snolf_name_override > 0 then
-		hud.disable("lives")
-	else
-		hud.enable("lives")
-	end
+	update_hud()
 end, COM_ADMIN)
 
 
@@ -1195,11 +1207,7 @@ COM_AddCommand("everybodys_snolf_name_override", function(player, arg)
 	end
 	print2("everybodys_snolf_name_override has been "..(options.everybodys_snolf_name_override > 0 and "enabled" or "disabled")..".")
 
-	if options.everybodys_snolf and options.everybodys_snolf_name_override > 0 then
-		hud.disable("lives")
-	else
-		hud.enable("lives")
-	end
+	update_hud()
 end, COM_ADMIN)
 
 
