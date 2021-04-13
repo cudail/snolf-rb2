@@ -5,12 +5,13 @@ sfxinfo[sfx_msnolf].caption = "Anomalous Metal Snolf"
 
 -- declare functions in advance so they can reference each other
 -- without causing parsing errors
-local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, is_snolf,
-	at_rest, take_a_mulligan, same_position, snolf_setup, reset_state,
-	sinusoidal_scale, get_charge_increment, in_black_core, allow_air_snolf,
-	option_toggle, snolfify_name, is_snolf_setup, override_controls, are_touching,
-	on_hit_boss, calculate_weight, is_anyone_snolf, reversed_gravity, print2,
-	draw_trajectory, shot_charge, update_state
+local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, at_rest,
+	take_a_mulligan, same_position, snolf_setup, reset_state, sinusoidal_scale,
+	get_charge_increment, in_black_core, allow_air_snolf, option_toggle,
+	snolfify_name, is_golf_setup, override_controls, are_touching, on_hit_boss,
+	calculate_weight, is_anyone_snolfing, reversed_gravity, print2, shot_charge,
+	draw_trajectory, update_state, is_snolf, is_snolfing, is_golfing,
+	is_anyone_snolf
 
 local options = {
 	everybodys_snolf = false,
@@ -115,22 +116,34 @@ reset_state = function(snlf, leave_mulls)
 end
 
 
+-- Is this Snolf?
 is_snolf = function(mo)
 	if not mo or not mo.player or not mo.skin then
 		return false
 	end
 
-	if options.everybodys_snolf or mo.skin == "snolf" then
-		return true
+	return mo.skin == "snolf"
+end
+
+-- Is this player Snolf or is Everybody's Snolf on?
+is_snolfing = function(mo)
+	if not mo or not mo.player or not mo.skin then
+		return false
 	end
 
-	if mo.skin == "kirby" and kirby_snolf_ability
-	and mo.player.kvars.secretability
-	and mo.player.kvars.ability == kirby_snolf_ability then
-		return true
+	return is_snolf(mo) or options.everybodys_snolf
+end
+
+-- Is this player either of the above or are they playing as Kirby with the
+-- Golf ability?
+is_golfing = function(mo)
+	if not mo or not mo.player or not mo.skin then
+		return false
 	end
 
-	return false
+	return is_snolfing(mo) or (mo.skin == "kirby" and kirby_snolf_ability
+		and mo.player.kvars.secretability
+		and mo.player.kvars.ability == kirby_snolf_ability)
 end
 
 
@@ -144,13 +157,23 @@ is_anyone_snolf = function()
 end
 
 
+is_anyone_snolfing = function()
+	for p in players.iterate do
+		if is_snolfing(p.mo) then
+			return true
+		end
+	end
+	return false
+end
+
+
 reversed_gravity = function(mo)
 	return P_GetMobjGravity(mo) > 0
 end
 
 
-is_snolf_setup = function(mo)
-	return is_snolf(mo) and mo.player.snolf
+is_golf_setup = function(mo)
+	return is_golfing(mo) and mo.player.snolf
 end
 
 
@@ -385,12 +408,13 @@ end
 
 on_hit_boss = function(boss, player_hopefully)
 	for player in players.iterate do
+		--TODO:this iteration is unnecessary we can do this better
 		if player.mo ~= player_hopefully then
 			continue
 		end
 
 		if options.snolf_shot_on_hit_boss then
-			if is_snolf_setup(player.mo) and player.snolf.state == STATE_WAITING then
+			if is_snolfing(player.mo) and player.snolf.state == STATE_WAITING then
 				update_state(player.snolf, STATE_READY)
 			end
 		end
@@ -550,7 +574,7 @@ end
 -------------------
 -- shot meter
 hud.add( function(v, player, camera)
-	if not is_snolf_setup(player.mo) then return end
+	if not is_golf_setup(player.mo) then return end
 	local snlf = player.snolf
 	local state = snlf.state
 	if state != STATE_CHARGE1 and state != STATE_CHARGE2 then return end
@@ -577,7 +601,7 @@ end, "game")
 
 -- shots count
 hud.add( function(v, player, camera)
-	if not is_snolf_setup(player.mo) then return end
+	if not is_golf_setup(player.mo) then return end
 
 	local hud_shots = v.getSpritePatch(SPR_SFST) -- SHOTS HUD element
 	local shotcount = player.snolf.shotcount + player.snolf.mullcount
@@ -634,8 +658,8 @@ addHook("PreThinkFrame", function()
 
 	for player in players.iterate do
 
-		-- don't do anything if we're not Snolf
-		if not is_snolf(player.mo) then continue end
+		-- don't do anything if we're not golfing
+		if not is_golfing(player.mo) then continue end
 
 		if player.snolf == nil then
 			snolf_setup(player)
@@ -852,10 +876,10 @@ end)
 addHook("ThinkFrame", function()
 	local snolf_players = {}
 	for play1 in players.iterate do
-		if not is_snolf_setup(play1.mo) then continue end
+		if not is_golf_setup(play1.mo) then continue end
 		for play2 in players.iterate do
 			if play1 == play2 then continue end
-			if not is_snolf_setup(play2.mo) then continue end
+			if not is_golf_setup(play2.mo) then continue end
 			-- If a player is Kirby and only just copied Snolf make them immune to
 			-- collisions for a second. This prevents Snolf from getting stuck in
 			-- Kirby while being ejected
@@ -907,7 +931,7 @@ end)
 
 addHook("PostThinkFrame", function()
 	for player in players.iterate do
-		if not is_snolf_setup(player.mo) then continue end
+		if not is_golf_setup(player.mo) then continue end
 
 		-- force rolling animation
 		if maptol & TOL_NIGHTS == 0 -- if we're not in NiGHTS mode
@@ -938,7 +962,7 @@ end)
 
 -- Hook to override default collision and make Snolf bounce off walls
 addHook("MobjMoveBlocked", function(mo)
-	if not is_snolf_setup(mo) then return false end
+	if not is_golf_setup(mo) then return false end
 
 	local slope = mo.standingslope
 	if slope and slope.valid and slope.zangle >= ANGLE_45 then
@@ -948,7 +972,7 @@ addHook("MobjMoveBlocked", function(mo)
 	--let player take a shot if they bounce off walls while fighting a boss
 	if boss_level and options.snolf_shot_on_touch_wall_when_in_boss then
 		local player = mo.player
-		if is_snolf_setup(mo) and player.snolf.state == STATE_WAITING then
+		if is_golf_setup(mo) and player.snolf.state == STATE_WAITING then
 			update_state(player.snolf, STATE_READY)
 		end
 	end
@@ -966,7 +990,7 @@ end, MT_PLAYER)
 
 -- reset state on death
 addHook("MobjDeath", function(mo)
-	if not is_snolf_setup(mo) then return false end
+	if not is_golf_setup(mo) then return false end
 	reset_state(mo.player.snolf, options.snolf_death_mulligan)
 
 	-- infinite lives option
@@ -979,7 +1003,7 @@ end, MT_PLAYER)
 -- reset state when a new map is loaded
 addHook("MapLoad", function(mapnumber)
 	for player in players.iterate do
-		if not is_snolf_setup(player.mo) then continue end
+		if not is_golf_setup(player.mo) then continue end
 		reset_state(player.snolf)
 		if mapnumber ~= oldmap then
 			player.snolf.save_pts = {}
@@ -1003,7 +1027,7 @@ end)
 
 -- option to return to last spot on death
 addHook("PlayerSpawn", function(player)
-	if is_snolf_setup(player.mo) and options.snolf_death_mulligan then
+	if is_golf_setup(player.mo) and options.snolf_death_mulligan then
 		take_a_mulligan(player.snolf, player.snolf.mull_pts, true)
 	end
 end)
@@ -1028,7 +1052,7 @@ addHook("MobjDamage", function(target, inflictor, source, damage, damagetype)
 	if ( source ~= nil and (source.type >= MT_BOSSEXPLODE and source.type <= MT_MSGATHER) )
 		or (  inflictor ~= nil and ( inflictor.type >= MT_BOSSEXPLODE and inflictor.type <= MT_MSGATHER ) ) then
 
-		if is_snolf_setup(player.mo) and player.snolf.state == STATE_WAITING then
+		if is_golf_setup(player.mo) and player.snolf.state == STATE_WAITING then
 			update_state(player.snolf, STATE_READY)
 		end
 	end
@@ -1043,7 +1067,7 @@ addHook("BossThinker", function(boss)
 		bosses_health[boss] = boss.health
 
 		-- boss drops rings
-		if is_anyone_snolf() and options.snolf_rings_on_hit_boss then
+		if is_anyone_snolfing() and options.snolf_rings_on_hit_boss then
 			S_StartSound(boss, sfx_s3kb9)
 			for i=0, 5 do
 				local ring = P_SpawnMobjFromMobj(boss, 0,0,0, MT_FLINGRING)
@@ -1069,7 +1093,7 @@ end)
 addHook("MobjDamage", function(player, inflictor, source, damage, damagetype)
 	-- Snolf has an asbestos suit because Red Volcano is almost impossible
 	if options.snolf_fire_shield and inflictor and
-		inflictor.type ==  MT_FLAMEJETFLAMEB and is_snolf(player) then
+		inflictor.type ==  MT_FLAMEJETFLAMEB and is_snolfing(player) then
 		return true
 	end
 end, MT_PLAYER)
@@ -1127,7 +1151,7 @@ COM_AddCommand("everybodys_snolf", function(player, arg)
 	-- restore character stats
 	for player in players.iterate do
 		if player.mo then
-			if is_snolf(player.mo) then
+			if is_snolfing(player.mo) then
 				if not player.snolf then
 					snolf_setup(player)
 				end
