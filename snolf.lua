@@ -574,10 +574,7 @@ end
 
 
 update_hud = function()
-	if options.snolf_hud_mode == 3 then
-		hud.enable("lives")
-	elseif (options.everybodys_snolf and options.snolf_hud_mode > 0)
-	or options.snolf_inf_lives then
+	if options.snolf_hud_mode > 0 then
 		hud.disable("lives")
 	else
 		hud.enable("lives")
@@ -647,35 +644,29 @@ end, "game")
 
 -- everybody's snolf life icon
 hud.add ( function(v, player, camera)
-
-	if options.snolf_hud_mode == 3 then return end
-
-	if is_snolfing(player.mo)
-	and (options.everybodys_snolf and options.snolf_hud_mode == 1)
-	or options.snolf_inf_lives and
-		player.mo and player.mo.skin then
+	if options.snolf_hud_mode == 1 and player.mo and player.mo.skin then
+		local mo = player.mo
 
 		local life_x = v.getSpritePatch(SPR_SFHX)
 		v.draw(38, 186	, life_x, V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM)
 
 		local life_icon_box = v.getSpritePatch(SPR_LVBX)
-		local life_icon = v.getSprite2Patch(player.mo.skin, SPR2_XTRA, player.powers[pw_super] > 0)
+		local life_icon = v.getSprite2Patch(mo.skin, SPR2_XTRA, player.powers[pw_super] > 0)
 		v.drawScaled(16*FRACUNIT, 176*FRACUNIT, FRACUNIT/2, life_icon_box,
 			V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM)
 		v.drawScaled(16*FRACUNIT, 176*FRACUNIT, FRACUNIT/2, life_icon,
 			V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM,
-			v.getColormap(player.mo.skin, player.mo.color))
+			v.getColormap(mo.skin, mo.color))
 
-		if options.snolf_inf_lives then
+		if is_snolfing(mo) and options.snolf_inf_lives then
 			local infinity = v.getSpritePatch(SPR_INFL)
 			v.draw(63, 185, infinity, V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM)
 		else
 			v.drawString(74, 184, player.lives, V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM, "right" )
 		end
 
-		local hudname = skins[player.mo.skin].hudname
-		local override = options.snolf_hud_mode
-		if override == 1 or override == 2 then
+		local hudname = skins[mo.skin].hudname
+		if is_snolfing(mo) and options.everybodys_snolf then
 			hudname = snolfify_name(hudname)
 		end
 
