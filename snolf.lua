@@ -1014,6 +1014,10 @@ addHook("MobjMoveBlocked", function(mo)
 		return false
 	end
 
+	if mo.player.pflags & PF_SLIDING then
+		return false
+	end
+
 	--let player take a shot if they bounce off walls while fighting a boss
 	if boss_level and options.snolf_shot_on_touch_wall_when_in_boss
 	and is_snolfing(mo) then
