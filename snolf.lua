@@ -1249,10 +1249,8 @@ COM_AddCommand("snolf_hud_mode", function(player, arg)
 		options.snolf_hud_mode = 1
 	elseif arg == "2" then
 		options.snolf_hud_mode = 2
-	elseif arg == "3" then
-		options.snolf_hud_mode = 3
 	else
-		CONS_Printf(player, "snolf_hud_mode should be called with either 0, 1, 2, 3 or no argument")
+		CONS_Printf(player, "snolf_hud_mode should be called with either 0, 1, 2 or no argument")
 	end
 	print2("snolf_hud_mode has been "..(options.snolf_hud_mode > 0 and "enabled" or "disabled")..".")
 
