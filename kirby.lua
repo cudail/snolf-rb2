@@ -16,6 +16,14 @@ local K_Snolf = function(checkflags, destroy, late, player)
 	if late then
 		return
 	end
+
+	--Immediately set stats to 0
+	if player.kvars.ablvar1 == 0 then
+		player.jumpfactor = 0
+		player.accelstart = 0
+		player.acceleration = 0
+		player.charability2 = CA2_NONE
+	end
 	player.kvars.ablvar1 = $1+1 --use ablvar1 as a timer
 end
 
