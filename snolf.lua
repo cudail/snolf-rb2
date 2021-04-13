@@ -63,7 +63,13 @@ local V_METER_LENGTH = 50
 local WATER_AIR_TIMER = 1050
 local SPACE_AIR_TIMER = 403
 
-
+local button_names = {
+	spn = "SPIN",
+	jmp = "JUMP",
+	ca1 = "CUSTOM ACTION 1",
+	ca2 = "CUSTOM ACTION 2",
+	ca3 = "CUSTOM ACTION 3"
+}
 
 ---------------
 -- functions --
@@ -623,13 +629,15 @@ end, "game")
 -- tip for if you're stuck unable to take a shot
 hud.add( function(v, player, camera)
 	if not is_golf_setup(player.mo) or not is_snolfing(player.mo)
-	or player.snolf.state ~= STATE_WAITING
+	or player.snolf.state ~= STATE_WAITING or not player.snolf.mull_button
 	or player.snolf.statetimer < TICRATE*10 then
 		return
 	end
 
+	local bname = button_names[player.snolf.mull_button]
+	local hint = "Hold "..bname.." to retake shot"
 	local colourflag = (player.snolf.statetimer/TICRATE)%2 == 0 and V_YELLOWMAP or V_REDMAP
-	v.drawString(16, 166 , "Hold SPIN to retake shot", colourflag|V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM, "thin")
+	v.drawString(16, 166 , hint, colourflag|V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM, "thin")
 end, "game")
 
 
