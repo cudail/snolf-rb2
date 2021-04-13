@@ -125,6 +125,7 @@ is_snolf = function(mo)
 	end
 
 	if mo.skin == "kirby" and kirby_snolf_ability
+	and mo.player.kvars.secretability
 	and mo.player.kvars.ability == kirby_snolf_ability then
 		return true
 	end
