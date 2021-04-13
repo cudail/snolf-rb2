@@ -1,5 +1,5 @@
 freeslot("SPR_SFST", "SPR_SFAH", "SPR_SFAV", "SPR_SFMR", "SPR_SFHX", "SPR_MSNF",
-	"SPR_LVBX", "sfx_msnolf")
+	"SPR_LVBX", "SPR_INFL", "sfx_msnolf")
 
 sfxinfo[sfx_msnolf].caption = "Anomalous Metal Snolf"
 
@@ -574,7 +574,8 @@ end
 
 
 update_hud = function()
-	if options.everybodys_snolf and options.everybodys_snolf_name_override > 0 then
+	if (options.everybodys_snolf and options.everybodys_snolf_name_override > 0)
+	or options.snolf_inf_lives then
 		hud.disable("lives")
 	else
 		hud.enable("lives")
@@ -645,7 +646,9 @@ end, "game")
 -- everybody's snolf life icon
 hud.add ( function(v, player, camera)
 
-	if options.everybodys_snolf and options.everybodys_snolf_name_override == 1 and
+	if is_snolfing(player.mo)
+	and (options.everybodys_snolf and options.everybodys_snolf_name_override == 1)
+	or options.snolf_inf_lives and
 		player.mo and player.mo.skin then
 
 		local life_x = v.getSpritePatch(SPR_SFHX)
@@ -658,9 +661,17 @@ hud.add ( function(v, player, camera)
 		v.drawScaled(16*FRACUNIT, 176*FRACUNIT, FRACUNIT/2, life_icon,
 			V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM,
 			v.getColormap(player.mo.skin, player.mo.color))
-		v.drawString(74, 184, player.lives, V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM, "right" )
 
-		local hudname = snolfify_name(skins[player.mo.skin].hudname)
+		if options.snolf_inf_lives then
+			local infinity = v.getSpritePatch(SPR_INFL)
+			v.draw(63, 185, infinity, V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM)
+		else
+			v.drawString(74, 184, player.lives, V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM, "right" )
+		end
+
+
+		local ohudname = skins[player.mo.skin].hudname
+		local hudname = options.everybodys_snolf and snolfify_name(ohudname) or ohudname
 
 		if #hudname > 7 then
 			v.drawString(34, 176, hudname, V_YELLOWMAP|V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM, "thin")
@@ -1285,6 +1296,7 @@ end, COM_ADMIN)
 
 COM_AddCommand("snolf_inf_lives", function(player, arg)
 	option_toggle("snolf_inf_lives", arg, player)
+	update_hud()
 end, COM_ADMIN)
 
 COM_AddCommand("snolf_inf_air", function(player, arg)
@@ -1334,3 +1346,5 @@ end, COM_ADMIN)
 COM_AddCommand("snolf_shot_on_touch_wall_when_in_boss", function(player, arg)
 	option_toggle("snolf_shot_on_touch_wall_when_in_boss", arg, player)
 end, COM_ADMIN)
+
+update_hud()
