@@ -406,18 +406,10 @@ snolfify_name = function(orig_name)
 end
 
 
-on_hit_boss = function(boss, player_hopefully)
-	for player in players.iterate do
-		--TODO:this iteration is unnecessary we can do this better
-		if player.mo ~= player_hopefully then
-			continue
-		end
-
-		if options.snolf_shot_on_hit_boss then
-			if is_snolfing(player.mo) and player.snolf.state == STATE_WAITING then
-				update_state(player.snolf, STATE_READY)
-			end
-		end
+on_hit_boss = function(boss, pmo)
+	if options.snolf_shot_on_hit_boss and pmo.player and pmo.player.snolf
+	and is_snolfing(pmo) and pmo.player.snolf.state == STATE_WAITING then
+		update_state(pmo.player.snolf, STATE_READY)
 	end
 end
 
