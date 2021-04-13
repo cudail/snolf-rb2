@@ -1244,24 +1244,27 @@ end, COM_ADMIN)
 
 COM_AddCommand("snolf_mulligan_button", function(player, arg)
 	if arg then arg = arg:lower() end
-	if arg == "spin" or arg == "spn" or arg == "shift" then
-		CONS_Printf(player, "Shot reset button set to SPIN")
-		player.snolf.mull_button = "spn"
-	elseif arg == "jump" or arg == "jmp" or arg == "space" then
-		CONS_Printf(player, "Shot reset button set to JUMP")
-		player.snolf.mull_button = "jmp"
-	elseif arg == "ca1" or arg == "1" then
-		CONS_Printf(player, "Shot reset button set to CUSTOM ACTION 1")
-		player.snolf.mull_button = "ca1"
-	elseif arg == "ca2" or arg == "2" then
-		CONS_Printf(player, "Shot reset button set to CUSTOM ACTION 2")
-		player.snolf.mull_button = "ca2"
-	elseif arg == "ca3" or arg == "3" then
-		CONS_Printf(player, "Shot reset button set to CUSTOM ACTION 3")
-		player.snolf.mull_button = "ca3"
+
+	local choices = {
+		spin = "spn",
+		spn = "spn",
+		jump = "jmp",
+		jmp = "jmp",
+		ca1 = "ca1",
+		ca2 = "ca2",
+		ca3 = "ca3",
+	}
+	choices["1"] = "ca1"
+	choices["2"] = "ca2"
+	choices["3"] = "ca3"
+
+	local snlf = player.snolf
+	if choices[arg] then
+		snlf.mull_button = choices[arg]
+		CONS_Printf(player, "Mulligan set to "..button_names[snlf.mull_button])
 	elseif arg == "off" or arg == "0" then
-		CONS_Printf(player, "Shot reset is no longer bound to anything")
-		player.snolf.mull_button = nil
+		snlf.mull_button = nil
+		CONS_Printf(player, "Mulligan is no longer bound to any button")
 	else
 		CONS_Printf(player, "snolf_mulligan_button should be called with either 'spin', 'jump', 'ca1', 'ca2', 'ca3' or 'off'")
 	end
