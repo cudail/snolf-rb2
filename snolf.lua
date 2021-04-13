@@ -619,6 +619,19 @@ hud.add( function(v, player, camera)
 end, "game")
 
 
+-- tip for if you're stuck unable to take a shot
+hud.add( function(v, player, camera)
+	if not is_golf_setup(player.mo) or not is_snolfing(player.mo)
+	or player.snolf.state ~= STATE_WAITING
+	or player.snolf.statetimer < TICRATE*10 then
+		return
+	end
+
+	local colourflag = (player.snolf.statetimer/TICRATE)%2 == 0 and V_YELLOWMAP or V_REDMAP
+	v.drawString(16, 166 , "Hold SPIN to retake shot", colourflag|V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM, "thin")
+end, "game")
+
+
 -- everybody's snolf life icon
 hud.add ( function(v, player, camera)
 
