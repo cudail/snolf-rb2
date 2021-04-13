@@ -91,6 +91,7 @@ snolf_setup = function(player)
 		prev = { momz = 0 },
 		-- controls
 		ctrl = { jmp = 0, spn = 0, up = 0, ca1 = 0, ca2 = 0, ca3 = 0 },
+		mull_button = 'spn',
 		-- mulligan points
 		mull_pts = {},
 		save_pts = {},
@@ -837,7 +838,7 @@ addHook("PreThinkFrame", function()
 		if not is_snolfing(mo) then continue end
 
 		-- take a mulligan
-		if snlf.ctrl.spn == TICKS_FOR_MULLIGAN then
+		if snlf.ctrl[snlf.mull_button] == TICKS_FOR_MULLIGAN then
 			take_a_mulligan(snlf, snlf.mull_pts)
 		end
 
@@ -1231,6 +1232,32 @@ COM_AddCommand("everybodys_snolf_name_override", function(player, arg)
 
 	update_hud()
 end, COM_ADMIN)
+
+
+COM_AddCommand("snolf_mulligan_button", function(player, arg)
+	if arg then arg = arg:lower() end
+	if arg == "spin" or arg == "spn" or arg == "shift" then
+		CONS_Printf(player, "Shot reset button set to SPIN")
+		player.snolf.mull_button = "spn"
+	elseif arg == "jump" or arg == "jmp" or arg == "space" then
+		CONS_Printf(player, "Shot reset button set to JUMP")
+		player.snolf.mull_button = "jmp"
+	elseif arg == "ca1" or arg == "1" then
+		CONS_Printf(player, "Shot reset button set to CUSTOM ACTION 1")
+		player.snolf.mull_button = "ca1"
+	elseif arg == "ca2" or arg == "2" then
+		CONS_Printf(player, "Shot reset button set to CUSTOM ACTION 2")
+		player.snolf.mull_button = "ca2"
+	elseif arg == "ca3" or arg == "3" then
+		CONS_Printf(player, "Shot reset button set to CUSTOM ACTION 3")
+		player.snolf.mull_button = "ca3"
+	elseif arg == "off" or arg == "0" then
+		CONS_Printf(player, "Shot reset is no longer bound to anything")
+		player.snolf.mull_button = nil
+	else
+		CONS_Printf(player, "snolf_mulligan_button should be called with either 'spin', 'jump', 'ca1', 'ca2', 'ca3' or 'off'")
+	end
+end)
 
 
 COM_AddCommand("snolf_inf_rings", function(player, arg)
