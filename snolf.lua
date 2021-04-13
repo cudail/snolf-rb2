@@ -783,7 +783,7 @@ addHook("PreThinkFrame", function()
 			-- I don't like forcing stat changes every frame but other mods can
 			-- also mess with these values so we need to be defensive about it
 			-- to ensure Snolf works correctly with them
-			p.jumpfactor = 0
+			override_controls(snlf)
 		elseif not P_IsObjectOnGround(mo) then
 			-- Give back jump when in the air. It will be taken away again on
 			-- landing. This is done so that players can jump off objects like
