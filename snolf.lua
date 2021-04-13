@@ -1,5 +1,5 @@
 freeslot("SPR_SFST", "SPR_SFAH", "SPR_SFAV", "SPR_SFMR", "SPR_SFHX", "SPR_MSNF",
-	"sfx_msnolf")
+	"SPR_LVBX", "sfx_msnolf")
 
 sfxinfo[sfx_msnolf].caption = "Anomalous Metal Snolf"
 
@@ -651,7 +651,10 @@ hud.add ( function(v, player, camera)
 		local life_x = v.getSpritePatch(SPR_SFHX)
 		v.draw(38, 186	, life_x, V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM)
 
+		local life_icon_box = v.getSpritePatch(SPR_LVBX)
 		local life_icon = v.getSprite2Patch(player.mo.skin, SPR2_XTRA, player.powers[pw_super] > 0)
+		v.drawScaled(16*FRACUNIT, 176*FRACUNIT, FRACUNIT/2, life_icon_box,
+			V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM)
 		v.drawScaled(16*FRACUNIT, 176*FRACUNIT, FRACUNIT/2, life_icon,
 			V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM,
 			v.getColormap(player.mo.skin, player.mo.color))
