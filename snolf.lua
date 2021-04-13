@@ -15,7 +15,7 @@ local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, at_rest,
 
 local options = {
 	everybodys_snolf = false,
-	everybodys_snolf_name_override = 1,
+	snolf_hud_mode = 1,
 
 	snolf_inf_rings = false,
 	snolf_inf_lives = true,
@@ -574,9 +574,9 @@ end
 
 
 update_hud = function()
-	if options.everybodys_snolf_name_override == 3 then
+	if options.snolf_hud_mode == 3 then
 		hud.enable("lives")
-	elseif (options.everybodys_snolf and options.everybodys_snolf_name_override > 0)
+	elseif (options.everybodys_snolf and options.snolf_hud_mode > 0)
 	or options.snolf_inf_lives then
 		hud.disable("lives")
 	else
@@ -648,10 +648,10 @@ end, "game")
 -- everybody's snolf life icon
 hud.add ( function(v, player, camera)
 
-	if options.everybodys_snolf_name_override == 3 then return end
+	if options.snolf_hud_mode == 3 then return end
 
 	if is_snolfing(player.mo)
-	and (options.everybodys_snolf and options.everybodys_snolf_name_override == 1)
+	and (options.everybodys_snolf and options.snolf_hud_mode == 1)
 	or options.snolf_inf_lives and
 		player.mo and player.mo.skin then
 
@@ -674,7 +674,7 @@ hud.add ( function(v, player, camera)
 		end
 
 		local hudname = skins[player.mo.skin].hudname
-		local override = options.everybodys_snolf_name_override
+		local override = options.snolf_hud_mode
 		if override == 1 or override == 2 then
 			hudname = snolfify_name(hudname)
 		end
@@ -1249,21 +1249,21 @@ COM_AddCommand("everybodys_snolf", function(player, arg)
 end, COM_ADMIN)
 
 
-COM_AddCommand("everybodys_snolf_name_override", function(player, arg)
+COM_AddCommand("snolf_hud_mode", function(player, arg)
 	if arg == nil then
-		options.everybodys_snolf_name_override = $1 == 0 and 1 or 0
+		options.snolf_hud_mode = $1 == 0 and 1 or 0
 	elseif arg == "0" or arg == "off" or arg == "false" then
-		options.everybodys_snolf_name_override = 0
+		options.snolf_hud_mode = 0
 	elseif arg == "1" or arg == "on" or arg == "true" then
-		options.everybodys_snolf_name_override = 1
+		options.snolf_hud_mode = 1
 	elseif arg == "2" then
-		options.everybodys_snolf_name_override = 2
+		options.snolf_hud_mode = 2
 	elseif arg == "3" then
-		options.everybodys_snolf_name_override = 3
+		options.snolf_hud_mode = 3
 	else
-		CONS_Printf(player, "everybodys_snolf_name_override should be called with either 0, 1, 2, 3 or no argument")
+		CONS_Printf(player, "snolf_hud_mode should be called with either 0, 1, 2, 3 or no argument")
 	end
-	print2("everybodys_snolf_name_override has been "..(options.everybodys_snolf_name_override > 0 and "enabled" or "disabled")..".")
+	print2("snolf_hud_mode has been "..(options.snolf_hud_mode > 0 and "enabled" or "disabled")..".")
 
 	update_hud()
 end, COM_ADMIN)
