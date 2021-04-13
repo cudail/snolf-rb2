@@ -574,7 +574,9 @@ end
 
 
 update_hud = function()
-	if (options.everybodys_snolf and options.everybodys_snolf_name_override > 0)
+	if options.everybodys_snolf_name_override == 3 then
+		hud.enable("lives")
+	elseif (options.everybodys_snolf and options.everybodys_snolf_name_override > 0)
 	or options.snolf_inf_lives then
 		hud.disable("lives")
 	else
@@ -646,6 +648,8 @@ end, "game")
 -- everybody's snolf life icon
 hud.add ( function(v, player, camera)
 
+	if options.everybodys_snolf_name_override == 3 then return end
+
 	if is_snolfing(player.mo)
 	and (options.everybodys_snolf and options.everybodys_snolf_name_override == 1)
 	or options.snolf_inf_lives and
@@ -669,9 +673,11 @@ hud.add ( function(v, player, camera)
 			v.drawString(74, 184, player.lives, V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM, "right" )
 		end
 
-
-		local ohudname = skins[player.mo.skin].hudname
-		local hudname = options.everybodys_snolf and snolfify_name(ohudname) or ohudname
+		local hudname = skins[player.mo.skin].hudname
+		local override = options.everybodys_snolf_name_override
+		if override == 1 or override == 2 then
+			hudname = snolfify_name(hudname)
+		end
 
 		if #hudname > 7 then
 			v.drawString(34, 176, hudname, V_YELLOWMAP|V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM, "thin")
@@ -1252,8 +1258,10 @@ COM_AddCommand("everybodys_snolf_name_override", function(player, arg)
 		options.everybodys_snolf_name_override = 1
 	elseif arg == "2" then
 		options.everybodys_snolf_name_override = 2
+	elseif arg == "3" then
+		options.everybodys_snolf_name_override = 3
 	else
-		CONS_Printf(player, "everybodys_snolf_name_override should be called with either 0, 1, 2 or no argument")
+		CONS_Printf(player, "everybodys_snolf_name_override should be called with either 0, 1, 2, 3 or no argument")
 	end
 	print2("everybodys_snolf_name_override has been "..(options.everybodys_snolf_name_override > 0 and "enabled" or "disabled")..".")
 
