@@ -677,7 +677,8 @@ addHook("PreThinkFrame", function()
 			mo.momy = FixedMul($1, SKIM_FACTOR)
 			P_SetObjectMomZ(mo, -mo.momz)
 			S_StartSound(mo, sfx_splish)
-			if boss_level and options.snolf_shot_on_touch_ground_when_in_boss and snlf.state == STATE_WAITING then
+			if boss_level and options.snolf_shot_on_touch_ground_when_in_boss
+			and snlf.state == STATE_WAITING and is_snolfing(mo) then
 				update_state(snlf, STATE_READY)
 			end
 		end
@@ -685,7 +686,8 @@ addHook("PreThinkFrame", function()
 		-- check if we landed this turn
 		if mo.eflags & MFE_JUSTHITFLOOR > 0 then
 			--makes bosses easier
-			if boss_level and options.snolf_shot_on_touch_ground_when_in_boss and snlf.state == STATE_WAITING then
+			if boss_level and options.snolf_shot_on_touch_ground_when_in_boss
+			and snlf.state == STATE_WAITING and is_snolfing(mo) then
 				update_state(snlf, STATE_READY)
 			end
 			-- if going fast enough when Snolf hits the ground, bounce
@@ -774,6 +776,39 @@ addHook("PreThinkFrame", function()
 		end
 
 
+		-- enable jumping while on a water slide
+		if p.pflags & PF_SLIDING ~= 0 and p.jumpfactor == 0 then
+			p.jumpfactor = FRACUNIT
+		elseif P_IsObjectOnGround(mo) then
+			-- I don't like forcing stat changes every frame but other mods can
+			-- also mess with these values so we need to be defensive about it
+			-- to ensure Snolf works correctly with them
+			p.jumpfactor = 0
+		elseif not P_IsObjectOnGround(mo) then
+			-- Give back jump when in the air. It will be taken away again on
+			-- landing. This is done so that players can jump off objects like
+			-- the rollout rocks in Red Volcano Zone
+			p.jumpfactor = skins[mo.skin].jumpfactor
+		end
+
+
+		-- eat jump inputs entirely so other characters can't use jump abilties
+		-- while taking a shot when using Everybody's Snolf
+		if snlf.state != STATE_WAITING or snlf.statetimer < TICRATE/5 then
+			p.cmd.buttons = $1 & (!BT_JUMP)
+		end
+
+		-- store certain state attributes so we can check for changes next tick
+		snlf.prev.momz = player.mo.momz
+
+		-- state timer
+		snlf.statetimer = $1 + 1
+
+
+		-- No Kirby zone!
+		-- Don't apply everything below here to Kirby with the golf ability
+		if not is_snolfing(mo) then continue end
+
 		-- take a mulligan
 		if snlf.ctrl.spn == TICKS_FOR_MULLIGAN then
 			take_a_mulligan(snlf, snlf.mull_pts)
@@ -818,21 +853,6 @@ addHook("PreThinkFrame", function()
 			end
 		end
 
-		-- enable jumping while on a water slide
-		if p.pflags & PF_SLIDING ~= 0 and p.jumpfactor == 0 then
-			p.jumpfactor = FRACUNIT
-		elseif P_IsObjectOnGround(mo) then
-			-- I don't like forcing stat changes every frame but other mods can
-			-- also mess with these values so we need to be defensive about it
-			-- to ensure Snolf works correctly with them
-			p.jumpfactor = 0
-		elseif not P_IsObjectOnGround(mo) then
-			-- Give back jump when in the air. It will be taken away again on
-			-- landing. This is done so that players can jump off objects like
-			-- the rollout rocks in Red Volcano Zone
-			p.jumpfactor = skins[mo.skin].jumpfactor
-		end
-
 		-- infinite rings option
 		if options.snolf_inf_rings then
 			p.xtralife = 99
@@ -849,18 +869,6 @@ addHook("PreThinkFrame", function()
 				p.powers[pw_spacetime] = SPACE_AIR_TIMER
 			end
 		end
-
-		-- eat jump inputs entirely so other characters can't use jump abilties
-		-- while taking a shot when using Everybody's Snolf
-		if snlf.state != STATE_WAITING or snlf.statetimer < TICRATE/5 then
-			p.cmd.buttons = $1 & (!BT_JUMP)
-		end
-
-		-- store certain state attributes so we can check for changes next tick
-		snlf.prev.momz = player.mo.momz
-
-		-- state timer
-		snlf.statetimer = $1 + 1
 	end
 end)
 
@@ -965,7 +973,8 @@ addHook("MobjMoveBlocked", function(mo)
 	end
 
 	--let player take a shot if they bounce off walls while fighting a boss
-	if boss_level and options.snolf_shot_on_touch_wall_when_in_boss then
+	if boss_level and options.snolf_shot_on_touch_wall_when_in_boss
+	and is_snolfing(mo) then
 		local player = mo.player
 		if is_golf_setup(mo) and player.snolf.state == STATE_WAITING then
 			update_state(player.snolf, STATE_READY)
@@ -989,7 +998,7 @@ addHook("MobjDeath", function(mo)
 	reset_state(mo.player.snolf, options.snolf_death_mulligan)
 
 	-- infinite lives option
-	if options.snolf_inf_lives then
+	if options.snolf_inf_lives and is_snolfing(mo) then
 		mo.player.lives = $1 + 1
 	end
 end, MT_PLAYER)
@@ -1022,7 +1031,8 @@ end)
 
 -- option to return to last spot on death
 addHook("PlayerSpawn", function(player)
-	if is_golf_setup(player.mo) and options.snolf_death_mulligan then
+	if is_golf_setup(player.mo) and options.snolf_death_mulligan
+	and is_snolfing(player.mo) then
 		take_a_mulligan(player.snolf, player.snolf.mull_pts, true)
 	end
 end)
@@ -1047,7 +1057,7 @@ addHook("MobjDamage", function(target, inflictor, source, damage, damagetype)
 	if ( source ~= nil and (source.type >= MT_BOSSEXPLODE and source.type <= MT_MSGATHER) )
 		or (  inflictor ~= nil and ( inflictor.type >= MT_BOSSEXPLODE and inflictor.type <= MT_MSGATHER ) ) then
 
-		if is_golf_setup(player.mo) and player.snolf.state == STATE_WAITING then
+		if is_golf_setup(player.mo) and is_snolfing(player.mo) and player.snolf.state == STATE_WAITING then
 			update_state(player.snolf, STATE_READY)
 		end
 	end
