@@ -11,7 +11,7 @@ local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, at_rest,
 	snolfify_name, is_golf_setup, override_controls, are_touching, on_hit_boss,
 	calculate_weight, is_anyone_snolfing, reversed_gravity, print2, shot_charge,
 	draw_trajectory, update_state, is_snolf, is_snolfing, is_golfing,
-	is_anyone_snolf, update_hud
+	is_anyone_snolf, update_hud, h_meter_limit, v_meter_limit
 
 local options = {
 	everybodys_snolf = false,
@@ -256,6 +256,10 @@ get_charge_increment = function(snlf)
 	if snlf.p.powers[pw_super] > 0 then
 		-- double charge rate for Super Snolf
 		increment = $1 * 2
+		if snlf.p.hyper and snlf.p.hyper.capable then
+			-- double again for Hyper Snolf
+			increment = $1 * 2
+		end
 	end
 	if snlf.p.powers[pw_sneakers] > 0 then
 		-- double charge rate for Speed Shoes
@@ -428,8 +432,8 @@ end
 
 -- Predict the trajectory of the currently charging shot
 draw_trajectory = function(snlf)
-	local h = sinusoidal_scale(snlf.hdrive, H_METER_LENGTH)
-	local v = sinusoidal_scale(snlf.vdrive, V_METER_LENGTH)
+	local h = sinusoidal_scale(snlf.hdrive, h_meter_limit(snlf.p))
+	local v = sinusoidal_scale(snlf.vdrive, v_meter_limit(snlf.p))
 	local mo = snlf.p.mo
 	local x, y, z = mo.x, mo.y, mo.z -- current position
 	local mx = FixedMul(h*FRACUNIT, cos(mo.angle)) -- force we will take off with
@@ -508,6 +512,22 @@ draw_trajectory = function(snlf)
 end
 
 
+h_meter_limit = function(player)
+	if player.hyper and player.hyper.capable and player.powers[pw_super] then
+		return H_METER_LENGTH*2
+	end
+	return H_METER_LENGTH
+end
+
+
+v_meter_limit = function(player)
+	if player.hyper and player.hyper.capable and player.powers[pw_super] then
+		return V_METER_LENGTH*2
+	end
+	return V_METER_LENGTH
+end
+
+
 -- I wanted some characters to be considered heavier than others but weight is
 -- not an attribute characters have. I have opted for some weird logic instead.
 -- A character's mass is considered to be inverse of their jumpfactor.
@@ -544,7 +564,7 @@ shot_charge = function(snlf, vertical)
 	snlf.p.pflags = $1 | PF_STARTDASH | PF_SPINNING -- force spindash state
 
 	local charge = vertical and snlf.vdrive or snlf.hdrive
-	local limit = vertical and V_METER_LENGTH or H_METER_LENGTH
+	local limit = vertical and h_meter_limit(snlf.p) or v_meter_limit(snlf.p)
 	if charge >= limit then
 		snlf.chargegoingback = true
 	elseif charge <= 0 then
@@ -597,8 +617,8 @@ hud.add( function(v, player, camera)
 	local harrow = v.getSpritePatch(SPR_SFAH, 0, 4) -- shot meter arrow sprite 1
 	local varrow = v.getSpritePatch(SPR_SFAV, 0, 5) -- shot meter arrow sprite 2
 
-	local hpos = sinusoidal_scale(snlf.hdrive, H_METER_LENGTH)
-	local vpos = sinusoidal_scale(snlf.vdrive, V_METER_LENGTH)
+	local hpos = sinusoidal_scale(snlf.hdrive, h_meter_limit(player))
+	local vpos = sinusoidal_scale(snlf.vdrive, v_meter_limit(player))
 
 	if hpos < 1 then hpos = 1 end
 	if vpos < 1 then vpos = 1 end
@@ -807,8 +827,8 @@ addHook("PreThinkFrame", function()
 			if snlf.ctrl.jmp == 1 then
 				-- shoot
 				S_StartSound(mo, sfx_zoom)
-				local h = sinusoidal_scale(snlf.hdrive, H_METER_LENGTH)
-				local v = sinusoidal_scale(snlf.vdrive, V_METER_LENGTH)
+				local h = sinusoidal_scale(snlf.hdrive, h_meter_limit(p))
+				local v = sinusoidal_scale(snlf.vdrive, v_meter_limit(p))
 				P_InstaThrust(snlf.p.mo, snlf.p.mo.angle, h*FRACUNIT)
 				P_SetObjectMomZ(snlf.p.mo, v*FRACUNIT)
 
