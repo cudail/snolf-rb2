@@ -104,14 +104,15 @@ take a shot immediately after touching the ground
 ### Everybody's Snolf
 
 * `everybodys_snolf` [off]: Force all characters to control like Snolf.
-* `everybodys_snolf_name_override` [on]: Changes the name displayed on the life
-counter in the head's up display for non-Snolf characters. Turning it off
-returns the life count display to normal. Can also be set to `2` in to disable
-the life counter entirely.
+
 
 
 ### Other gameplay settings
 
+* `snolf_hud_mode` [on]: Alters the life count section of the heads up display
+to reflect if infinite lives is enabled and alterters character names if
+Everybody's Snolf is enabled. Can also be set to `2` in to disable the life
+counter entirely.
 * `snolf_inf_lives` [on]: Extra life is refunded on death
 * `snolf_fire_shield` [on]: Protects from spinning fire jets in Red Volcano
 * `snolf_shot_guide` [off]: Display a shot guide to help aim
