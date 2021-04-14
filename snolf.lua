@@ -854,6 +854,13 @@ addHook("PreThinkFrame", function()
 		-- state timer
 		snlf.statetimer = $1 + 1
 
+		-- X Momentum trick failed
+		if pcall(function(var) return not not _G[var] end, "S_PLAY_FACEPLANT") -- Safely check if this state exists
+		and is_snolf(mo) and mo.state == S_PLAY_FACEPLANT then
+			-- stick Snolf in place
+			P_InstaThrust(mo,0,0)
+		end
+
 
 		-- No Kirby zone!
 		-- Don't apply everything below here to Kirby with the golf ability
