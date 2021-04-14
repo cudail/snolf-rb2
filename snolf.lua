@@ -986,6 +986,7 @@ end)
 
 addHook("PostThinkFrame", function()
 	for player in players.iterate do
+		local mo = player.mo
 		if not is_golf_setup(player.mo) then continue end
 
 		-- force rolling animation
@@ -993,18 +994,19 @@ addHook("PostThinkFrame", function()
 			and player.mo.sprite ~= SPR_NULL -- if our sprite isn't null
 			and (player.playerstate ~= PST_DEAD or player.mo.skin == "snolf") then -- if we're not dead or Snolf Classic
 
-			if is_snolf(player.mo) and player.mo.state ~= S_PLAY_ROLL then
-				-- Snolf always rolls
-				player.mo.state = S_PLAY_ROLL
-			elseif is_golfing(player.mo) and P_IsObjectOnGround(player.mo) then
+			local state = mo.state
+
+			if is_snolf(mo) and state ~= S_PLAY_ROLL and state ~= S_PLAY_SPRING and state < S_NAMECHECK then
+				mo.state = S_PLAY_ROLL
+			elseif is_golfing(mo) and P_IsObjectOnGround(mo) then
 				-- don't force rolling animation if the player is in a mod-added state
 				-- only do it for default ones like standing, running, etc.
-				if player.mo.state ~= S_PLAY_ROLL and player.mo.state < S_NAMECHECK then
-					player.mo.state = S_PLAY_ROLL
+				if state ~= S_PLAY_ROLL and state < S_NAMECHECK then
+					mo.state = S_PLAY_ROLL
 				end
-			elseif is_golfing(player.mo) and player.mo.state == S_PLAY_FALL then
+			elseif is_golfing(mo) and state == S_PLAY_FALL then
 				-- if in the air only force the rolling animation if the player is currently in the falling animation
-				player.mo.state = S_PLAY_ROLL
+				mo.state = S_PLAY_ROLL
 			end
 		end
 
