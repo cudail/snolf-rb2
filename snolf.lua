@@ -11,7 +11,7 @@ local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, at_rest,
 	snolfify_name, is_golf_setup, override_controls, are_touching, on_hit_boss,
 	calculate_weight, is_anyone_snolfing, reversed_gravity, print2, shot_charge,
 	draw_trajectory, update_state, is_snolf, is_snolfing, is_golfing,
-	is_anyone_snolf, update_hud, h_meter_limit, v_meter_limit
+	is_anyone_snolf, update_hud, h_meter_limit, v_meter_limit, does_global_exist
 
 local options = {
 	everybodys_snolf = false,
@@ -605,6 +605,9 @@ update_hud = function()
 end
 
 
+does_global_exist = function(var)
+	return pcall(function(var2) return not not _G[var2] end, var)
+end
 
 -------------------
 -- HUD functions --
@@ -846,6 +849,13 @@ addHook("PreThinkFrame", function()
 		end
 
 
+		-- X Momentum trick failed
+		if does_global_exist("S_PLAY_FACEPLANT")
+		and is_snolf(mo) and mo.state == S_PLAY_FACEPLANT then
+			-- stick Snolf in place
+			P_InstaThrust(mo,0,0)
+		end
+
 		-- enable jumping while on a water slide
 		if p.pflags & PF_SLIDING ~= 0 and p.jumpfactor == 0 then
 			p.jumpfactor = FRACUNIT
@@ -854,7 +864,7 @@ addHook("PreThinkFrame", function()
 			-- also mess with these values so we need to be defensive about it
 			-- to ensure Snolf works correctly with them
 			override_controls(snlf)
-			if p.speed > 0 then
+			if mo.momx > 0 or mo.momy > 0 then
 				p.pflags = $1 | PF_SPINNING -- force spinning flag
 			end
 		elseif not P_IsObjectOnGround(mo) then
@@ -876,13 +886,6 @@ addHook("PreThinkFrame", function()
 
 		-- state timer
 		snlf.statetimer = $1 + 1
-
-		-- X Momentum trick failed
-		if pcall(function(var) return not not _G[var] end, "S_PLAY_FACEPLANT") -- Safely check if this state exists
-		and is_snolf(mo) and mo.state == S_PLAY_FACEPLANT then
-			-- stick Snolf in place
-			P_InstaThrust(mo,0,0)
-		end
 
 
 		-- No Kirby zone!
