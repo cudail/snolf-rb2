@@ -773,10 +773,6 @@ addHook("PreThinkFrame", function()
 				-- count as being classed as on the ground for the frame
 				-- otherwise they might be able to do a jump input when they shouldn't
 				P_TeleportMove(mo, mo.x, mo.y, mo.z + (reversed_gravity(mo) and -1 or 1))
-			-- otherwise land
-			else
-				p.pflags = $1 | PF_SPINNING -- force spinning flag
-				override_controls(snlf)
 			end
 		end
 
@@ -858,6 +854,9 @@ addHook("PreThinkFrame", function()
 			-- also mess with these values so we need to be defensive about it
 			-- to ensure Snolf works correctly with them
 			override_controls(snlf)
+			if p.speed > 0 then
+				p.pflags = $1 | PF_SPINNING -- force spinning flag
+			end
 		elseif not P_IsObjectOnGround(mo) then
 			-- Give back jump when in the air. It will be taken away again on
 			-- landing. This is done so that players can jump off objects like
