@@ -287,7 +287,7 @@ allow_air_snolf = function(snlf)
 		return true
 	end
 	-- Super Snolf
-	if snlf.p.powers[pw_super] > 0 then
+	if is_snolf(snlf.p.mo) and snlf.p.powers[pw_super] > 0 then
 		return true
 	-- if Snolf is in the vacuum of space
 	elseif snlf.p.powers[pw_spacetime] > 0 then
