@@ -45,6 +45,17 @@ shot wisely. Because Snolf can be very difficult to control they have infinite
 lives. Snolf is also immune to the spinning fire jets in Red Volcano Zone.
 
 
+### Control rebinding
+
+The mulligan button can also be rebound in the console with the following:
+* `snolf_mulligan_button spin`
+* `snolf_mulligan_button jump`
+* `snolf_mulligan_button ca1`
+* `snolf_mulligan_button ca2`
+* `snolf_mulligan_button ca3`
+* `snolf_mulligan_button off`
+
+
 ### Boss mode
 
 When fighting a boss Snolf gets some extra leeway. Against a boss you can take a
