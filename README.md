@@ -145,7 +145,23 @@ Life count icon from Mario Golf: Advance Tour.
 ## Changelog
 
 v2.15
-* Snolf grants Kirby the Ball ability if copied
+* Made changes to accomidate X Momentum
+* Added X Momentum faceplant sprites
+* Added Kirby copy ability to Snolf: Golf
+* Added Milne dancing sprites
+* Snolf physics no longer interfere with Nack's bounce or Gemma's slam
+* Golfing characters are forced into a roll state less often
+* Reworked some features to only apply to Snolf, even in Everybody's Snolf mode
+* Golfers no longer bounce off walls while on a waterslide
+* Save state system now saves and loads object and player flags
+* Added onscreen hint about using a mulligan if the player hasn't been able to
+take a shot for ten seconds
+* snolf_inf_lives is now reflected in the life counter in the head's up display
+* Renamed command everybodys_snolf_name_override to snolf_hud_mode
+* Added snolf_mulligan_button command to let players set their mulligan button
+* Fixed Everybody's Snolf mode still allowing normal movement sometimes
+* Fixed bug with input handling
+* Fixed roll animation playing too quickly
 
 v2.14
 * Improved compatibility with mods that alter character stats like X Momentum
