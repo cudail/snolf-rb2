@@ -282,14 +282,17 @@ end
 
 -- situations where we want Snolf to be able to shoot mid-air
 allow_air_snolf = function(snlf)
+	if not is_snolfing(snlf.p.mo) then
+		return false
+	end
+
 	-- air snolf option
 	if options.snolf_air_shot then
 		return true
-	end
 	-- Super Snolf
-	if is_snolf(snlf.p.mo) and snlf.p.powers[pw_super] > 0 then
+	elseif is_snolf(snlf.p.mo) and snlf.p.powers[pw_super] > 0 then
 		return true
-	-- if Snolf is in the vacuum of space
+	-- in the vacuum of space
 	elseif snlf.p.powers[pw_spacetime] > 0 then
 		return true
 	end
