@@ -732,12 +732,14 @@ addHook("PreThinkFrame", function()
 		end
 
 		-- check if we landed this turn
-		if mo.eflags & MFE_JUSTHITFLOOR > 0 then
+		if mo.eflags & MFE_JUSTHITFLOOR > 0
+		and p.mo.rollangle <= ANG60 and p.mo.rollangle >= ANG350 - ANG30 - ANG20 then --allow X Momentum faceplants
 			--makes bosses easier
 			if boss_level and options.snolf_shot_on_touch_ground_when_in_boss
 			and snlf.state == STATE_WAITING and is_snolfing(mo) then
 				update_state(snlf, STATE_READY)
 			end
+
 			-- if going fast enough when Snolf hits the ground, bounce
 			if abs(snlf.prev.momz) > BOUNCE_LIMIT and p.playerstate ~= PST_DEAD
 			and mo.state ~= S_PLAY_BOUNCE and mo.state ~= S_PLAY_BOUNCE_LANDING then
