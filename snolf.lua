@@ -765,7 +765,8 @@ addHook("PreThinkFrame", function()
 
 			-- if going fast enough when Snolf hits the ground, bounce
 			if abs(snlf.prev.momz) > BOUNCE_LIMIT and p.playerstate ~= PST_DEAD
-			and mo.state ~= S_PLAY_BOUNCE and mo.state ~= S_PLAY_BOUNCE_LANDING then
+			and mo.state ~= S_PLAY_BOUNCE and mo.state ~= S_PLAY_BOUNCE_LANDING
+			and not (p.gemmasmash and p.gemmasmash > 0) then
 				P_SetObjectMomZ(mo, FixedMul(snlf.prev.momz, BOUNCE_FACTOR) * (reversed_gravity(mo) and 1 or -1))
 				snlf.p.pflags = $1 | PF_JUMPED | PF_THOKKED | PF_SHIELDABILITY
 				-- move slightly off the ground immediately so snolf doesn't
