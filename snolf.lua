@@ -995,7 +995,6 @@ addHook("PostThinkFrame", function()
 			and (player.playerstate ~= PST_DEAD or player.mo.skin == "snolf") then -- if we're not dead or Snolf Classic
 
 			local state = mo.state
-
 			if is_snolf(mo) and state ~= S_PLAY_ROLL and state ~= S_PLAY_SPRING and state < S_NAMECHECK then
 				mo.state = S_PLAY_ROLL
 			elseif is_golfing(mo) and P_IsObjectOnGround(mo) then
