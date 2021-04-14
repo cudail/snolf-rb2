@@ -860,12 +860,17 @@ addHook("PreThinkFrame", function()
 		if p.pflags & PF_SLIDING ~= 0 and p.jumpfactor == 0 then
 			p.jumpfactor = FRACUNIT
 		elseif P_IsObjectOnGround(mo) then
-			-- I don't like forcing stat changes every frame but other mods can
-			-- also mess with these values so we need to be defensive about it
-			-- to ensure Snolf works correctly with them
-			override_controls(snlf)
-			if mo.momx > 0 or mo.momy > 0 then
-				p.pflags = $1 | PF_SPINNING -- force spinning flag
+			if does_global_exist("S_MILNE_KICK") and mo.state == S_MILNE_KICK then
+				player.accelstart = 96
+				player.acceleration = 40
+			else
+				-- I don't like forcing stat changes every frame but other mods can
+				-- also mess with these values so we need to be defensive about it
+				-- to ensure Snolf works correctly with them
+				override_controls(snlf)
+				if mo.momx > 0 or mo.momy > 0 then
+					p.pflags = $1 | PF_SPINNING -- force spinning flag
+				end
 			end
 		elseif not P_IsObjectOnGround(mo) then
 			-- Give back jump when in the air. It will be taken away again on
