@@ -1105,10 +1105,10 @@ end, MT_PLAYER)
 addHook("MobjDeath", function(mo)
 	if mo.player and mo.skin and mo.player.accelstart == 0 then
 		local skin = skins[mo.skin]
-		player.jumpfactor = skin.jumpfactor
-		player.accelstart = skin.accelstart
-		player.acceleration = skin.acceleration
-		player.charability2 = skin.ability2
+		mo.player.jumpfactor = skin.jumpfactor
+		mo.player.accelstart = skin.accelstart
+		mo.player.acceleration = skin.acceleration
+		mo.player.charability2 = skin.ability2
 	end
 end, MT_PLAYER)
 
