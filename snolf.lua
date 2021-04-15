@@ -641,7 +641,7 @@ end, "game")
 
 -- shots count
 hud.add( function(v, player, camera)
-	if not is_golf_setup(player.mo) then return end
+	if not is_golf_setup(player.mo) or not is_snolfing(player.mo) then return end
 
 	local hud_shots = v.getSpritePatch(SPR_SFST) -- SHOTS HUD element
 	local shotcount = player.snolf.shotcount + player.snolf.mullcount
