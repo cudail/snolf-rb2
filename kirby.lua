@@ -12,6 +12,7 @@ local K_Snolf = function(checkflags, destroy, late, player)
 		player.accelstart = skin.accelstart
 		player.acceleration = skin.acceleration
 		player.charability2 = skin.ability2
+		return
 	end
 	if late then
 		return
