@@ -1102,6 +1102,17 @@ addHook("MobjDeath", function(mo)
 end, MT_PLAYER)
 
 
+addHook("MobjDeath", function(mo)
+	if mo.player and mo.skin and mo.player.accelstart == 0 then
+		local skin = skins[mo.skin]
+		player.jumpfactor = skin.jumpfactor
+		player.accelstart = skin.accelstart
+		player.acceleration = skin.acceleration
+		player.charability2 = skin.ability2
+	end
+end, MT_PLAYER)
+
+
 -- reset state when a new map is loaded
 addHook("MapLoad", function(mapnumber)
 	for player in players.iterate do
