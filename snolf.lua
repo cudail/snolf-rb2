@@ -11,7 +11,7 @@ local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, at_rest,
 	snolfify_name, is_golf_setup, override_controls, are_touching, on_hit_boss,
 	calculate_weight, is_anyone_snolfing, reversed_gravity, print2, shot_charge,
 	draw_trajectory, update_state, is_snolf, is_snolfing, is_golfing,
-	is_anyone_snolf, update_hud, h_meter_limit, v_meter_limit, does_global_exist
+	is_anyone_snolf, update_hud, h_meter_limit, v_meter_limit
 
 local options = {
 	everybodys_snolf = false,
@@ -605,10 +605,6 @@ update_hud = function()
 	end
 end
 
-
-does_global_exist = function(var)
-	return pcall(function(var2) return not not _G[var2] end, var)
-end
 
 -------------------
 -- HUD functions --
