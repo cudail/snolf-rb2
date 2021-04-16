@@ -861,7 +861,7 @@ addHook("PreThinkFrame", function()
 		if p.pflags & PF_SLIDING ~= 0 and p.jumpfactor == 0 then
 			p.jumpfactor = FRACUNIT
 		elseif P_IsObjectOnGround(mo) then
-			if does_global_exist("S_MILNE_KICK") and mo.state == S_MILNE_KICK then
+			if player.milnekick and player.milnekick > 0 then
 				player.accelstart = 96
 				player.acceleration = 40
 			else
