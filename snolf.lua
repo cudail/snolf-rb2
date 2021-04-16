@@ -851,8 +851,7 @@ addHook("PreThinkFrame", function()
 
 
 		-- X Momentum trick failed
-		if does_global_exist("S_PLAY_FACEPLANT")
-		and is_snolf(mo) and mo.state == S_PLAY_FACEPLANT then
+		if is_snolf(mo) and player.isxmomentum and mo.state == S_PLAY_FACEPLANT then
 			-- stick Snolf in place
 			P_InstaThrust(mo,0,0)
 		end
