@@ -156,6 +156,9 @@ Life count icon from Mario Golf: Advance Tour.
 
 ## Changelog
 
+v2.17
+* Changed how Milne dance and Cross Momentum faceplant states are checked
+
 v2.16
 * Fixed some issues with Kirby's Golf ability
 
