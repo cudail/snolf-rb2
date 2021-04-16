@@ -355,7 +355,12 @@ snolfify_name = function(orig_name)
 	local name_replacement = {
 		sonic = "Snolf",
 		knuckles = "Knolf",
-		tails = "Tolf"
+		knux = "Knolf",
+		tails = "Tolf",
+		shadow = "Shdolf",
+		silver = "Slolf",
+		rouge = "Roulfe",
+		robotnik = "Robotnolf"
 	}
 
 	for k, v in pairs(name_replacement) do
@@ -367,11 +372,7 @@ snolfify_name = function(orig_name)
 	local name_lookup = {
 		amy = "Amy Rolf",
 		metal = "M"..sep.."Snolf",
-		robotnik = "Robotnolf",
-		shadow = "Shdolf",
-		silver = "Slolf",
-		rouge = "Roulfe",
-		gamma = "102-Golf",
+		gamma = "E-102 Golf",
 		dickkickem = "Dolf Snolfem",
 		steve = "Stove"}
 	name_lookup["k"..sep.."t"..sep.."e"] = "Knolf"
