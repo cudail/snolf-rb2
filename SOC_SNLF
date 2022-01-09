@@ -1,12 +1,16 @@
 Character
-SkinName = Snolf
+SkinName = snolf
 DisplayName = Snolf
 TagTextColor = SKINCOLOR_COBALT
 TagOutlineColor = SKINCOLOR_SEAFOAM
 OppositeColor = SKINCOLOR_FOREST
 PlayerText = \8BSnolf^0 can only move via the power of golf.
 
-Aim with the camera and use the Jump button to time your shots' horizontal and vertical power. Hold forward to charge vertical power first.
+Aim with the camera and use the Jump button to time your shots' power.
+
+Hold Jump while rolling to brake.
+
+Hold forward to charge vertical power first.
 
 \8BAbility:^0 Mulligan
 Hold the Spin button to undo your last shot.
