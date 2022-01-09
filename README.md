@@ -35,6 +35,8 @@ power of golf.
 horizontal and vertical power. You can also hold the forward button when you
 press Jump to charge vertical power first.
 
+You can hold the Jump button to brake while rolling.
+
 **Mulligan:** Hold the Spin button to undo your last shot. Use this if you get
 stuck.
 
@@ -155,6 +157,10 @@ Life count icon from Mario Golf: Advance Tour.
 
 
 ## Changelog
+
+v2.18
+* Added braking
+* Snolf leaves a default thok particle train instead of dust again
 
 v2.17
 * Changed how Milne dance and Cross Momentum faceplant states are checked
