@@ -864,8 +864,22 @@ addHook("PreThinkFrame", function()
 				-- also mess with these values so we need to be defensive about it
 				-- to ensure Snolf works correctly with them
 				override_controls(snlf)
+
 				if mo.momx > 0 or mo.momy > 0 then
-					p.pflags = $1 | PF_SPINNING -- force spinning flag
+					--braking
+					if snlf.ctrl.jmp > 0
+					and snlf.state == STATE_WAITING
+					and snlf.statetimer > TICRATE/5 then
+						if p.skidtime == 0 then
+							p.pflags = $1 & ~PF_SPINNING
+							p.skidtime = TICRATE/2
+							S_StartSound(mo, sfx_skid)
+						elseif p.skidtime == 1
+							p.skidtime = $1 + 1
+						end
+					else
+						p.pflags = $1 | PF_SPINNING -- force spinning flag
+					end
 				end
 			end
 		elseif not P_IsObjectOnGround(mo) then
