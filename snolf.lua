@@ -741,6 +741,8 @@ addHook("PreThinkFrame", function()
 		snlf.ctrl.ca2 = p.cmd.buttons & BT_CUSTOM2 and $1+1 or 0
 		snlf.ctrl.ca3 = p.cmd.buttons & BT_CUSTOM3 and $1+1 or 0
 
+		local braking = snlf.ctrl.jmp > 0
+
 		-- skim across water
 		if mo.momz < 0 and p.speed > SKIM_THRESHOLD and mo.eflags & MFE_TOUCHWATER > 0 and
 		R_PointToAngle2(0, 0, p.speed, -mo.momz) < SKIM_ANLGE then
@@ -768,7 +770,7 @@ addHook("PreThinkFrame", function()
 			local bounce_f = BOUNCE_FACTOR
 
 			-- if player is holding jump they are braking so let them get out of bouncing easier
-			if snlf.ctrl.jmp ~= 0 then
+			if braking then
 				bounce_l = BOUNCE_LIMIT * 2
 				bounce_f = BOUNCE_FACTOR * 2 / 3
 			end
@@ -876,7 +878,7 @@ addHook("PreThinkFrame", function()
 
 				if mo.momx > 0 or mo.momy > 0 then
 					--braking
-					if snlf.ctrl.jmp > 0
+					if braking
 					and snlf.state == STATE_WAITING
 					and snlf.statetimer > TICRATE/5 then
 						if p.skidtime == 0 then
