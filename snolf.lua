@@ -11,7 +11,7 @@ local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, at_rest,
 	snolfify_name, is_golf_setup, override_controls, are_touching, on_hit_boss,
 	calculate_weight, is_anyone_snolfing, reversed_gravity, print2, shot_charge,
 	draw_trajectory, update_state, is_snolf, is_snolfing, is_golfing,
-	is_anyone_snolf, update_hud, h_meter_limit, v_meter_limit, shoot
+	is_anyone_snolf, update_hud, h_meter_limit, v_meter_limit, shoot, nudge_up
 
 local options = {
 	everybodys_snolf = false,
@@ -597,22 +597,34 @@ update_state = function(snolf, state)
 end
 
 shoot = function(snlf)
-	S_StartSound(snlf.p.mo, sfx_zoom)
-	local h = sinusoidal_scale(snlf.hdrive, h_meter_limit(snlf.p))
-	local v = sinusoidal_scale(snlf.vdrive, v_meter_limit(snlf.p))
-	P_InstaThrust(snlf.p.mo, snlf.p.mo.angle, h*FRACUNIT)
-	P_SetObjectMomZ(snlf.p.mo, v*FRACUNIT)
+	local p = snlf.p
+	local mo = p.mo
+	S_StartSound(mo, sfx_zoom)
+	local h = sinusoidal_scale(snlf.hdrive, h_meter_limit(p))
+	local v = sinusoidal_scale(snlf.vdrive, v_meter_limit(p))
+	P_InstaThrust(mo, mo.angle, h*FRACUNIT)
+	P_SetObjectMomZ(mo, v*FRACUNIT)
 
 	-- change some player state
 	if v > 0 then
-		snlf.p.pflags = $1 | PF_JUMPED
+		p.pflags = $1 | PF_JUMPED
+	else
+		nudge_up(mo)
 	end
-	if snlf.p.pflags & PF_FINISHED == 0 then
+	if p.pflags & PF_FINISHED == 0 then
 		snlf.shotcount = $1 + 1
 	end
-	snlf.p.mo.state = S_PLAY_ROLL
+	mo.state = S_PLAY_ROLL
 
 	update_state(snlf, STATE_WAITING)
+end
+
+
+nudge_up = function(mo)
+	-- move slightly off the ground immediately so snolf doesn't
+	-- count as being classed as on the ground for the frame
+	-- hacky thing to make certain things work more smoothly
+	P_TeleportMove(mo, mo.x, mo.y, mo.z + (reversed_gravity(mo) and -1 or 1))
 end
 
 
@@ -799,10 +811,7 @@ addHook("PreThinkFrame", function()
 			and not (p.gemmasmash and p.gemmasmash > 0) then
 				P_SetObjectMomZ(mo, FixedMul(snlf.prev.momz, bounce_f) * (reversed_gravity(mo) and 1 or -1))
 				snlf.p.pflags = $1 | PF_JUMPED | PF_THOKKED | PF_SHIELDABILITY
-				-- move slightly off the ground immediately so snolf doesn't
-				-- count as being classed as on the ground for the frame
-				-- otherwise they might be able to do a jump input when they shouldn't
-				P_TeleportMove(mo, mo.x, mo.y, mo.z + (reversed_gravity(mo) and -1 or 1))
+				nudge_up(mo)
 			end
 		end
 
