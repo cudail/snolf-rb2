@@ -32,8 +32,10 @@ Snolf cannot move or jump like a normal character. They can only move via the
 power of golf.
 
 **Swing:** Aim with the camera and use the Jump button to time your shots'
-horizontal and vertical power. You can also hold the forward button when you
-press Jump to charge vertical power first.
+horizontal and vertical power.
+
+You can hold the forward button when you press Jump to charge vertical power
+first and you can hold back to shoot after only charging a single axis.
 
 You can hold the Jump button to brake while rolling.
 
@@ -157,6 +159,10 @@ Life count icon from Mario Golf: Advance Tour.
 
 
 ## Changelog
+
+v2.19
+* You can now hold down when shooting to only drive along one axis
+* Stop life count from going below 2 so retry can always be used from the menu
 
 v2.18
 * Added braking
