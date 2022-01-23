@@ -15,3 +15,5 @@ Investigating using MF_BOUNCE rather than MobjMoveBlocked.
 Design with distinction between Snolf, Snolfers and Golfers from the start. (Snolf = the character themself, Snolfers = everyone else if Everybody's Snolf is enabled, Golfers = Kirby with the Golf copy ability)
 
 Think more about how things should be split between ThinkFrame, PreThinkFrame, PostThinkFrame, PlayerThink, MobjThinker and possibly other hooks.
+
+The shot guide is unreliable and things like goop interfere with it.
