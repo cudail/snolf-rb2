@@ -96,7 +96,7 @@ snolf_setup = function(player)
 		-- previous tick state
 		prev = { momz = 0 },
 		-- controls
-		ctrl = { jmp = 0, spn = 0, up = 0, ca1 = 0, ca2 = 0, ca3 = 0 },
+		ctrl = { jmp = 0, spn = 0, up = 0, dn = 0, ca1 = 0, ca2 = 0, ca3 = 0 },
 		mull_button = 'spn',
 		-- mulligan points
 		mull_pts = {},
@@ -768,6 +768,7 @@ addHook("PreThinkFrame", function()
 		snlf.ctrl.jmp = p.cmd.buttons & BT_JUMP and $1+1 or 0
 		snlf.ctrl.spn = p.cmd.buttons & BT_SPIN and $1+1 or 0
 		snlf.ctrl.up  = p.cmd.forwardmove >  20 and $1+1 or 0
+		snlf.ctrl.dn  = p.cmd.forwardmove < -20 and $1+1 or 0
 		snlf.ctrl.ca1 = p.cmd.buttons & BT_CUSTOM1 and $1+1 or 0
 		snlf.ctrl.ca2 = p.cmd.buttons & BT_CUSTOM2 and $1+1 or 0
 		snlf.ctrl.ca3 = p.cmd.buttons & BT_CUSTOM3 and $1+1 or 0
@@ -854,9 +855,18 @@ addHook("PreThinkFrame", function()
 		elseif snlf.state == STATE_CHARGE1 then
 			-- jump is pressed
 			if snlf.ctrl.jmp == 1 then
-				S_StartSoundAtVolume(mo, sfx_spndsh, 100)
-				snlf.chargegoingback = false
-				update_state(snlf, STATE_CHARGE2)
+				if snlf.ctrl.dn > 0 then
+					if snlf.verticalfirst then
+						snlf.hdrive = 0
+					else
+						snlf.vdrive = 0
+					end
+					shoot(snlf)
+				else
+					S_StartSoundAtVolume(mo, sfx_spndsh, 100)
+					snlf.chargegoingback = false
+					update_state(snlf, STATE_CHARGE2)
+				end
 			else
 				shot_charge(snlf, snlf.verticalfirst)
 			end
