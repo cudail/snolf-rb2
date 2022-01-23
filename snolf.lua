@@ -11,7 +11,7 @@ local shot_ready, horizontal_charge, vertical_charge, waiting_to_stop, at_rest,
 	snolfify_name, is_golf_setup, override_controls, are_touching, on_hit_boss,
 	calculate_weight, is_anyone_snolfing, reversed_gravity, print2, shot_charge,
 	draw_trajectory, update_state, is_snolf, is_snolfing, is_golfing,
-	is_anyone_snolf, update_hud, h_meter_limit, v_meter_limit
+	is_anyone_snolf, update_hud, h_meter_limit, v_meter_limit, shoot
 
 local options = {
 	everybodys_snolf = false,
@@ -596,6 +596,25 @@ update_state = function(snolf, state)
 	snolf.statetimer = 0
 end
 
+shoot = function(snlf)
+	S_StartSound(snlf.p.mo, sfx_zoom)
+	local h = sinusoidal_scale(snlf.hdrive, h_meter_limit(snlf.p))
+	local v = sinusoidal_scale(snlf.vdrive, v_meter_limit(snlf.p))
+	P_InstaThrust(snlf.p.mo, snlf.p.mo.angle, h*FRACUNIT)
+	P_SetObjectMomZ(snlf.p.mo, v*FRACUNIT)
+
+	-- change some player state
+	if v > 0 then
+		snlf.p.pflags = $1 | PF_JUMPED
+	end
+	if snlf.p.pflags & PF_FINISHED == 0 then
+		snlf.shotcount = $1 + 1
+	end
+	snlf.p.mo.state = S_PLAY_ROLL
+
+	update_state(snlf, STATE_WAITING)
+end
+
 
 update_hud = function()
 	if options.snolf_hud_mode > 0 then
@@ -836,21 +855,7 @@ addHook("PreThinkFrame", function()
 		elseif snlf.state == STATE_CHARGE2 then
 			-- jump is pressed
 			if snlf.ctrl.jmp == 1 then
-				-- shoot
-				S_StartSound(mo, sfx_zoom)
-				local h = sinusoidal_scale(snlf.hdrive, h_meter_limit(p))
-				local v = sinusoidal_scale(snlf.vdrive, v_meter_limit(p))
-				P_InstaThrust(snlf.p.mo, snlf.p.mo.angle, h*FRACUNIT)
-				P_SetObjectMomZ(snlf.p.mo, v*FRACUNIT)
-
-				-- change some player state
-				snlf.p.pflags = $1 | PF_JUMPED
-				if p.pflags & PF_FINISHED == 0 then
-					snlf.shotcount = $1 + 1
-				end
-				mo.state = S_PLAY_ROLL
-
-				update_state(snlf, STATE_WAITING)
+				shoot(snlf)
 			else
 				shot_charge(snlf, not snlf.verticalfirst)
 			end
