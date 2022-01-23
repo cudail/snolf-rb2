@@ -1191,6 +1191,16 @@ addHook("PlayerSpawn", function(player)
 	end
 end)
 
+-- keep they player with at least two lives so they can use the retry option
+addHook("PlayerSpawn", function(player)
+	if options.snolf_inf_lives
+	and is_snolfing(player.mo)
+	and player.lives < 2 then
+		player.lives = 2
+	end
+end)
+
+
 -- Immediately allow player to take another shot if they hit a boss
 addHook("MobjCollide", on_hit_boss, MT_EGGMOBILE, S_EGGMOBILE_PAIN)
 addHook("MobjCollide", on_hit_boss, MT_EGGMOBILE2)
