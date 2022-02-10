@@ -89,6 +89,7 @@ snolf_setup = function(player)
 		-- Snolf shot state
 		state = STATE_WAITING,
 		statetimer = 0,
+		hinttimer = 0,
 		hdrive = 0,
 		vdrive = 0,
 		chargegoingback = false,
@@ -594,6 +595,7 @@ end
 update_state = function(snolf, state)
 	snolf.state = state
 	snolf.statetimer = 0
+	snolf.hinttimer = 0
 end
 
 shoot = function(snlf)
@@ -685,13 +687,13 @@ end, "game")
 hud.add( function(v, player, camera)
 	if not is_golf_setup(player.mo) or not is_snolfing(player.mo)
 	or player.snolf.state ~= STATE_WAITING or not player.snolf.mull_button
-	or player.snolf.statetimer < TICRATE*10 then
+	or player.snolf.hinttimer < TICRATE*10 then
 		return
 	end
 
 	local bname = button_names[player.snolf.mull_button]
 	local hint = "Hold "..bname.." to retake shot"
-	local colourflag = (player.snolf.statetimer/TICRATE)%2 == 0 and V_YELLOWMAP or V_REDMAP
+	local colourflag = (player.snolf.hinttimer/TICRATE)%2 == 0 and V_YELLOWMAP or V_REDMAP
 	v.drawString(16, 166 , hint, colourflag|V_HUDTRANS|V_SNAPTOLEFT|V_SNAPTOBOTTOM, "thin")
 end, "game")
 
@@ -936,7 +938,12 @@ addHook("PreThinkFrame", function()
 
 		-- state timer
 		snlf.statetimer = $1 + 1
+		snlf.hinttimer = $1 + 1
 
+		-- don't display hint if player is on waterslide
+		if p.pflags & PF_SLIDING ~= 0 then
+			snlf.hinttimer = 0
+		end
 
 		-- No Kirby zone!
 		-- Don't apply everything below here to Kirby with the golf ability
