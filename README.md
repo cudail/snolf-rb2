@@ -161,7 +161,7 @@ Life count icon from Mario Golf: Advance Tour.
 ## Changelog
 
 v2.20
-* Don't display mulligan hint when player is on a waterslide or rollou rock
+* The mulligan hint is no longer displayed when Snolf is on a waterslide or rollout rock
 
 v2.19
 * You can now hold down when shooting to only drive along one axis
