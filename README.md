@@ -160,6 +160,9 @@ Life count icon from Mario Golf: Advance Tour.
 
 ## Changelog
 
+v2.20
+* Don't display mulligan hint when player is on a waterslide or rollou rock
+
 v2.19
 * You can now hold down when shooting to only drive along one axis
 * Stop life count from going below 2 so retry can always be used from the menu
