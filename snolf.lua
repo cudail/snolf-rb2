@@ -207,6 +207,9 @@ take_a_mulligan = function(snlf, pts, dont_play_sound)
 			S_StartSound(mo, sfx_mixup)
 		end
 
+		mo.tracer = nil
+		snlf.p.powers[pw_carry] = 0
+
 		P_TeleportMove(mo, lm.x, lm.y, lm.z)
 
 		local momx, momy, momz = lm.momx or 0, lm.momy or 0, lm.momz or 0
