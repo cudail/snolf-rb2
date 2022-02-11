@@ -819,7 +819,7 @@ addHook("PreThinkFrame", function()
 		end
 
 		-- try to set a mulligan point
-		if at_rest(snlf) and not p.onconveyor then
+		if at_rest(snlf) and not p.onconveyor and p.powers[pw_carry] == 0 then
 			local mo, mulls = snlf.p.mo, snlf.mull_pts
 			local lm = mulls[#mulls] -- last mulligan point
 
