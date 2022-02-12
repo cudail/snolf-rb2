@@ -1,6 +1,6 @@
 ## Snolf Robo Blast 2
 
-![Snolf the Golfball illustration by Mike Tona](snolf.png)
+![Snolf the Golfball illustration by Mike Tona](media/snolf.png)
 
 Snolf character mod for Sonic Robo Blast 2 that allows you to play it like golf.
 Snolf cannot move normally and controls like a golf game. Aim with the camera
@@ -25,6 +25,7 @@ to enable saving use [V_customsave-v1.soc].
 [V_customsave-v1.soc]: https://mb.srb2.org/showthread.php?t=45730
 
 
+![Snolf gameplay](media/frozen-hillside.gif)
 
 ## Gameplay
 
@@ -68,6 +69,8 @@ boss or after getting hit by the boss. Bosses also drop six rings when hit.
 These features can be toggled off if you prefer (see commands section below).
 
 
+![Snolf combined with the Tangle the Lemur mod](media/tangolf.gif)
+
 ### Everybody's Snolf
 
 Snolf isn't just for Snolf. With Everybody's Snolf everybody can snolf. Use the
@@ -92,6 +95,7 @@ emulator. It only affects the player and can't be used between dying and
 respawning.
 
 
+![Snolf multiplayer](media/pool.gif)
 
 ## Commands
 
