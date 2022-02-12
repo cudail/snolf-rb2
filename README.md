@@ -25,8 +25,6 @@ to enable saving use [V_customsave-v1.soc].
 [V_customsave-v1.soc]: https://mb.srb2.org/showthread.php?t=45730
 
 
-![Snolf gameplay](media/frozen-hillside.gif)
-
 ## Gameplay
 
 Snolf cannot move or jump like a normal character. They can only move via the
@@ -50,6 +48,8 @@ shot wisely. Because Snolf can be very difficult to control they have infinite
 lives. Snolf is also immune to the spinning fire jets in Red Volcano Zone.
 
 
+![Snolf gameplay](media/frozen-hillside.gif)
+
 ### Control rebinding
 
 The mulligan button can also be rebound in the console with the following:
@@ -69,14 +69,14 @@ boss or after getting hit by the boss. Bosses also drop six rings when hit.
 These features can be toggled off if you prefer (see commands section below).
 
 
-![Snolf combined with the Tangle the Lemur mod](media/tangolf.gif)
-
 ### Everybody's Snolf
 
 Snolf isn't just for Snolf. With Everybody's Snolf everybody can snolf. Use the
 `everybodys_snolf` command to get everyone in on the fun. It even works with
 characters from other addons, but I can't guarantee it won't break anything.
 
+
+![Snolf combined with the Tangle the Lemur mod](media/tangolf.gif)
 
 ### Shot guide
 
@@ -94,8 +94,6 @@ and shot charge. This is not a full save state like you would have in an
 emulator. It only affects the player and can't be used between dying and
 respawning.
 
-
-![Snolf multiplayer](media/pool.gif)
 
 ## Commands
 
@@ -143,6 +141,7 @@ counter entirely.
 * `snolf_air_shot` [off]: Shots can be taken in the air
 
 
+![Snolf multiplayer](media/pool.gif)
 
 ## Credits
 
