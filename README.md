@@ -163,6 +163,10 @@ Life count icon from Mario Golf: Advance Tour.
 
 ## Changelog
 
+v2.22
+* Mulliganing out of minecarts no longer kills the
+player
+
 v2.21
 * Snolf can mulligan out of objects the player attaches to like rollout rocks or
 swings
