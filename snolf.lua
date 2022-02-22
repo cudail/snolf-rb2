@@ -949,7 +949,7 @@ addHook("PreThinkFrame", function()
 		snlf.hinttimer = $1 + 1
 
 		-- don't display hint if player is on waterslide or rollout rock
-		if p.pflags & PF_SLIDING ~= 0 or (mo.tracer and mo.tracer.type == MT_ROLLOUTROCK) then
+		if p.pflags & PF_SLIDING ~= 0 or mo.tracer then
 			snlf.hinttimer = 0
 		end
 
