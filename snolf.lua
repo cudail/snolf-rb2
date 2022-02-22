@@ -207,6 +207,11 @@ take_a_mulligan = function(snlf, pts, dont_play_sound)
 			S_StartSound(mo, sfx_mixup)
 		end
 
+		if snlf.p.powers[pw_carry] == CR_MINECART then
+			mo.tracer.target = nil
+			P_KillMobj(mo.tracer, mo, mo)
+		end
+
 		mo.tracer = nil
 		snlf.p.powers[pw_carry] = 0
 
