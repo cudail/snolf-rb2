@@ -163,6 +163,10 @@ Life count icon from Mario Golf: Advance Tour.
 
 ## Changelog
 
+v2.23
+* Mulligans now reset jumped, thokked and shield ability flags
+* Fixed bug with save states not saving player flags correctly
+
 v2.22
 * Snolf can mulligan out of minecarts without dying
 * The mulligan hint is no longer displayed when Snolf is on any ridable object
