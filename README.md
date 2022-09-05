@@ -164,7 +164,7 @@ Life count icon from Mario Golf: Advance Tour.
 ## Changelog
 
 v2.22
-* Snofl can mulligan out of minecarts without dying
+* Snolf can mulligan out of minecarts without dying
 * The mulligan hint is no longer displayed when Snolf is on any ridable object
 
 v2.21
