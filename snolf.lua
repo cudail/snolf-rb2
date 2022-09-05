@@ -230,7 +230,11 @@ take_a_mulligan = function(snlf, pts, dont_play_sound)
 		if lm.flags ~= nil then mo.flags = lm.flags end
 		if lm.flags2 ~= nil then mo.flags2 = lm.flags2 end
 		if lm.eflags ~= nil then mo.eflags = lm.eflags end
-		if lm.pflags ~= nil then snlf.p.pflags = lm.pflags end
+		if lm.pflags ~= nil then
+			snlf.p.pflags = lm.pflags
+		else
+			snlf.p.pflags = $1 & ~PF_JUMPED & ~PF_THOKKED & ~ PF_SHIELDABILITY
+		end
 
 		if snlf.p.pflags & PF_FINISHED == 0 then
 			snlf.mullcount = $1 + 1
