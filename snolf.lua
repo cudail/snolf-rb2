@@ -790,8 +790,10 @@ addHook("PreThinkFrame", function()
 		local braking = snlf.ctrl.jmp > 0
 
 		-- skim across water
-		if mo.momz < 0 and p.speed > SKIM_THRESHOLD and mo.eflags & MFE_TOUCHWATER > 0 and
-		R_PointToAngle2(0, 0, p.speed, -mo.momz) < SKIM_ANLGE then
+		if mo.momz < 0 and p.speed > SKIM_THRESHOLD
+		and mo.eflags & MFE_TOUCHWATER > 0
+		and p.p.pflags & PF_SLIDING == 0
+		and R_PointToAngle2(0, 0, p.speed, -mo.momz) < SKIM_ANLGE then
 			mo.momx = FixedMul($1, SKIM_FACTOR)
 			mo.momy = FixedMul($1, SKIM_FACTOR)
 			P_SetObjectMomZ(mo, -mo.momz)
