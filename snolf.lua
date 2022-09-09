@@ -222,6 +222,8 @@ take_a_mulligan = function(snlf, pts, dont_play_sound)
 		mo.momy = momy
 		P_SetObjectMomZ(mo, momz)
 
+		snlf.hinttimer = 0
+
 		if lm.rings ~= nil then snlf.p.rings = lm.rings end
 		if lm.state ~= nil then snlf.state = lm.state end
 		if lm.hdrive ~= nil then snlf.hdrive = lm.hdrive end
