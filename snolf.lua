@@ -825,6 +825,7 @@ addHook("PreThinkFrame", function()
 
 			if abs(snlf.prev.momz) > bounce_l and p.playerstate ~= PST_DEAD
 			and mo.state ~= S_PLAY_BOUNCE and mo.state ~= S_PLAY_BOUNCE_LANDING
+			and p.pflags & PF_SLIDING == 0
 			and not (p.gemmasmash and p.gemmasmash > 0) then
 				P_SetObjectMomZ(mo, FixedMul(snlf.prev.momz, bounce_f) * (reversed_gravity(mo) and 1 or -1))
 				snlf.p.pflags = $1 | PF_JUMPED | PF_THOKKED | PF_SHIELDABILITY
