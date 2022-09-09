@@ -847,8 +847,11 @@ addHook("PreThinkFrame", function()
 		end
 
 		-- state dependent update
+		-- if being carried, just revert state to waiting
+		if p.powers[pw_carry] ~= 0 and  snlf.state ~= STATE_WAITING then
+			update_state(snlf, STATE_WAITING)
 		-- waiting to come to rest
-		if snlf.state == STATE_WAITING then
+		elseif snlf.state == STATE_WAITING then
 			--allow a shot to happen
 			if at_rest(snlf) or allow_air_snolf(snlf) then
 				update_state(snlf, STATE_READY)
