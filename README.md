@@ -163,6 +163,11 @@ Life count icon from Mario Golf: Advance Tour.
 
 ## Changelog
 
+v2.24
+* Snolf will no longer skim across water or bounce off ground onw water slides
+* Snolf will not carry a (useless) shot into a minecart any more
+* Hint timer resets on taking a mulligan
+
 v2.23
 * Mulligans now reset jumped, thokked and shield ability flags
 * Fixed bug with save states not saving player flags correctly
