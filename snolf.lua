@@ -215,7 +215,7 @@ take_a_mulligan = function(snlf, pts, dont_play_sound)
 		mo.tracer = nil
 		snlf.p.powers[pw_carry] = 0
 
-		P_TeleportMove(mo, lm.x, lm.y, lm.z)
+		P_SetOrigin(mo, lm.x, lm.y, lm.z)
 
 		local momx, momy, momz = lm.momx or 0, lm.momy or 0, lm.momz or 0
 		mo.momx = momx
@@ -640,7 +640,7 @@ nudge_up = function(mo)
 	-- move slightly off the ground immediately so snolf doesn't
 	-- count as being classed as on the ground for the frame
 	-- hacky thing to make certain things work more smoothly
-	P_TeleportMove(mo, mo.x, mo.y, mo.z + (reversed_gravity(mo) and -1 or 1))
+	P_SetOrigin(mo, mo.x, mo.y, mo.z + (reversed_gravity(mo) and -1 or 1))
 end
 
 

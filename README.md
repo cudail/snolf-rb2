@@ -163,6 +163,9 @@ Life count icon from Mario Golf: Advance Tour.
 
 ## Changelog
 
+v2.25
+* Replace deprecated P_TeleportMove with P_SetOrigin
+
 v2.24
 * Snolf will no longer skim across water or bounce off ground onw water slides
 * Snolf will not carry a (useless) shot into a minecart any more
